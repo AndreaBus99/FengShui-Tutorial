@@ -3,6 +3,8 @@
 # Some resources
 1. Fabricjs. we'll use this package for the interactivity part. strongly recommend go over the tutorials and demo.
    1. http://fabricjs.com
+2. actually, https://jqueryui.com/draggable/#snap-to
+   1. I just found that jquery also have a pretty good library that we can use
 
 
 ## April 13 - Ruize Li
