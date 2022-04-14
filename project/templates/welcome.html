@@ -1,0 +1,62 @@
+
+{% extends "layout.html" %}
+
+
+{% block content%}
+
+<!-- dependencies -->
+<!-- <script type="text/javascript" src="{{ url_for('static', filename = 'welcome.js') }}"></script> -->
+<link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+
+
+
+
+<!-- 
+    @TODO:
+        1. fix the image..... idk why its' not working lol
+
+ -->
+
+
+
+<!-- content -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="../assets/placeholder.png" alt="home page image" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <!-- caption -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>
+                        What is Feng Shui?
+                    </h1>
+                </div>
+            </div>
+            <!-- first paragrapth -->
+            <div class="row">
+                <div class="col-md-12">
+                    Feng Shui is a set of principles originating from ancient China that involves applying common sense and instinct when you plan your spaces or build a home.
+                </div>
+            </div>
+            <!-- second paragraph -->
+            <div class="row">
+                <div class="col-md-12">
+                    It is based upon the idea that your future path depends on luck, your efforts and mind state, or the natural and built environment, and that the practice of it is about optimizing your environment for the different parts of your life.
+                </div>
+            </div>
+            <!-- learn button -->
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="/learn">
+                        <button type="button" class="btn btn-primary btn-lg btn-block">Learn More</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

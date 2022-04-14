@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+
+{% block content%}
+
+<!-- dependencies -->
+<script type="text/javascript" src="{{ url_for('static', filename = 'quiz.js') }}"></script>
+<link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+
+
+
+<div class="container">
+    <!-- quiz score -->
+    <div class="row">
+        <div class="col-md-8 col-md-offset-4">
+        Great Job! You got <span id='quiz-end-score'></span> questions correct.
+        </div>
+    </div>
+    <!-- button -->
+    <div class="row">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="button" class="btn btn-primary btn-lg">Back to learn more</button>
+        </div> 
+    </div>
+</div>
+
+
+
+{% endblock %}

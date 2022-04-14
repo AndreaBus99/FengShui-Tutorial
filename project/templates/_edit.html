@@ -1,0 +1,196 @@
+
+{% extends "layout.html" %}
+
+
+{% block content%}
+
+
+<script type="text/javascript" src="{{ url_for('static', filename = 'edit.js') }}"></script>
+<script>
+    let entry = {{entry | tojson }};
+</script>
+
+
+<!-- contents -->
+<div class="container">
+
+
+
+
+<!-- input boxes
+@todo: 
+    name,
+    desc,
+    img_url,
+    rating,
+    pricing,
+    dishes,
+    similar_res
+-->
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> -->
+    <!-- Launch demo modal
+  </button> -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title" id="myModalLabel">Discard changes</span>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          
+        </div>
+        <div class="modal-body">
+          Are you sure you want to discard the changes?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id='edit-dialog-save-changes'>Discard</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" >Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
+<div class="row notification-row">
+    <!-- <div class="col-md-auto" id="notification">New Item successfully created.</div>
+    <div class="col-md-6"><button class='btn btn-success btn-lg' id='view-new-itm-btn'>View it Here</button></div>  -->
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Edit a item</h3>
+        </div>
+        
+    </div>
+    <div class="row">
+       <div class="col-md-2"><button class='btn btn-primary' id='edit-submit-btn'>Submit</button></div> 
+       <div class="col-md-2"><button class='btn btn-secondary' id='edit-discard-btn' data-toggle='modal' data-target="#myModal">Discard</button></div>  
+    </div> 
+
+<!-- inputs -->
+
+<!-- <form action="/view/" method = 'POST', id='edit-form'> -->
+
+<div class="row">
+    <div class="col-md-2"><span>Name</span></div>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="edit-name_input">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2"><span></span></div>
+    <div class="col-md-10" id="edit-name_error">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2"><span>Description</span></div>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="edit-desc_input">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2"><span></span></div>
+    <div class="col-md-10" id="edit-desc_error">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2"><span>Image URL</span></div>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="edit-url_input">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2"><span></span></div>
+    <div class="col-md-10" id="edit-url_error">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2"><span>Rating</span></div>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="edit-rating_input">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2"><span></span></div>
+    <div class="col-md-10" id="edit-rating_error">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2"><span>Pricing</span></div>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="edit-pricing_input">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2"><span></span></div>
+    <div class="col-md-10" id="edit-pricing_error">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2"><span>Dishes</span></div>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="edit-dishes_input">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2"><span></span></div>
+    <div class="col-md-10" id="edit-dishes_error">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2"><span>Similar Ones</span></div>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="edit-similar_res_input">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2"><span></span></div>
+    <div class="col-md-10" id="edit-similar_res_error">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2"><span>Open Status</span></div>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="edit-open_status_input">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2"><span></span></div>
+    <div class="col-md-10" id="edit-open_status_error">
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-2"><span>Hours</span></div>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="edit-hours_input">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2"><span></span></div>
+    <div class="col-md-10" id="edit-hours_error">
+    </div>
+</div>
+
+
+</div>
+
+
+<!-- </form> -->
+
+</div>
+
+
+{% endblock%}

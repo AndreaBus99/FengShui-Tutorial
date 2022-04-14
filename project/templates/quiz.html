@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+
+{% block content%}
+
+<!-- dependencies -->
+<script type="text/javascript" src="{{ url_for('static', filename = 'quiz.js') }}"></script>
+<link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+
+
+
+<!-- 
+TODO:
+    1. how to handle the quiz start page? do we really need it?
+ -->
+<div class="container">
+    <div class="row">
+        <!-- current quiz score -->
+        <div class="col-md-3 quiz-score">
+
+        </div>
+        <!-- body of question -->
+        <div class="col-md-6">
+            <!-- image -->
+            <div class="row">
+                <div class="col-md-12">
+                    <img src="" alt="image of quiz" class="quiz-image">
+                </div>
+            </div>
+            <!-- question prompt -->
+            <div class="row">
+                <div class="col-md-12 quiz-prompt">
+                    
+                </div>
+            </div>
+            <!-- options -->
+            <div class="row quiz-choices">
+                <!-- create divs representing choices here... -->
+            </div>
+            <!-- system status percentage -->
+            <div class="row quiz-percentage">
+
+            </div>
+        </div>
+        <!-- buttons 
+            if q not answered -> render ONLY submit button
+            if q answered -> render next AND review
+        -->
+        <div class="col-md-3 quiz-buttons">
+            
+        </div>
+    </div>  
+</div>
+
+
+
+{% endblock %}
