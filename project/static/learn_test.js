@@ -10,10 +10,6 @@ I wrote a quick demo on how the dragging and snapping works.
 */
 
 
-/* return a fabric object that can be added to canvas */
-function create_item(name, image_url) {
-    // TODO: code this
-}
 
 /* return position properties of a furniture */
 function get_prop_of_item(furniture){
@@ -40,6 +36,26 @@ function disable_scaling(obj){
   obj.snapAngle = 90;
 }
 
+
+/**
+ * create and return a canvas object
+ */
+function create_item(img_id) {
+  let img = $("#" + img_id);
+  let imgInstance = new fabric.Image(img, {
+    top : 100,
+    left : 100,
+    angle : 0,
+
+  });
+  // scale to width
+  pug.scaleToWidth(250,false)
+  // disable scaling
+  disable_scaling(imgInstance);
+  canvas.add(imgInstance);
+  // return
+  return imgInstance;
+}
 
 
 
@@ -99,34 +115,16 @@ function build() {
 
 var imgURL = 'https://i.imgur.com/8rmMZI3.jpg';
 
-// var canvas = new fabric.Canvas('canvas');
 
 var pugImg = new Image();
 pugImg.onload = function (img) {    
   var pug = new fabric.Image(pugImg);
-  pug.scaleToWidth(250,false)
-  disable_scaling(pug)    
-    // var pug = new fabric.Image(pugImg, {
-    //     // angle: 45,
-    //     width: 500,
-    //     height: 500,
-    //     left: 50,
-    //     top: 70,
-    //     scaleX: .25,
-    //     scaleY: .25
-    // });
-    canvas.add(pug);
+  pug.scaleToWidth(250,false);
+  disable_scaling(pug);
+  canvas.add(pug);
 };
 pugImg.src = bed_url;
 
-  // add image
-  // fabric.Image.fromURL(bed_url, function(oImg) {
-  //   oImg.scaleToWidth(250,false)
-  //   disable_scaling(oImg);
-  //   oImg.id = 'bed'
-  //   canvas.add(oImg);
-  //   bed = oImg;
-  // });
 
   fabric.Image.fromURL(sofa_url, function(oImg) {
     oImg.scaleToWidth(250,false)
@@ -148,19 +146,17 @@ pugImg.src = bed_url;
     });
   });
 
+
+  // on click submit button
   $("#learn-test-submit-btn").click(()=>{
-    // alert("bed is at : " + pugImg.x + ", " + pugImg.y);
-    // var obj = canvas.getActiveObject();
-    // console.log(obj)
-    // alert(obj.x + "," + obj.y);
-    console.log('clicked');
+    console.log('here i show that we can access location of objects..');
     getCoordinates(canvas);
   });
 }
 
 
-/* get coordinates of objects*/
-function getCoordinates(canvas){
+/* get coordinates of object by id*/
+function getCoordinates(canvas, id){
   var coords = [];
   canvas.forEachObject(function(obj){
     var prop = {
@@ -169,7 +165,7 @@ function getCoordinates(canvas){
       width : obj.width,
       height : obj.height
     };
-    if (obj.id == 'sofa') {
+    if (obj.id == id) {
       coords.push(prop);
     }
     
@@ -184,13 +180,13 @@ function getCoordinates(canvas){
 // main
 $(document).ready(() => {
   build();
-  $( function() {
-    $( "#draggable" ).draggable({ snap: true });
-    $( "#draggable2" ).draggable({ snap: ".ui-widget-header" });
-    $( "#draggable3" ).draggable({ snap: ".ui-widget-header", snapMode: "outer" });
-    $( "#draggable4" ).draggable({ grid: [ 20, 20 ] });
-    $( "#draggable5" ).draggable({ grid: [ 80, 80 ] });
-  } );
+  // $( function() {
+  //   $( "#draggable" ).draggable({ snap: true });
+  //   $( "#draggable2" ).draggable({ snap: ".ui-widget-header" });
+  //   $( "#draggable3" ).draggable({ snap: ".ui-widget-header", snapMode: "outer" });
+  //   $( "#draggable4" ).draggable({ grid: [ 20, 20 ] });
+  //   $( "#draggable5" ).draggable({ grid: [ 80, 80 ] });
+  // } );
 
  
   // canvas.add(SelectObject);
