@@ -1,0 +1,17 @@
+
+{% extends "layout.html" %}
+
+
+{% block content%}
+
+
+<script type="text/javascript" src="{{ url_for('static', filename = 'edit.js') }}"></script>
+<script>
+    let entry = {{entry | tojson }};
+</script>
+
+
+
+
+
+{% endblock%}
