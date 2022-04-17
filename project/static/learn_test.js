@@ -10,16 +10,7 @@ I wrote a quick demo on how the dragging and snapping works.
 */
 
 
-
-/* return position properties of a furniture */
-function get_prop_of_item(furniture){
-     // TODO: code this
-    let obj = canvas.getActiveObject();
-    alert(obj.left + "," + obj.top);
-
-}
-
-/* disable scaling and rotation */
+/* disable scaling, enable rotation with 90 degrees */
 function disable_scaling(obj){
   // disable scaling
   obj.setControlsVisibility({
@@ -37,37 +28,30 @@ function disable_scaling(obj){
 }
 
 
-/**
- * create and return a canvas object
- */
-function create_item(img_id) {
-  let img = $("#" + img_id);
-  let imgInstance = new fabric.Image(img, {
-    top : 100,
-    left : 100,
-    angle : 0,
+// /**
+//  * create and return a canvas object
+//  */
+// function create_item(img_id) {
+//   let img = $("#" + img_id);
+//   let imgInstance = new fabric.Image(img, {
+//     top : 100,
+//     left : 100,
+//     angle : 0,
 
-  });
-  // scale to width
-  pug.scaleToWidth(250,false)
-  // disable scaling
-  disable_scaling(imgInstance);
-  canvas.add(imgInstance);
-  // return
-  return imgInstance;
-}
+//   });
+//   // scale to width
+//   pug.scaleToWidth(250,false)
+//   // disable scaling
+//   disable_scaling(imgInstance);
+//   canvas.add(imgInstance);
+//   // return
+//   return imgInstance;
+// }
 
-
-
-
-/* build the canvas for testing purpose ONLY */
-function build() {
-  var canvas = new fabric.Canvas("c", { selection: false });
-  var grid = 50;
-
+/* given a canvas, initialize the room, including window, door, and grid lines */
+function init_room(canvas, grid) {
   // create grid
-
-  for (var i = 0; i < 800 / grid; i++) {
+  for (let i = 0; i < 800 / grid; i++) {
     canvas.add(
       new fabric.Line([i * grid, 0, i * grid, 800], {
         stroke: "#ccc",
@@ -82,76 +66,112 @@ function build() {
     );
   }
 
-  // add objects
-  let rec = new fabric.Rect({
-    left: 100,
-    top: 100,
-    width: 50,
-    height: 50,
-    fill: "#faa",
-    originX: "left",
-    originY: "top",
-    centeredRotation: true,
-  });
-  
-  disable_scaling(rec);
-  canvas.add(rec);
-
-  canvas.add(
-    new fabric.Circle({
-      left: 300,
-      top: 300,
-      radius: 50,
-      fill: "#9f9",
-      originX: "left",
-      originY: "top",
-      centeredRotation: true,
-    })
-  );
-  
-  let bed_url = "https://media.istockphoto.com/vectors/cat-lying-on-the-bed-cute-funny-scene-top-view-cartoon-style-image-vector-id1084804806?k=20&m=1084804806&s=612x612&w=0&h=t_8yAXc40RKVHjQXflR6oDzkwIgQ7fVsEr7proyJHo8=";
-  let sofa_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmGXMYZDrAz0Hgzp28d-e6YiCXAfCfafVajw&usqp=CAU";
-
-
-var imgURL = 'https://i.imgur.com/8rmMZI3.jpg';
-
-
-var pugImg = new Image();
-pugImg.onload = function (img) {    
-  var pug = new fabric.Image(pugImg);
-  pug.scaleToWidth(250,false);
-  disable_scaling(pug);
-  canvas.add(pug);
-};
-pugImg.src = bed_url;
-
-
-  fabric.Image.fromURL(sofa_url, function(oImg) {
-    oImg.scaleToWidth(250,false)
+  // add door
+  fabric.Image.fromURL("../images/_door.png", function(oImg) {
+    oImg.scaleToWidth(150,false)
     disable_scaling(oImg);
-    oImg.id = 'sofa'
+    oImg.id = 'door';
+    oImg.set('top', 650);
+    oImg.set('left', 650);
+    oImg.selectable = false;
     canvas.add(oImg);
-    sofa = oImg;
+    canvas.sendToBack(oImg);
   });
-
-  console.log(pugImg);
-  // canvas.add(bed);
-
+  // add window
+  fabric.Image.fromURL("../images/_window.jpeg", function(oImg) {
+    oImg.scaleToWidth(50,true);
+    oImg.scaleToHeight(300,true);
+    oImg.set('top', 250);
+    oImg.set('left',0); 
+    oImg.selectable = false;
+    disable_scaling(oImg);
+    oImg.id = 'window'
+    canvas.add(oImg);
+    canvas.sendToBack(oImg);
+  });
+  
+    
   // snap to grid
-
   canvas.on("object:moving", function (options) {
     options.target.set({
       left: Math.round(options.target.left / grid) * grid,
       top: Math.round(options.target.top / grid) * grid,
     });
   });
+    
+  
+
+}
 
 
-  // on click submit button
+/* add furnitures to canvas */
+function add_furnitures(canvas) {
+  // add bed
+  fabric.Image.fromURL("../images/Bed.JPG", function(oImg) {
+    oImg.scaleToWidth(150,false)
+    disable_scaling(oImg);
+    oImg.id = 'bed';
+    canvas.add(oImg);
+  });
+}
+
+/**
+ * when clicked, send ajax to server
+ * if correct, re-render the buttons and can move to next question
+ * if wrong, send feedback
+ */
+function handle_learn_submit(canvas) {
   $("#learn-test-submit-btn").click(()=>{
     console.log('here i show that we can access location of objects..');
-    getCoordinates(canvas);
+    let coords = getCoordinates(canvas, 'bed');
+
+    /*
+      test on sending coordinates and angle of bed to server
+    */
+
+    // send new entry to server
+		$.ajax({
+			type        :   "POST",
+			url         :   "learn/" + 1,
+			dataType    :   "json",
+			contentType :   "application/json; charset=utf-8",
+			data        :   JSON.stringify(coords),
+			success     :   
+			function(result){
+				// display the feedback
+				newAddedID = result["newID"]
+				// createTopBar(newAddedID);
+				// clearWarnings();
+				// clearInputs();
+				// $('#name_input').focus();
+				
+	
+			},
+			error: 
+			function(request, status, error){
+				console.log("Error");
+				console.log(request)
+				console.log(status)
+				console.log(error)
+			}
+		});
   });
+}
+
+
+/* build the canvas for testing purpose ONLY */
+function build() {
+  let canvas = new fabric.Canvas("c", { selection: false });
+  let grid = 50;
+
+  // initialize the room layout
+  init_room(canvas, grid);
+
+  // add furnitures
+  add_furnitures(canvas);
+
+  // on click submit button
+  handle_learn_submit(canvas);
 }
 
 
@@ -162,15 +182,17 @@ function getCoordinates(canvas, id){
     var prop = {
       left : obj.left,
       top : obj.top,
-      width : obj.width,
-      height : obj.height
+      // width : obj.width,
+      // height : obj.height,
+      angle : obj.angle
     };
     if (obj.id == id) {
       coords.push(prop);
     }
     
   });
-  console.log(coords)
+  console.log(coords);
+  return coords;
  }
 
 
@@ -179,15 +201,9 @@ function getCoordinates(canvas, id){
 
 // main
 $(document).ready(() => {
+  // retrieve lesson info, render it
+  // render_lesson(learn_lesson);
   build();
-  // $( function() {
-  //   $( "#draggable" ).draggable({ snap: true });
-  //   $( "#draggable2" ).draggable({ snap: ".ui-widget-header" });
-  //   $( "#draggable3" ).draggable({ snap: ".ui-widget-header", snapMode: "outer" });
-  //   $( "#draggable4" ).draggable({ grid: [ 20, 20 ] });
-  //   $( "#draggable5" ).draggable({ grid: [ 80, 80 ] });
-  // } );
-
  
   // canvas.add(SelectObject);
 

@@ -44,9 +44,11 @@ def welcome():
     return render_template('welcome.html')
 
 # TODO: implement this
-@app.route('/learn<lesson_number>')
-def learn():
-    return render_template('learn.html')
+@app.route('/learn/<lesson_number>', methods = ['GET', 'POST'])
+def learn(lesson_number):
+    if request.method == 'POST':
+        print(request.get_json())
+    return render_template('learn_test.html')
 
 # TODO: implement this
 @app.route('/quiz_yourself/<quiz_number>')
