@@ -67,7 +67,7 @@ function init_room(canvas, grid) {
   }
 
   // add door
-  fabric.Image.fromURL("../images/_door.png", function(oImg) {
+  fabric.Image.fromURL("{{ img_url[0] }}", function(oImg) {
     oImg.scaleToWidth(150,false)
     disable_scaling(oImg);
     oImg.id = 'door';
@@ -78,7 +78,7 @@ function init_room(canvas, grid) {
     canvas.sendToBack(oImg);
   });
   // add window
-  fabric.Image.fromURL("../images/_window.jpeg", function(oImg) {
+  fabric.Image.fromURL("{{ img_url[1] }}", function(oImg) {
     oImg.scaleToWidth(50,true);
     oImg.scaleToHeight(300,true);
     oImg.set('top', 250);
@@ -107,7 +107,7 @@ function init_room(canvas, grid) {
 /* add furnitures to canvas */
 function add_furnitures(canvas) {
   // add bed
-  fabric.Image.fromURL("../images/Bed.JPG", function(oImg) {
+  fabric.Image.fromURL("{{ img_url[2] }}", function(oImg) {
     oImg.scaleToWidth(150,false)
     disable_scaling(oImg);
     oImg.id = 'bed';
@@ -130,31 +130,31 @@ function handle_learn_submit(canvas) {
     */
 
     // send new entry to server
-		$.ajax({
-			type        :   "POST",
-			url         :   "learn/" + 1,
-			dataType    :   "json",
-			contentType :   "application/json; charset=utf-8",
-			data        :   JSON.stringify(coords),
-			success     :   
-			function(result){
-				// display the feedback
-				newAddedID = result["newID"]
-				// createTopBar(newAddedID);
-				// clearWarnings();
-				// clearInputs();
-				// $('#name_input').focus();
+		// $.ajax({
+		// 	type        :   "POST",
+		// 	url         :   "learn/" + 1,
+		// 	dataType    :   "json",
+		// 	contentType :   "application/json; charset=utf-8",
+		// 	data        :   JSON.stringify(coords),
+		// 	success     :   
+		// 	function(result){
+		// 		// display the feedback
+		// 		newAddedID = result["newID"]
+		// 		// createTopBar(newAddedID);
+		// 		// clearWarnings();
+		// 		// clearInputs();
+		// 		// $('#name_input').focus();
 				
 	
-			},
-			error: 
-			function(request, status, error){
-				console.log("Error");
-				console.log(request)
-				console.log(status)
-				console.log(error)
-			}
-		});
+		// 	},
+		// 	error: 
+		// 	function(request, status, error){
+		// 		console.log("Error");
+		// 		console.log(request)
+		// 		console.log(status)
+		// 		console.log(error)
+		// 	}
+		// });
   });
 }
 

@@ -35,7 +35,8 @@ furniture = [
     {
         "furniture_id" : "1",
         "furniture" : "bed",
-        "img_url" : "https://media.istockphoto.com/vectors/cat-lying-on-the-bed-cute-funny-scene-top-view-cartoon-style-image-vector-id1084804806?k=20&m=1084804806&s=612x612&w=0&h=t_8yAXc40RKVHjQXflR6oDzkwIgQ7fVsEr7proyJHo8="
+        "img_url": "../static/images/Bed.JPG" 
+        # "img_url" : "https://media.istockphoto.com/vectors/cat-lying-on-the-bed-cute-funny-scene-top-view-cartoon-style-image-vector-id1084804806?k=20&m=1084804806&s=612x612&w=0&h=t_8yAXc40RKVHjQXflR6oDzkwIgQ7fVsEr7proyJHo8="
     }
 ]
 
@@ -161,6 +162,12 @@ def welcome():
 # TODO: implement this
 @app.route('/learn')
 def learn():
+    # relative image urls, use thses in the furniture defined above!!
+    img_urls = [
+        "../static/images/_door.png",
+        "../static/images/_window.jpeg",
+        "../static/images/Bed.JPG"
+    ]
     return render_template('edit.html', furniture=furniture)
 
 # TODO: implement this

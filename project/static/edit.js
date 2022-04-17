@@ -50,10 +50,7 @@ function create_item(img_id) {
   return imgInstance;
 }
 
-function create_item(name, image_url) {
-    // TODO: code this
 
-}
 
 /* return position properties of a furniture */
 function get_prop_of_item(furniture){
@@ -179,7 +176,7 @@ function build() {
     let furnitureImg = new Image();
     furnitureImg.onload = function (img) {    
       let furniture = new fabric.Image(furnitureImg);
-      furniture.scaleToWidth(250,false);
+      furniture.scaleToWidth(100,false);
       disable_scaling(furniture);
       canvas.add(furniture);
     };
