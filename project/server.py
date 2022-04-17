@@ -164,7 +164,7 @@ def learn():
     return render_template('edit.html', furniture=furniture)
 
 # TODO: implement this
-@app.route('/quiz_yourself/<quiz_number>')
+@app.route('/quiz_yourself')
 def quiz_yourself():
     mc_quiz = mc_quiz_questions
     tf_quiz = tf_quiz_questions

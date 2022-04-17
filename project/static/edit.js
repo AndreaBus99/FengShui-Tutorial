@@ -114,7 +114,7 @@ function build() {
     })
   );
 
-  //Add image of the furniture (for the moment just the bed)
+  //Add image of the furniture dynamically (for the moment just the bed)
   $.each(furniture,function(index,ui){
     let furniture_url=ui.img_url
     console.log(furniture_url)
