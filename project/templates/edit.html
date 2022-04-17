@@ -1,0 +1,25 @@
+
+{% extends "layout.html" %}
+
+
+{% block content%}
+
+<!-- dependencies -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/521/fabric.min.js" integrity="sha512-nPzvcIhv7AtvjpNcnbr86eT6zGtiudLiLyVssCWLmvQHgR95VvkLX8mMpqNKWs1TG3Hnf+tvHpnGmpPS3yJIgw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'edit.js') }}"></script>
+<link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+
+<!-- Getting furniture from server -->
+<script>
+    let furniture = {{furniture|tojson}}
+    console.log(furniture)
+</script>
+
+<!-- content -->
+<!-- Adding canva grid to html page -->
+<canvas id="canva" width="600" height="700" ></canvas>
+
+
+{% endblock %}

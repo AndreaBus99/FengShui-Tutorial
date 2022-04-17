@@ -31,11 +31,126 @@ global variables to maintain
     1. function(room arrangement) -> feedback, correct or not
     2. quiz score, correct answer for each question
 """
+furniture = [
+    {
+        "furniture_id" : "1",
+        "furniture" : "bed",
+        "img_url" : "https://media.istockphoto.com/vectors/cat-lying-on-the-bed-cute-funny-scene-top-view-cartoon-style-image-vector-id1084804806?k=20&m=1084804806&s=612x612&w=0&h=t_8yAXc40RKVHjQXflR6oDzkwIgQ7fVsEr7proyJHo8="
+    }
+]
 
-restaurants = []
+good_lessons = [
+    {
+        "good_id" : "1",
+        "good_title" : "Bed in corner",
+        "good_feedback" : "Great! It is good practice in a college dorm (or smaller rooms in general) to position the bed in a corner."
+    },
+    {
+        "good_id" : "2",
+        "good_title" : "Large clear space",
+        "good_feedback" : "Excellent! You’ve identified another good rule. For a college dorm, it’s good to have a (relatively) large open space. Clearing out space will clear your mind and prevent distractions."
+    },
+    {
+        "good_id" : "3",
+        "good_title" : "Desk should have view of door",
+        "good_feedback" : "Amazing! It’s good to have your desk allow a view of the door. Try to always position the desk so that the door is in sight!"
 
-# current_id = restaurants[-1]['id'] + 1
+    },
+    {
+        "good_id" : "4",
+        "good_title" : "Desk close to window",
+        "good_feedback" : "Nicely done! It’s good to have the desk close to the window. Having the desk close to the window allows for nice natural lighting during the day!"
+    }
+]
 
+bad_lessons = [
+    {
+        "bad_id" : "1",
+        "bad_title" : "Bed should not backed by window",
+        "bad_feedback" : "Oh dear! In Feng Shui for a good night’s sleep your bed needs to be backed by something solid, like a wall - not a window where something could sneak up on you"
+    },
+    {
+        "bad_id" : "2",
+        "bad_title" : "Bed should not be in line with door",
+        "bad_feedback" : "Oh no! In Feng Shui it is bad to have your bed directly in line with the door, because “the chi (energy) is too intense”. It is known as “dead man’s position” or 'coffin position'."
+    },
+    {
+        "bad_id" : "3",
+        "bad_title" : "Desk should not be facing away from door",
+        "bad_feedback" : "Oh dear! In Feng Shui people try to not have their backs against the door as this could lead to one feeling vulnerable. Imagine all the things that could sneak up on you!"
+    },
+    {
+        "bad_id" : "4",
+        "bad_title" : "Bed and desk should not be too close",
+        "bad_feedback" : "Oops! In Feng Shui, the bed is seen as an area for rest and the desk a workspace. Try to not have the bed and desk so close for some Feng Shui work life balance!"
+    }
+]
+
+mc_quiz_questions = [
+    {
+        "mc_quiz_id" : "1",
+        "mc_image" : "",#to be filled
+        "mc_question" : "What are some potential issues with the room shown above?",
+        "option_1" : "Bed direction",
+        "option_2" : "Bed and desk proximity",
+        "option_3" : "Bed positioning relative to walls",
+        "mc_answer" : "Bed direction",
+        "mc_next_question" : "2"
+    },
+    {
+        "mc_quiz_id" : "2",
+        "mc_image" : "", #to be filled
+        "mc_question" : "What are some potential issues with the room shown above?",
+        "option_1" : "Bed direction",
+        "option_2" : "Bed and desk proximity",
+        "option_3" : "Bed positioning relative to walls",
+        "mc_answer" : "Bed and desk proximity",
+        "mc_next_question" : "3"
+    },
+    {
+        "mc_quiz_id" : "3",
+        "mc_image" : "",#to be filled
+        "mc_question":  "What are some positive things about this layout?",
+        "option_1" : "Bed is in the corner and open space",
+        "option_2" : "Bed is in the corner",
+        "option_3" : "Desk location (people have their backs against the door)",
+        "mc_answer" : "Bed is in the corner and open space",
+        "mc_next_question" : "4",
+    },
+    {
+        "mc_quiz_id" : "4",
+        "mc_image" : "",#to be filled
+        "mc_question" : "What are some negative things about this layout?",
+        "option_1" : "Bed is in the corner and open space",
+        "option_2" : "Bed is in the corner",
+        "option_3" : "Desk location (people have their backs against the door)",
+        "mc_answer" : "Desk location (people have their backs against the door)",
+        "mc_next_question" : "end"
+    }
+]
+
+tf_quiz_questions = [
+    {
+        "tf_quiz_id" : "1",
+        "tf_image" : "",#to be filled
+        "tf_question" : "Desk should be close to the window",
+        "true" : "True",
+        "false" : "False",
+        "tf_answer" : "True",
+        "tf_next_question" : "2"
+
+    },
+    {
+        "tf_quiz_id" : "2",
+        "tf_image" : "", #to be filled
+        "tf_question" : "Desk should face door",
+        "true" : "True",
+        "false" : "False",
+        "tf_answer" : "True",
+        "tf_next_question" : "end"
+    },
+
+]
 
 
 # ROUTES
@@ -44,16 +159,16 @@ def welcome():
     return render_template('welcome.html')
 
 # TODO: implement this
-@app.route('/learn/<lesson_number>', methods = ['GET', 'POST'])
-def learn(lesson_number):
-    if request.method == 'POST':
-        print(request.get_json())
-    return render_template('learn_test.html')
+@app.route('/learn')
+def learn():
+    return render_template('edit.html', furniture=furniture)
 
 # TODO: implement this
 @app.route('/quiz_yourself/<quiz_number>')
 def quiz_yourself():
-    pass
+    mc_quiz = mc_quiz_questions
+    tf_quiz = tf_quiz_questions
+    return render_template('quiz.html', mc_quiz=mc_quiz, tf_quiz=tf_quiz)
 
 
 # @app.route('/search/<keywords>', methods = ['GET', 'POST'])
