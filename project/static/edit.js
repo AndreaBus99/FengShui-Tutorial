@@ -5,7 +5,6 @@ I wrote a quick demo on how the dragging and snapping works.
 @TODOS:
     1. write a function that fetchs all information of each furniture object, i.e. location, direction, etc,
     use ajax to send the json object to the server, and the server should return information including which section should be highlighted, and what messages should be prompted.
-    2. status bar should be implemented in the same way.
     3. server should maintain 1. location of eahc object, and over all status bar. server should also preserve pre-defined 
 */
 
@@ -169,7 +168,8 @@ function build() {
   // create a wrapper around native canvas element (with id="c")
   let canvas = new fabric.Canvas("c", { selection: false });
   let grid = 25;
-
+  
+  // initialzie room
   init_room(canvas, grid);
   
 
