@@ -35,7 +35,8 @@ furniture = [
     {
         "furniture_id" : "1",
         "furniture" : "bed",
-        "img_url": "../static/images/Bed.JPG" 
+        "img_url": "../static/images/Bed.JPG" ,
+        "width" : 100
         # "img_url" : "https://media.istockphoto.com/vectors/cat-lying-on-the-bed-cute-funny-scene-top-view-cartoon-style-image-vector-id1084804806?k=20&m=1084804806&s=612x612&w=0&h=t_8yAXc40RKVHjQXflR6oDzkwIgQ7fVsEr7proyJHo8="
     }
 ]
