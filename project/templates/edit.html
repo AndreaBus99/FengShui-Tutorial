@@ -9,7 +9,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'edit.js') }}"></script>
-<link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+<!-- <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}"> -->
 
 <!-- Getting furniture from server -->
 <script>
@@ -17,9 +17,48 @@
     console.log(furniture)
 </script>
 
+<style>
+    .draggable {
+        width: 90px;
+        height: 80px;
+        padding: 5px;
+        float: left;
+        margin: 0 10px 10px 0;
+        font-size: .9em;
+    }
+
+    .ui-widget-header p,
+    .ui-widget-content p {
+        margin: 0;
+    }
+
+    .canvas-container{
+        width: 1155;
+        height: 550;
+    }
+
+    #snaptarget {
+        height: 140px;
+    }
+
+    #canvas{
+        position: absolute;
+    }
+
+    /* absolute positioning needed to see btn 'above' canvas */
+    #learn-test-submit-btn{
+        top: 545px;
+        left: 1095px;
+        position: absolute;
+    }
+</style>
+
 <!-- content -->
 <!-- Adding canva grid to html page -->
-<canvas id="canva" width="600" height="700" ></canvas>
+<div class="canvas-container">
+    <canvas id="c" width="1125" height="550"></canvas>
+    <button type="button" class="btn btn-primary" id="learn-test-submit-btn">Submit</button>
+</div>
 
 
 {% endblock %}

@@ -20,7 +20,7 @@ from flask import Response, request, jsonify
 import random
 import sys
 
-from itsdangerous import json
+# from itsdangerous import json
 app = Flask(__name__)
 
 

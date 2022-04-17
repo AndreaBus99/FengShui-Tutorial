@@ -67,52 +67,109 @@ function get_prop_of_item(furniture){
 
 /* build the canvas for testing purpose ONLY */
 function build() {
-  var canvas = new fabric.Canvas("canva", { selection: false });
-  var grid = 50;
+  // create a wrapper around native canvas element (with id="c")
+  var canvas = new fabric.Canvas("c", { selection: false });
+
+  var grid = 25;
+  var canvasWidth =  document.getElementById('c').width;
+  var canvasHeight = document.getElementById('c').height;
 
   // create grid
-  for (var i = 0; i < 800 / grid; i++) {
-    canvas.add(
-      new fabric.Line([i * grid, 0, i * grid, 800], {
-        stroke: "#ccc",
-        selectable: false,
-      })
-    );
-    canvas.add(
-      new fabric.Line([0, i * grid, 800, i * grid], {
-        stroke: "#ccc",
-        selectable: false,
-      })
-    );
+  for (var i = 0; i < (canvasWidth / grid); i++) {
+      canvas.add(new fabric.Line([ i * grid, 0, i * grid, canvasHeight], { type:'line', stroke: '#ccc', selectable: false }));
+      canvas.add(new fabric.Line([ 0, i * grid, canvasWidth, i * grid], { type: 'line', stroke: '#ccc', selectable: false }))
   }
 
-  // add objects
-  let rec = new fabric.Rect({
-    left: 100,
-    top: 100,
-    width: 50,
-    height: 50,
-    fill: "#faa",
-    originX: "left",
-    originY: "top",
-    centeredRotation: true,
+  // create room outline
+  var room_outline = new fabric.Rect({
+      width: 275, //8.5 ft
+      height: 450, //14 ft
+      fill: '', 
+      stroke: 'black',
+      strokeWidth: 3,
+      left: canvasWidth/4,
+      top: 50,
+      selectable: false, //user cannot move/select outline
+      evented: false, //cursor does not change to move on hover
   });
 
-  // disable scaling
-  disable_scaling(rec);
-  canvas.add(rec);
+  var window = new fabric.Rect({
+      width: 175,
+      height: 6, 
+      fill: 'lightBlue', 
+      left: (canvasWidth/4)+53,//+3 to account for room outline strokeWidth
+      top: 49,
+      selectable: false, //user cannot move/select outline
+      evented: false, //cursor does not change to move on hover
+  })
 
-  canvas.add(
-    new fabric.Circle({
-      left: 300,
-      top: 300,
-      radius: 50,
-      fill: "#9f9",
-      originX: "left",
-      originY: "top",
-      centeredRotation: true,
-    })
-  );
+  var door = new fabric.Rect({
+      width: 100,
+      height: 8, 
+      fill: 'lightGrey', 
+      left: (canvasWidth/4)+153,//+3 to account for room outline strokeWidth
+      top: 499,
+      selectable: false, //user cannot move/select outline
+      evented: false, //cursor does not change to move on hover
+  })
+
+  var doorOpening = new fabric.Circle({
+      radius: 100,
+      left: (canvasWidth/4)+353,//+3 to account for room outline strokeWidth
+      top: 602,
+      angle: 180,
+      startAngle: 0,
+      endAngle: 90,
+      stroke: 'lightGrey',
+      strokeWidth: 3,
+      fill: '',
+      strokeDashArray: [5, 5],
+      selectable: false, //user cannot move/select outline
+      evented: false, //cursor does not change to move on hover
+  });
+
+  var doorOpeningLine = new fabric.Rect({
+      width: 0,
+      height: 100, 
+      fill: '', 
+      left: (canvasWidth/4)+253,//+3 to account for room outline strokeWidth
+      top: 399,
+      selectable: false, //user cannot move/select outline
+      evented: false, //cursor does not change to move on hover
+      strokeDashArray: [5, 7],
+      stroke: 'lightGrey',
+      strokeWidth: 3,
+  })
+
+  var widthText = new fabric.Text("8'5\" ft", { 
+      left: canvasWidth/3, 
+      top: 35,
+      fontSize: 24,
+      originX: 'center',
+      originY: 'center', 
+      selectable: false, //user cannot move/select outline
+      evented: false, //cursor does not change to move on hover
+  });
+
+  var heightText = new fabric.Text("14'0\" ft", { 
+      left: (canvasWidth/3)+150, 
+      top: 275,
+      fontSize: 24,
+      originX: 'center',
+      originY: 'center', 
+      angle: 90,
+      selectable: false, //user cannot move/select outline
+      evented: false, //cursor does not change to move on hover
+  });
+
+  // "add" room outline onto canvas
+  canvas.add(widthText);
+  canvas.add(heightText);
+  canvas.add(room_outline);
+  canvas.add(window);
+  canvas.add(door);
+  canvas.add(doorOpening);
+  canvas.add(doorOpeningLine);
 
   //Add image of the furniture dynamically (for the moment just the bed)
   $.each(furniture,function(index,ui){

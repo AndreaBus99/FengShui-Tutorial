@@ -1,11 +1,7 @@
-
-
 canvas {
     border: 1px solid #ccc;
-    margin: 100px;
-    
 }
-/* log sales css */
+
 #header{
     background-color: lightgray;
     padding: 25px
@@ -16,24 +12,6 @@ canvas {
     padding-bottom: 5px;
 
 }
-
-.highlight {
-    background-color: yellow;
-}
-
-
-span.stars, span.stars span {
-    display: block;
-    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/747/star-o-white.svg) 0 0 repeat-x;
-    width: 200px; /* width of a star multiplied by 5 */
-    height: 25px; /* the height of the star */
-    background-size: 25px 25px;
-  }
-  
-  span.stars span {
-    background-position: 0 0;
-    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/747/star.svg);
-  }
 
 body{
     background-color: #f4f4f4;
