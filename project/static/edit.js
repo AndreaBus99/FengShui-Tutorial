@@ -296,6 +296,7 @@ function mark_furniture(canvas, id, feedback) {
         width: obj.getScaledWidth(),
         height: obj.getScaledHeight(),
         opacity: 0.6,
+        angle: obj.angle,
         class: 'alert-box',
         selectable : true
       });

@@ -37,24 +37,24 @@ furniture = [
         "width" : 100
         # "img_url" : "https://media.istockphoto.com/vectors/cat-lying-on-the-bed-cute-funny-scene-top-view-cartoon-style-image-vector-id1084804806?k=20&m=1084804806&s=612x612&w=0&h=t_8yAXc40RKVHjQXflR6oDzkwIgQ7fVsEr7proyJHo8="
     },
-    {
-        "furniture_id": "2",
-        "furniture": "desk",
-        "img_url": "../static/images/Desk.JPG",
-        "width": 200
-    },
-    {
-        "furniture_id" : "3",
-        "furniture" : "door",
-        "img_url": "../static/images/_door.png",
-        "width" : 100
-    },
-    {
-        "furniture_id" : "4",
-        "furniture" : "window",
-        "img_url": "../static/images/_window.jpeg",
-        "width" : 100
-    }
+    # {
+    #     "furniture_id": "2",
+    #     "furniture": "desk",
+    #     "img_url": "../static/images/Desk.JPG",
+    #     "width": 200
+    # },
+    # {
+    #     "furniture_id" : "3",
+    #     "furniture" : "door",
+    #     "img_url": "../static/images/_door.png",
+    #     "width" : 100
+    # },
+    # {
+    #     "furniture_id" : "4",
+    #     "furniture" : "window",
+    #     "img_url": "../static/images/_window.jpeg",
+    #     "width" : 100
+    # }
 ]
 
 # relative image urls, use thses in the furniture defined above!!
@@ -218,6 +218,11 @@ def is_in_room(coords):
     w = coords['width']
     h = coords['height']
     a = coords['angle']
+    # swap w and h if angle is 90 / -90
+    if a != 0 or a != 180:
+        temp = w
+        w = h
+        h = temp
     # check x-axis
     check_x = True
     if x < 500 or (x+w) > 775:
