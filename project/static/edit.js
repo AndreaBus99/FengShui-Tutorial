@@ -212,6 +212,15 @@ function build() {
 
   // on click submit button
   $("#learn-test-submit-btn").click(()=>{
+    // deselect all objects
+    canvas.discardActiveObject().renderAll();
+    // clear all alert boxes
+    canvas.forEachObject((obj)=> {
+      if (obj.class == 'alert-box') {
+        canvas.remove(obj);
+        canvas.renderAll();
+      }
+    });
     // get coords of bed
     let coords = getCoordinates(canvas, 'bed');
     // send coords of bed to server
@@ -223,12 +232,19 @@ function build() {
 			data        :   JSON.stringify(coords),
 			success     :   
 			function(result){
-        // result is a json with two fields 1. status 2. feedback
+        // result is a json with two fields 1. status 2. feedback 3. complete 4. progress
         console.log(result);
-        let status = result['status'];
-        let feedback = result['feedback'];
+        let status    = result['status'];
+        let feedback  = result['feedback'];
+        let complete  = result['complete'];
+        let progress  = result['progress'];
 
+        // set progress bar
+        $("#learn-progress-bar").text(progress);
+        $("#learn-progress-bar").attr('aria-valuenow', progress);
+        $("#learn-progress-bar").attr('style', "width:" + progress + "%");
         // get bed obj
+
         // let bed = get_obj(canvas, 'bed');
         // let rect = new fabric.Rect({
         //   left : 200,
@@ -242,9 +258,13 @@ function build() {
         // canvas.add(rect);
         // canvas.bringToFront(rect);
         // canvas.requestRenderAll();
-        set_filter(canvas, 'bed', feedback)
+        mark_furniture(canvas, 'bed', feedback)
         
-        
+
+        // if complete, enable the next button to 
+        if (complete == 'True') {
+          $("#learn-complete-msg").text("You've learned all lessons!");
+        }
 
         
 				
@@ -263,52 +283,46 @@ function build() {
 
 
 // set filter to object by id
-function set_filter(canvas, id, feedback) {
+function mark_furniture(canvas, id, feedback) {
   canvas.forEachObject(function(obj){
-    if (obj.id == id) {
-      // obj.filters.push(new fabric.Image.filters.ColorMatrix({
-      //   matrix: [
-      //         1.1285582396593525, -0.3967382283601348, -0.03992559172921793, 0, 63.72958762196502,
-      //         -0.16404339962244616, 1.0835251566291304, -0.05498805115633132, 0, 24.732407896706203,
-      //         -0.16786010706155763, -0.5603416277695248, 1.6014850761964943, 0, 35.62982807460946,
-      //         0, 0, 0, 1, 0
-      //        ]
-      //  }));
+    if (obj !== undefined && obj.id == id) {
+      // create a red rectangle
       let rect = new fabric.Rect({
-        originX: 'center',
-        originY: 'center',
+        // originX: 'center',
+        // originY: 'center',
         left:obj.left,
         top:obj.top,
         fill: 'red',
         width: obj.getScaledWidth(),
         height: obj.getScaledHeight(),
         opacity: 0.6,
-        class: 'alert-box'
+        class: 'alert-box',
+        selectable : true
       });
-
+      // console.log(rect);
       var text = new fabric.Text(feedback, {
-        fontSize: 13,
-        originX: 'center',
-        originY: 'center'
-      });
-
-      var group = new fabric.Group([ rect, text ], {
+        fontSize: 14,
         left: obj.left,
         top: obj.top,
-        width: obj.getScaledWidth(),
-        height: obj.getScaledHeight(), 
+        class: 'alert-box'
+        // originX: 'center',
+        // originY: 'center'
       });
 
+      // on click, add lesson text to the lesson learned below progress bard
+      rect.on('mousedown', ()=> {
+        console.log('moused clicked!');
+        $("#learn-lesson-learned").append($('<div>').append($('<h3>',{text: feedback})));
+        canvas.remove(rect);
+      });
 
-      canvas.add(rect).renderAll().bringToFront(rect).setActiveObject(rect);
-      // console.log('rect added...');
-      // console.log(rect);
-      // // canvas.renderAll();
-      // canvas.bringToFront(rect);
-      // // rect.sendToFront();
-      // console.log(obj);
-      // canvas.requestRenderAll()
-      // return obj
+      // add to canvas
+      // canvas.add(rect).renderAll().bringToFront(rect).setActiveObject();
+      canvas.add(rect).bringToFront(rect).renderAll();
+      canvas.bringToFront(rect);
+      // canvas.bringToFront(text);
+      canvas.renderAll();
+      
     }
   });  
 }
