@@ -220,10 +220,10 @@ def is_in_room(coords):
     h = coords['height']
     a = coords['angle']
     # swap w and h if angle is 90 / -90
-    if a != 0 or a != 180:
-        temp = w
-        w = h
-        h = temp
+    # if a != 0 or a != 180:
+    #     temp = w
+    #     w = h
+    #     h = temp
     # check x-axis
     check_x = True
     if x < 500 or (x+w) > 775:

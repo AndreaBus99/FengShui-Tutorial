@@ -258,7 +258,7 @@ function build() {
         // canvas.add(rect);
         // canvas.bringToFront(rect);
         // canvas.requestRenderAll();
-        mark_furniture(canvas, 'bed', feedback)
+        mark_furniture(canvas, 'bed', feedback, status)
         
 
         // if complete, enable the next button to 
@@ -283,16 +283,18 @@ function build() {
 
 
 // set filter to object by id
-function mark_furniture(canvas, id, feedback) {
+function mark_furniture(canvas, id, feedback, status) {
   canvas.forEachObject(function(obj){
     if (obj !== undefined && obj.id == id) {
+
+      alert_color = status == 'no' ? 'red' : 'green';
       // create a red rectangle
       let rect = new fabric.Rect({
         // originX: 'center',
         // originY: 'center',
         left:obj.left,
         top:obj.top,
-        fill: 'red',
+        fill: alert_color,
         width: obj.getScaledWidth(),
         height: obj.getScaledHeight(),
         opacity: 0.6,
