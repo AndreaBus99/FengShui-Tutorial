@@ -20,7 +20,7 @@ from flask import Response, request, jsonify
 import random
 import sys
 
-from sqlalchemy import true
+# from sqlalchemy import true
 
 # from itsdangerous import json
 app = Flask(__name__)
