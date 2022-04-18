@@ -22,13 +22,3 @@ body{
 }
 
 
-#welcome-card{
-    background-color: #d4ebf2;
-    padding-top:50px;
-    padding-bottom: 50px;
-}
-
-.search-res-secondary-item{
-    color: dimgrey;
-    font-size: 12px;
-}

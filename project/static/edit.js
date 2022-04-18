@@ -182,9 +182,9 @@ function build() {
   // fetch furniture json from flask server and render on canvas
   $.each(furniture,function(index,ui){
     // get properties
-    let url = ui.img_url;
+    let url   = ui.img_url;
     let width = ui.width;
-    let id = ui.furniture;
+    let id    = ui.furniture;
     console.log(url)
     // create image
     let f_image = new Image();
@@ -244,31 +244,13 @@ function build() {
         $("#learn-progress-bar").attr('aria-valuenow', progress);
         $("#learn-progress-bar").attr('style', "width:" + progress + "%");
         // get bed obj
-
-        // let bed = get_obj(canvas, 'bed');
-        // let rect = new fabric.Rect({
-        //   left : 200,
-        //   top : 200,
-        //   fill: 'red',
-        //   width: 500,
-        //   height: 500
-        //   // opacity: 0.6
-        // })
-        // canvas.add(rect).renderAll().bringToFront(rect).setActiveObject(rect);
-        // canvas.add(rect);
-        // canvas.bringToFront(rect);
-        // canvas.requestRenderAll();
         mark_furniture(canvas, 'bed', feedback, status)
         
 
-        // if complete, enable the next button to 
+        // if complete, display the message
         if (complete == 'True') {
           $("#learn-complete-msg").text("You've learned all lessons!");
         }
-
-        
-				
-	
 			},
 			error: 
 			function(request, status, error){
@@ -334,14 +316,20 @@ function mark_furniture(canvas, id, feedback, status) {
 function getCoordinates(canvas, id){
   var coords = [];
   canvas.forEachObject(function(obj){
-    var prop = {
-      left : obj.left,
-      top : obj.top,
-      angle : obj.angle,
-      width : obj.getScaledWidth(),
-      height : obj.getScaledHeight()
-    };
+    
+    
     if (obj.id == id) {
+      // console.log(obj.getBoundingRect());
+      let bb =obj.getBoundingRect(); 
+      var prop = {
+        left : bb.left,
+        top : bb.top,
+        angle : obj.angle,
+        // width : obj.getScaledWidth(),
+        // height : obj.getScaledHeight()
+        width : bb.width,
+        height : bb.height
+      };
       coords.push(prop);
     }
     
