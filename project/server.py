@@ -219,20 +219,25 @@ def is_in_room(coords):
     w = coords['width']
     h = coords['height']
     a = coords['angle']
+    print("w is", w)
+    print("h is", h)
     # swap w and h if angle is 90 / -90
-    # if a != 0 or a != 180:
-    #     temp = w
-    #     w = h
-    #     h = temp
+    if a != 0 or a != 180:
+        temp = w
+        w = h
+        h = temp
+
     # check x-axis
     check_x = True
     if x < 500 or (x+w) > 775:
         check_x = False
     # check y-axis
     check_y = True
-    if y < 50 or (y+h) > 500:
+    if y < 50 or (y+h) > 600:
         check_y = False
-
+    print('y', y)
+    print("cy: ", check_y)
+    print("cx: ", check_x)
     return check_x and check_y
 
 # ROUTES
