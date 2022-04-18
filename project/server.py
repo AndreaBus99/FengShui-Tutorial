@@ -56,6 +56,7 @@ furniture = [
     #     "width" : 100
     # }
 ]
+# changes
 
 # relative image urls, use thses in the furniture defined above!!
 img_urls = [
