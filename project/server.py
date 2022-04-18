@@ -20,6 +20,8 @@ from flask import Response, request, jsonify
 import random
 import sys
 
+from sqlalchemy import true
+
 # from itsdangerous import json
 app = Flask(__name__)
 
@@ -39,6 +41,13 @@ furniture = [
         "width" : 100
         # "img_url" : "https://media.istockphoto.com/vectors/cat-lying-on-the-bed-cute-funny-scene-top-view-cartoon-style-image-vector-id1084804806?k=20&m=1084804806&s=612x612&w=0&h=t_8yAXc40RKVHjQXflR6oDzkwIgQ7fVsEr7proyJHo8="
     }
+]
+
+# relative image urls, use thses in the furniture defined above!!
+img_urls = [
+    "../static/images/_door.png",
+    "../static/images/_window.jpeg",
+    "../static/images/Bed.JPG"
 ]
 
 good_lessons = [
@@ -155,21 +164,61 @@ tf_quiz_questions = [
 ]
 
 
+
+# helper function to check location of furniture
+# return boolean
+def is_in_room(coords):
+    # get coords and degree
+    x = coords['left']
+    y = coords['top']
+    w = coords['width']
+    h = coords['height']
+    a = coords['angle']
+    # check x-axis
+    check_x = True
+    if x < 500 or (x+w) > 775:
+        check_x = False
+    # check y-axis
+    check_y = True
+    if y < 50 or (y+h) > 500:
+        check_y = False
+
+    return check_x and check_y
+
 # ROUTES
 @app.route('/')
 def welcome():
     return render_template('welcome.html')
 
-# TODO: implement this
-@app.route('/learn')
+"""
+learn route
+
+"""
+@app.route('/learn', methods = ['GET', 'POST'])
 def learn():
-    # relative image urls, use thses in the furniture defined above!!
-    img_urls = [
-        "../static/images/_door.png",
-        "../static/images/_window.jpeg",
-        "../static/images/Bed.JPG"
-    ]
-    return render_template('edit.html', furniture=furniture)
+    # user hit submit button
+    if request.method == 'POST':
+        # get coords of bed
+        coords = request.get_json()[0]
+        # print(coords)
+        res = {}
+        # check if bed is in room
+        if is_in_room(coords) is False:
+            res['status'] = 'no'
+            res['feedback'] = 'please place the bed inside the room!!!'  
+        # check if facing toward door
+        elif coords['angle'] == 0 and coords['left'] >= 650 and coords['left'] <= 675:
+            res['status'] = 'no'
+            res['feedback'] = 'the bed should not face toward the door!'
+        # good layout
+        else:
+            res['status'] = 'yes'
+            res['feedback'] = 'this is a good choice of placing the bed' 
+        
+        # return the feedback
+        return jsonify(res)
+    else:
+        return render_template('edit.html', furniture=furniture)
 
 # TODO: implement this
 @app.route('/quiz_yourself')

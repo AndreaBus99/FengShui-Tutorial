@@ -1,7 +1,5 @@
 /*
 js for learning portion.
-I wrote a quick demo on how the dragging and snapping works.
-
 @TODOS:
     1. write a function that fetchs all information of each furniture object, i.e. location, direction, etc,
     use ajax to send the json object to the server, and the server should return information including which section should be highlighted, and what messages should be prompted.
@@ -163,6 +161,14 @@ canvas.add(doorOpeningLine);
 }
 
 
+
+// handle submit button
+function handle_learn_submit() {
+}
+
+
+
+
 /* build the canvas for testing purpose ONLY */
 function build() {
   // create a wrapper around native canvas element (with id="c")
@@ -178,6 +184,7 @@ function build() {
     // get properties
     let url = ui.img_url;
     let width = ui.width;
+    let id = ui.furniture;
     console.log(url)
     // create image
     let f_image = new Image();
@@ -189,6 +196,8 @@ function build() {
       disable_scaling(f_entity);
       // add to canvas
       canvas.add(f_entity);
+      // set id
+      f_entity.set('id', id);
     };
     f_image.src = url;
   });
@@ -203,11 +212,106 @@ function build() {
 
   // on click submit button
   $("#learn-test-submit-btn").click(()=>{
-    console.log('here i show that we can access location of objects..');
-    getCoordinates(canvas);
+    // get coords of bed
+    let coords = getCoordinates(canvas, 'bed');
+    // send coords of bed to server
+		$.ajax({
+			type        :   "POST",
+			url         :   "learn",
+			dataType    :   "json",
+			contentType :   "application/json; charset=utf-8",
+			data        :   JSON.stringify(coords),
+			success     :   
+			function(result){
+        // result is a json with two fields 1. status 2. feedback
+        console.log(result);
+        let status = result['status'];
+        let feedback = result['feedback'];
+
+        // get bed obj
+        // let bed = get_obj(canvas, 'bed');
+        // let rect = new fabric.Rect({
+        //   left : 200,
+        //   top : 200,
+        //   fill: 'red',
+        //   width: 500,
+        //   height: 500
+        //   // opacity: 0.6
+        // })
+        // canvas.add(rect).renderAll().bringToFront(rect).setActiveObject(rect);
+        // canvas.add(rect);
+        // canvas.bringToFront(rect);
+        // canvas.requestRenderAll();
+        set_filter(canvas, 'bed', feedback)
+        
+        
+
+        
+				
+	
+			},
+			error: 
+			function(request, status, error){
+				console.log("Error");
+				console.log(request)
+				console.log(status)
+				console.log(error)
+			}
+		});
   });
 }
 
+
+// set filter to object by id
+function set_filter(canvas, id, feedback) {
+  canvas.forEachObject(function(obj){
+    if (obj.id == id) {
+      // obj.filters.push(new fabric.Image.filters.ColorMatrix({
+      //   matrix: [
+      //         1.1285582396593525, -0.3967382283601348, -0.03992559172921793, 0, 63.72958762196502,
+      //         -0.16404339962244616, 1.0835251566291304, -0.05498805115633132, 0, 24.732407896706203,
+      //         -0.16786010706155763, -0.5603416277695248, 1.6014850761964943, 0, 35.62982807460946,
+      //         0, 0, 0, 1, 0
+      //        ]
+      //  }));
+      let rect = new fabric.Rect({
+        originX: 'center',
+        originY: 'center',
+        left:obj.left,
+        top:obj.top,
+        fill: 'red',
+        width: obj.getScaledWidth(),
+        height: obj.getScaledHeight(),
+        opacity: 0.6,
+        class: 'alert-box'
+      });
+
+      var text = new fabric.Text(feedback, {
+        fontSize: 13,
+        originX: 'center',
+        originY: 'center'
+      });
+
+      var group = new fabric.Group([ rect, text ], {
+        left: obj.left,
+        top: obj.top,
+        width: obj.getScaledWidth(),
+        height: obj.getScaledHeight(), 
+      });
+
+
+      canvas.add(rect).renderAll().bringToFront(rect).setActiveObject(rect);
+      // console.log('rect added...');
+      // console.log(rect);
+      // // canvas.renderAll();
+      // canvas.bringToFront(rect);
+      // // rect.sendToFront();
+      // console.log(obj);
+      // canvas.requestRenderAll()
+      // return obj
+    }
+  });  
+}
 
 /* get coordinates of object by id*/
 function getCoordinates(canvas, id){
@@ -216,16 +320,17 @@ function getCoordinates(canvas, id){
     var prop = {
       left : obj.left,
       top : obj.top,
-      width : obj.width,
-      height : obj.height
+      angle : obj.angle,
+      width : obj.getScaledWidth(),
+      height : obj.getScaledHeight()
     };
     if (obj.id == id) {
       coords.push(prop);
     }
     
   });
-  console.log(coords)
- 
+  console.log(coords);
+  return coords;
 }
 
 
