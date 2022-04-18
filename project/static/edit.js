@@ -150,15 +150,22 @@ var heightText = new fabric.Text("14'0\" ft", {
     evented: false, //cursor does not change to move on hover
 });
 
+var roomOutlineGroup = new fabric.Group([ widthText, heightText, room_outline, window, door, doorOpening, doorOpeningLine ]);
+
 // "add" room outline onto canvas
-canvas.add(widthText);
-canvas.add(heightText);
-canvas.add(room_outline);
-canvas.add(window);
-canvas.add(door);
-canvas.add(doorOpening);
-canvas.add(doorOpeningLine);
+// canvas.add(widthText);
+// canvas.add(heightText);
+// canvas.add(room_outline);
+// canvas.add(window);
+// canvas.add(door);
+// canvas.add(doorOpening);
+// canvas.add(doorOpeningLine);
+// }
+
+canvas.add(roomOutlineGroup);
+
 }
+
 
 
 
