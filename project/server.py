@@ -53,7 +53,7 @@ furniture = [
         "furniture_id" : "4",
         "furniture" : "window",
         "img_url": "../static/images/_window.jpeg",
-        "width" : 100
+        "width" : 20
     }
 ]
 
