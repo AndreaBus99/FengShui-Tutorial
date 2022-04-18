@@ -81,7 +81,7 @@ function init_room(canvas, grid) {
   fabric.Image.fromURL("{{ img_url[1] }}", function(oImg) {
     oImg.scaleToWidth(50,true);
     oImg.scaleToHeight(300,true);
-    oImg.set('top', 250);
+    oImg.set('top', 0);
     oImg.set('left',0); 
     oImg.selectable = false;
     disable_scaling(oImg);
@@ -110,7 +110,19 @@ function add_furnitures(canvas) {
   fabric.Image.fromURL("{{ img_url[2] }}", function(oImg) {
     oImg.scaleToWidth(150,false)
     disable_scaling(oImg);
+    oImg.set('top', 650);
+    oImg.set('left', 650);
     oImg.id = 'bed';
+    canvas.add(oImg);
+  });
+
+  //add desk
+  fabric.Image.fromURL("{{ img_url[3] }}", function(oImg) {
+    oImg.scaleToWidth(150,false)
+    disable_scaling(oImg);
+    oImg.set('top', 650);
+    oImg.set('left', 650);
+    oImg.id = 'desk';
     canvas.add(oImg);
   });
 }
