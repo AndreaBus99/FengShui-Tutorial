@@ -19,9 +19,6 @@ from flask import render_template
 from flask import Response, request, jsonify
 import random
 import sys
-
-
-# from itsdangerous import json
 app = Flask(__name__)
 
 
@@ -45,6 +42,18 @@ furniture = [
         "furniture": "desk",
         "img_url": "../static/images/Desk.JPG",
         "width": 200
+    },
+    {
+        "furniture_id" : "3",
+        "furniture" : "door",
+        "img_url": "../static/images/_door.png",
+        "width" : 100
+    },
+    {
+        "furniture_id" : "4",
+        "furniture" : "window",
+        "img_url": "../static/images/_window.jpeg",
+        "width" : 100
     }
 ]
 
