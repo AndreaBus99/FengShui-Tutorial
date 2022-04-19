@@ -187,15 +187,17 @@ function build() {
   $.each(furniture,function(index,ui){
     // get properties
     let url   = ui.img_url;
-    let width = ui.width;
-    let height = ui.height;
+    let width = ui.width * grid;
+    let height = ui.height * grid;
     let id    = ui.furniture;
+
+    console.log("width: "+width);
     // create image
     let f_image = new Image();
     f_image.onload = function (img) {  
       let f_entity = new fabric.Image(f_image, {
-        left: ui.left,//position image on loading
-        top: ui.top
+        left: ui.left * grid,//position image on loading
+        top: ui.top * grid
       });
       // set width
       f_entity.scaleToWidth(width,false);
