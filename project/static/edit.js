@@ -58,13 +58,12 @@ function get_prop_of_item(furniture){
 }
 
 // initialize grids, room layout
-function init_room(canvas, grid) {
-  
-  // let canvasWidth =  document.getElementById('c').width;
-  // let canvasHeight = document.getElementById('c').height;
+function init_room(canvas) {
 
   let canvasWidth =  $('#canvasSpace').width();
   let canvasHeight = $('#canvasSpace').height();
+
+  let grid = canvasWidth/50;
 
   canvas.setDimensions({width:canvasWidth, height:canvasHeight});
 
@@ -76,67 +75,67 @@ function init_room(canvas, grid) {
 
   // create room outline
   var room_outline = new fabric.Rect({
-    width: 275, //8.5 ft
-    height: 450, //14 ft
+    width: grid*16, //8.5 ft - 275
+    height: grid*Math.round(16*1.6), //14 ft - 4503.0*Math.ceil(n/3.0)
     fill: '', 
     stroke: 'black',
     strokeWidth: 3,
-    left: 18 * grid,
+    left: 24 * grid,
     top: 2 * grid,
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
   });
 
   var window = new fabric.Rect({
-    width: 175,
-    height: 6, 
+    width: grid*12,
+    height: grid*0.5, 
     fill: 'lightBlue', 
-    left: 20 * grid,//+3 to account for room outline strokeWidth
+    left: 26 * grid,//+3 to account for room outline strokeWidth
     top: 1.95 * grid,
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
   })
 
   var door = new fabric.Rect({
-    width: 100,
-    height: 8, 
+    width: grid*6,
+    height: grid*0.5, 
     fill: 'lightGrey', 
-    left: 24 * grid,//+3 to account for room outline strokeWidth
-    top: 499,
+    left: 33 * grid,//+3 to account for room outline strokeWidth
+    top: grid*Math.round(16*1.6)+(1.95*grid),
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
   })
 
-  var doorOpening = new fabric.Circle({
-    radius: 100,
-    left: 32 * grid,//+3 to account for room outline strokeWidth
-    top: 24 * grid,
-    angle: 180,
-    startAngle: 0,
-    endAngle: 90,
-    stroke: 'lightGrey',
-    strokeWidth: 3,
-    fill: '',
-    strokeDashArray: [5, 5],
-    selectable: false, //user cannot move/select outline
-    evented: false, //cursor does not change to move on hover
-  });
+  // var doorOpening = new fabric.Circle({
+  //   radius: 100,
+  //   left: 32 * grid,//+3 to account for room outline strokeWidth
+  //   top: grid*Math.round(16*1.6)+(1.95*grid),
+  //   angle: 180,
+  //   startAngle: 0,
+  //   endAngle: 90,
+  //   stroke: 'lightGrey',
+  //   strokeWidth: 3,
+  //   fill: '',
+  //   strokeDashArray: [5, 5],
+  //   selectable: false, //user cannot move/select outline
+  //   evented: false, //cursor does not change to move on hover
+  // });
 
-  var doorOpeningLine = new fabric.Rect({
-    width: 0,
-    height: 100, 
-    fill: '', 
-    left: 28 * grid,//+3 to account for room outline strokeWidth
-    top: 16 * grid,
-    selectable: false, //user cannot move/select outline
-    evented: false, //cursor does not change to move on hover
-    strokeDashArray: [5, 7],
-    stroke: 'lightGrey',
-    strokeWidth: 3,
-  })
+  // var doorOpeningLine = new fabric.Rect({
+  //   width: 0,
+  //   height: 100, 
+  //   fill: '', 
+  //   left: 28 * grid,//+3 to account for room outline strokeWidth
+  //   top: 16 * grid,
+  //   selectable: false, //user cannot move/select outline
+  //   evented: false, //cursor does not change to move on hover
+  //   strokeDashArray: [5, 7],
+  //   stroke: 'lightGrey',
+  //   strokeWidth: 3,
+  // })
 
   var widthText = new fabric.Text("8'5\" ft", { 
-    left: 24 * grid, 
+    left: 32 * grid, 
     top: 1.5*grid,
     fontSize: 24,
     originX: 'center',
@@ -146,8 +145,8 @@ function init_room(canvas, grid) {
   });
 
   var heightText = new fabric.Text("14'0\" ft", { 
-    left: 30*grid, 
-    top: 11 * grid,
+    left: 41*grid, 
+    top: 2*grid+(grid*Math.round(16*1.6)/2),
     fontSize: 24,
     originX: 'center',
     originY: 'center', 
@@ -156,12 +155,14 @@ function init_room(canvas, grid) {
     evented: false, //cursor does not change to move on hover
   });
 
-  var roomOutlineGroup = new fabric.Group([ widthText, heightText, room_outline, window, door, doorOpening, doorOpeningLine ], {
+  var roomOutlineGroup = new fabric.Group([ widthText, heightText, room_outline, window, door ], {
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
   });
 
   canvas.add(roomOutlineGroup);
+
+  return grid;
 }
 
 
@@ -178,11 +179,9 @@ function handle_learn_submit() {
 function build() {
   // create a wrapper around native canvas element (with id="c")
   let canvas = new fabric.Canvas("c", { selection: false });
-  let grid = 25;
   
   // initialzie room
-  init_room(canvas, grid);
-  
+  let grid = init_room(canvas);
 
   // fetch furniture json from flask server and render on canvas
   $.each(furniture,function(index,ui){
