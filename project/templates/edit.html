@@ -15,11 +15,11 @@
 <!-- Getting furniture from server -->
 <script>
     let furniture = {{furniture|tojson}}
-    console.log(furniture)
+    // console.log(furniture);
 </script>
 
 <style>
-    .draggable {
+    /* .draggable {
         width: 90px;
         height: 80px;
         padding: 5px;
@@ -61,11 +61,11 @@
     }
 
     /* absolute positioning needed to see btn 'above' canvas */
-    #learn-test-submit-btn{
+    /* #learn-test-submit-btn{
         top: 545px;
         left: 1095px;
         position: absolute;
-    }
+    } */
 </style>
 
 <!-- content -->
@@ -73,24 +73,52 @@
 <div class="container">
     <!-- canvas -->
     <div class="row">
-        <canvas id="c" width="1125" height="550"></canvas>
+       <div class="col-md-9">
+            <canvas id="c" width = "800" height="550"></canvas>
+       </div>
+       <!-- sidebar -->
+       <div class="col-md-3">
+           <!-- submit button -->
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-primary" id="learn-test-submit-btn">Submit</button> 
+                </div>
+            </div>
+            <!-- good progress bar -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="w3-light-grey progressBarGreen w3-round-xlarge">
+                        <div class="w3-container w3-green w3-center w3-round-xlarge" style="width:0%" id="green-progress-bar">0%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- red progress bar -->
+                    <div class="w3-light-grey progressBarRed w3-round-xlarge">
+                        <div class="w3-container w3-red w3-center w3-round-xlarge" style="width:0%" id="red-progress-bar">0%</div>
+                    </div>
+                </div>
+            </div>
+            <!-- feedback message -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div><h3>Click on red/green to view feedback</h3></div>
+                    <p id="learn-feedback"></p>
+                </div>
+            </div>
+       </div>
     </div>
-    <!-- buttons -->
+    <!-- lesson learned -->
     <div class="row">
-        <div class="">
-            <button type="button" class="btn btn-primary" id="learn-test-submit-btn">Submit</button>
-        </div>
         <div>
             <h1 id="learn-complete-msg"></h1>
         </div>
-        <!-- green progress bar -->
-        <div class="w3-light-grey progressBarGreen w3-round-xlarge">
-            <div class="w3-container w3-green w3-center w3-round-xlarge" style="width:40%">25%</div>
-        </div>
-        <!-- red progress bar -->
-        <div class="w3-light-grey progressBarRed w3-round-xlarge">
-            <div class="w3-container w3-red w3-center w3-round-xlarge" style="width:60%">50%</div>
-        </div>
+        
+        <!-- <div>
+            <h2> Lesson Learned</h2>
+        </div> -->
+        
     </div>
     <!-- progress bar -->
     <!-- <div class="row">
@@ -109,11 +137,11 @@
         </div>
     </div>
             
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-12">
             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id = 'learn-progress-bar'>0</div>
         </div>
-    </div>
+    </div> -->
     
 </div>
 

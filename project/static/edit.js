@@ -6,11 +6,11 @@ js for learning portion.
     3. server should maintain 1. location of eahc object, and over all status bar. server should also preserve pre-defined 
 */
 
-function get_prop_of_item(furniture){
-  // TODO: code this
- let obj = canvas.getActiveObject();
- alert(obj.left + "," + obj.top);
-}
+// function get_prop_of_item(furniture){
+//   // TODO: code this
+//  let obj = canvas.getActiveObject();
+//  alert(obj.left + "," + obj.top);
+// }
 
 /* disable scaling and rotation */
 function disable_scaling(obj){
@@ -75,8 +75,8 @@ var room_outline = new fabric.Rect({
     fill: '', 
     stroke: 'black',
     strokeWidth: 3,
-    left: canvasWidth/4,
-    top: 50,
+    left: 18 * grid,
+    top: 2 * grid,
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
 });
@@ -85,8 +85,8 @@ var window = new fabric.Rect({
     width: 175,
     height: 6, 
     fill: 'lightBlue', 
-    left: (canvasWidth/4)+53,//+3 to account for room outline strokeWidth
-    top: 49,
+    left: 20 * grid,//+3 to account for room outline strokeWidth
+    top: 1.95 * grid,
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
 })
@@ -95,7 +95,7 @@ var door = new fabric.Rect({
     width: 100,
     height: 8, 
     fill: 'lightGrey', 
-    left: (canvasWidth/4)+153,//+3 to account for room outline strokeWidth
+    left: 24 * grid,//+3 to account for room outline strokeWidth
     top: 499,
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
@@ -103,8 +103,8 @@ var door = new fabric.Rect({
 
 var doorOpening = new fabric.Circle({
     radius: 100,
-    left: (canvasWidth/4)+353,//+3 to account for room outline strokeWidth
-    top: 602,
+    left: 32 * grid,//+3 to account for room outline strokeWidth
+    top: 24 * grid,
     angle: 180,
     startAngle: 0,
     endAngle: 90,
@@ -120,8 +120,8 @@ var doorOpeningLine = new fabric.Rect({
     width: 0,
     height: 100, 
     fill: '', 
-    left: (canvasWidth/4)+253,//+3 to account for room outline strokeWidth
-    top: 399,
+    left: 28 * grid,//+3 to account for room outline strokeWidth
+    top: 16 * grid,
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
     strokeDashArray: [5, 7],
@@ -130,8 +130,8 @@ var doorOpeningLine = new fabric.Rect({
 })
 
 var widthText = new fabric.Text("8'5\" ft", { 
-    left: canvasWidth/3, 
-    top: 35,
+    left: 24 * grid, 
+    top: 1.5*grid,
     fontSize: 24,
     originX: 'center',
     originY: 'center', 
@@ -140,8 +140,8 @@ var widthText = new fabric.Text("8'5\" ft", {
 });
 
 var heightText = new fabric.Text("14'0\" ft", { 
-    left: (canvasWidth/3)+150, 
-    top: 275,
+    left: 30*grid, 
+    top: 11 * grid,
     fontSize: 24,
     originX: 'center',
     originY: 'center', 
@@ -196,6 +196,7 @@ function build() {
     // get properties
     let url   = ui.img_url;
     let width = ui.width;
+    let height = ui.height;
     let id    = ui.furniture;
     console.log(url)
     // create image
@@ -204,6 +205,7 @@ function build() {
       let f_entity = new fabric.Image(f_image);
       // set width
       f_entity.scaleToWidth(width,false);
+      f_entity.scaleToHeight(height,false);
       // disable scaling and enalbe rotation by 90 degrees
       disable_scaling(f_entity);
       // add to canvas
@@ -249,12 +251,14 @@ function build() {
         let status    = result['status'];
         let feedback  = result['feedback'];
         let complete  = result['complete'];
-        let progress  = result['progress'];
-
+        let green_progress  = result['progress'][0];
+        let red_progress = result['progress'][1];
+        console.log(green_progress);
         // set progress bar
-        $("#learn-progress-bar").text(progress);
-        $("#learn-progress-bar").attr('aria-valuenow', progress);
-        $("#learn-progress-bar").attr('style', "width:" + progress + "%");
+        $("#green-progress-bar").text(green_progress);
+        $("#green-progress-bar").attr('style', "width:" + green_progress + "%");
+        $("#red-progress-bar").text(red_progress);
+        $("#red-progress-bar").attr('style', "width:" + red_progress + "%");
         // get bed obj
         mark_furniture(canvas, 'bed', feedback, status)
         
@@ -309,7 +313,8 @@ function mark_furniture(canvas, id, feedback, status) {
       // on click, add lesson text to the lesson learned below progress bard
       rect.on('mousedown', ()=> {
         console.log('moused clicked!');
-        $("#learn-lesson-learned").append($('<div>').append($('<h3>',{text: feedback})));
+        // $("#learn-lesson-learned").append($('<div>').append($('<h3>',{text: feedback})));
+        $("#learn-feedback").text(feedback);
         canvas.remove(rect);
       });
 
