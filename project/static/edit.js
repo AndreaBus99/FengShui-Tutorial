@@ -62,14 +62,15 @@ function init_room(canvas, grid) {
   
   let canvasWidth =  document.getElementById('c').width;
   let canvasHeight = document.getElementById('c').height;
+
   // create grid
   for (let i = 0; i < (canvasWidth / grid); i++) {
     canvas.add(new fabric.Line([ i * grid, 0, i * grid, canvasHeight], { type:'line', stroke: '#ccc', selectable: false }));
     canvas.add(new fabric.Line([ 0, i * grid, canvasWidth, i * grid], { type: 'line', stroke: '#ccc', selectable: false }))
-}
+  }
 
-// create room outline
-var room_outline = new fabric.Rect({
+  // create room outline
+  var room_outline = new fabric.Rect({
     width: 275, //8.5 ft
     height: 450, //14 ft
     fill: '', 
@@ -79,9 +80,9 @@ var room_outline = new fabric.Rect({
     top: 2 * grid,
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
-});
+  });
 
-var window = new fabric.Rect({
+  var window = new fabric.Rect({
     width: 175,
     height: 6, 
     fill: 'lightBlue', 
@@ -89,9 +90,9 @@ var window = new fabric.Rect({
     top: 1.95 * grid,
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
-})
+  })
 
-var door = new fabric.Rect({
+  var door = new fabric.Rect({
     width: 100,
     height: 8, 
     fill: 'lightGrey', 
@@ -99,9 +100,9 @@ var door = new fabric.Rect({
     top: 499,
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
-})
+  })
 
-var doorOpening = new fabric.Circle({
+  var doorOpening = new fabric.Circle({
     radius: 100,
     left: 32 * grid,//+3 to account for room outline strokeWidth
     top: 24 * grid,
@@ -114,9 +115,9 @@ var doorOpening = new fabric.Circle({
     strokeDashArray: [5, 5],
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
-});
+  });
 
-var doorOpeningLine = new fabric.Rect({
+  var doorOpeningLine = new fabric.Rect({
     width: 0,
     height: 100, 
     fill: '', 
@@ -127,9 +128,9 @@ var doorOpeningLine = new fabric.Rect({
     strokeDashArray: [5, 7],
     stroke: 'lightGrey',
     strokeWidth: 3,
-})
+  })
 
-var widthText = new fabric.Text("8'5\" ft", { 
+  var widthText = new fabric.Text("8'5\" ft", { 
     left: 24 * grid, 
     top: 1.5*grid,
     fontSize: 24,
@@ -137,9 +138,9 @@ var widthText = new fabric.Text("8'5\" ft", {
     originY: 'center', 
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
-});
+  });
 
-var heightText = new fabric.Text("14'0\" ft", { 
+  var heightText = new fabric.Text("14'0\" ft", { 
     left: 30*grid, 
     top: 11 * grid,
     fontSize: 24,
@@ -148,27 +149,14 @@ var heightText = new fabric.Text("14'0\" ft", {
     angle: 90,
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
-});
+  });
 
-var roomOutlineGroup = new fabric.Group([ widthText, heightText, room_outline, window, door, doorOpening, doorOpeningLine ], {
+  var roomOutlineGroup = new fabric.Group([ widthText, heightText, room_outline, window, door, doorOpening, doorOpeningLine ], {
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
-});
+  });
 
-// "add" room outline onto canvas
-// canvas.add(widthText);
-// canvas.add(heightText);
-// canvas.add(room_outline);
-// canvas.add(window);
-// canvas.add(door);
-// canvas.add(doorOpening);
-// canvas.add(doorOpeningLine);
-// }
-
-
-
-canvas.add(roomOutlineGroup);
-
+  canvas.add(roomOutlineGroup);
 }
 
 
@@ -198,11 +186,13 @@ function build() {
     let width = ui.width;
     let height = ui.height;
     let id    = ui.furniture;
-    console.log(url)
     // create image
     let f_image = new Image();
-    f_image.onload = function (img) {    
-      let f_entity = new fabric.Image(f_image);
+    f_image.onload = function (img) {  
+      let f_entity = new fabric.Image(f_image, {
+        left: ui.left,//position image on loading
+        top: ui.top
+      });
       // set width
       f_entity.scaleToWidth(width,false);
       f_entity.scaleToHeight(height,false);
@@ -236,14 +226,15 @@ function build() {
       }
     });
     // get coords of bed
-    let coords = getCoordinates(canvas, 'bed');
+    let coordsBed = getCoordinates(canvas, 'bed');
+    //TODO - get and send desk coords
     // send coords of bed to server
 		$.ajax({
 			type        :   "POST",
 			url         :   "learn",
 			dataType    :   "json",
 			contentType :   "application/json; charset=utf-8",
-			data        :   JSON.stringify(coords),
+			data        :   JSON.stringify(coordsBed),
 			success     :   
 			function(result){
         // result is a json with two fields 1. status 2. feedback 3. complete 4. progress
@@ -324,7 +315,6 @@ function mark_furniture(canvas, id, feedback, status) {
       canvas.bringToFront(rect);
       // canvas.bringToFront(text);
       canvas.renderAll();
-      
     }
   });  
 }
@@ -354,7 +344,6 @@ function getCoordinates(canvas, id){
   console.log(coords);
   return coords;
 }
-
 
 // main
 $(document).ready(() => {

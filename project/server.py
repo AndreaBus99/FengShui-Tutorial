@@ -36,15 +36,20 @@ furniture = [
         "furniture" : "bed",
         "img_url": "../static/images/Bed.JPG" ,
         "width" : 100,
-        "height" : 200
+        "height" : 200,
+        "left" : 100,
+        "top" : 50
         # "img_url" : "https://media.istockphoto.com/vectors/cat-lying-on-the-bed-cute-funny-scene-top-view-cartoon-style-image-vector-id1084804806?k=20&m=1084804806&s=612x612&w=0&h=t_8yAXc40RKVHjQXflR6oDzkwIgQ7fVsEr7proyJHo8="
     },
-    # {
-    #     "furniture_id": "2",
-    #     "furniture": "desk",
-    #     "img_url": "../static/images/Desk.JPG",
-    #     "width": 200
-    # },
+    {
+        "furniture_id": "2",
+        "furniture": "desk",
+        "img_url": "../static/images/Desk.JPG",
+        "width": 175,
+        "height": 70,
+        "left" : 250,
+        "top" : 50
+    },
     # {
     #     "furniture_id" : "3",
     #     "furniture" : "door",
@@ -240,6 +245,24 @@ def is_in_room(coords):
     print("cx: ", check_x)
     return check_x and check_y
 
+def is_in_corner(coords):
+    x = round(coords['left'])
+    y = round(coords['top'])
+    w = coords['width']
+    h = coords['height']
+    a = coords['angle']
+
+    corner = False
+
+    if a==270 and x==450 and y==53:
+        corner = True
+    elif a==90 and x==525 and y==50:
+        corner = True
+    elif a==180 and x==453 and y==300:
+        corner = True
+    
+    return corner
+
 # ROUTES
 @app.route('/')
 def welcome():
@@ -254,20 +277,41 @@ def learn():
     # user hit submit button
     if request.method == 'POST':
         # get coords of bed
-        coords = request.get_json()[0]
+        coordsBed = request.get_json()[0]
+        #TO DO get desk coords
+        # coordsDesk = request.get_json()[1]
         # print(coords)
         res = {}
+        # check if desk is in room
+        # if is_in_room(coordsDesk) is False:
+        #     res['status'] = 'no'
+        #     res['feedback'] = 'please place the desk inside the room!!!'  
+
         # check if bed is in room
-        if is_in_room(coords) is False:
+        if is_in_room(coordsBed) is False:
             res['status'] = 'no'
             res['feedback'] = 'please place the bed inside the room!!!'  
             
         # check if facing toward door
-        elif coords['angle'] == 0 and coords['left'] >= 24*grid and coords['left'] <= 25*grid:
+        elif coordsBed['angle'] == 0 and coordsBed['left'] >= 24*grid and coordsBed['left'] <= 25*grid:
             res['status'] = 'no'
             res['feedback'] = 'the bed should not face toward the door!'
             # done learning the lesson
             bad_lessons[0]['complete'] = True
+        
+        #check if has window backing
+        elif coordsBed['angle'] == 0 and round(coordsBed['left']) >= 450 and round(coordsBed['top'])==50:
+            res['status'] = 'no'
+            res['feedback'] = 'the bed should have a solid backing - not a window!'
+            # done learning the lesson
+            # bad_lessons[0]['complete'] = True
+        
+        #check if in corner and solid backing
+        elif is_in_corner(coordsBed):
+            res['status'] = 'yes'
+            res['feedback'] = 'it is good to place the bed in the corner with a solid backing in a dorm room'
+            good_lessons[0]['complete'] = True
+
         # good layout
         else:
             res['status'] = 'yes'

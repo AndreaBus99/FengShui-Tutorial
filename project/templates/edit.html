@@ -15,7 +15,7 @@
 <!-- Getting furniture from server -->
 <script>
     let furniture = {{furniture|tojson}}
-    // console.log(furniture);
+    console.log(furniture);
 </script>
 
 <style>
@@ -78,10 +78,11 @@
        </div>
        <!-- sidebar -->
        <div class="col-md-3">
-           <!-- submit button -->
-            <div class="row">
+           <!-- feedback message -->
+           <div class="row">
                 <div class="col-md-12">
-                    <button type="button" class="btn btn-primary" id="learn-test-submit-btn">Submit</button> 
+                    <div><h3>Click on red/green to view feedback</h3></div>
+                    <p id="learn-feedback"></p>
                 </div>
             </div>
             <!-- good progress bar -->
@@ -100,11 +101,10 @@
                     </div>
                 </div>
             </div>
-            <!-- feedback message -->
+            <!-- submit button -->
             <div class="row">
                 <div class="col-md-12">
-                    <div><h3>Click on red/green to view feedback</h3></div>
-                    <p id="learn-feedback"></p>
+                    <button type="button" class="btn btn-primary" id="learn-test-submit-btn" style="float: right;">Submit</button> 
                 </div>
             </div>
        </div>
