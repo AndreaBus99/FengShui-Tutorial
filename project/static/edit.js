@@ -60,8 +60,13 @@ function get_prop_of_item(furniture){
 // initialize grids, room layout
 function init_room(canvas, grid) {
   
-  let canvasWidth =  document.getElementById('c').width;
-  let canvasHeight = document.getElementById('c').height;
+  // let canvasWidth =  document.getElementById('c').width;
+  // let canvasHeight = document.getElementById('c').height;
+
+  let canvasWidth =  $('#canvasSpace').width();
+  let canvasHeight = $('#canvasSpace').height();
+
+  canvas.setDimensions({width:canvasWidth, height:canvasHeight});
 
   // create grid
   for (let i = 0; i < (canvasWidth / grid); i++) {

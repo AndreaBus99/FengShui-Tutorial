@@ -19,6 +19,19 @@
 </script>
 
 <style>
+    .container{
+        margin: 0px !important;
+        padding: 0px !important;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .rowCanvas{
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        width: 100vw;
+        height: 100vh;
+    }
     /* .draggable {
         width: 90px;
         height: 80px;
@@ -31,11 +44,6 @@
     .ui-widget-header p,
     .ui-widget-content p {
         margin: 0;
-    }
-
-    .canvas-container{
-        width: 1155;
-        height: 550;
     }
 
     .progressBarGreen{
@@ -72,12 +80,12 @@
 <!-- Adding canva grid to html page -->
 <div class="container">
     <!-- canvas -->
-    <div class="row">
-       <div class="col-md-9">
-            <canvas id="c" width = "800" height="550"></canvas>
+    <div class="row rowCanvas">
+       <div class="col-md-9 rowCanvas" id="canvasSpace">
+            <canvas id="c"></canvas>
        </div>
        <!-- sidebar -->
-       <div class="col-md-3">
+       <div class="col-md-3 rowCanvas">
            <!-- feedback message -->
            <div class="row">
                 <div class="col-md-12">
