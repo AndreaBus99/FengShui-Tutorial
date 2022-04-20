@@ -182,6 +182,7 @@ function build() {
   
   // initialzie room
   let grid = init_room(canvas);
+  console.log("grid size: "+ grid);
 
   // fetch furniture json from flask server and render on canvas
   $.each(furniture,function(index,ui){
@@ -233,6 +234,7 @@ function build() {
     });
     // get coords of bed
     let coordsBed = getCoordinates(canvas, 'bed');
+    let allData = [grid, coordsBed];
     //TODO - get and send desk coords
     // send coords of bed to server
 		$.ajax({
@@ -240,7 +242,7 @@ function build() {
 			url         :   "learn",
 			dataType    :   "json",
 			contentType :   "application/json; charset=utf-8",
-			data        :   JSON.stringify(coordsBed),
+			data        :   JSON.stringify(allData),
 			success     :   
 			function(result){
         // result is a json with two fields 1. status 2. feedback 3. complete 4. progress

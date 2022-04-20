@@ -20,11 +20,6 @@ import random
 import sys
 app = Flask(__name__)
 
-
-
-# grid length
-grid = 25
-
 """
 @TODO:
 global variables to maintain
@@ -222,11 +217,11 @@ def get_progress():
 # return boolean
 def is_in_room(coords):
     # get coords and degree
-    x = round(coords['left'])
-    y = round(coords['top'])
-    w = coords['width']
-    h = coords['height']
-    a = coords['angle']
+    x = round(coords[0]['left']/grid)
+    y = round(coords[0]['top']/grid)
+    w = round(coords[0]['width']/grid)
+    h = round(coords[0]['height']/grid)
+    a = coords[0]['angle']
     print("x is", x)
     print("y is", y)
     print("w is", w)
@@ -246,11 +241,10 @@ def is_in_room(coords):
     return check_x and check_y
 
 def is_in_corner(coords):
-    x = round(coords['left'])
-    y = round(coords['top'])
-    w = coords['width']
-    h = coords['height']
-    a = coords['angle']
+    x = round(coords[0]['left']/grid)
+    y = round(coords[0]['top']/grid)
+    w = round(coords[0]['width']/grid)
+    h = round(coords[0]['height']/grid)
 
     corner = False
 
@@ -276,8 +270,14 @@ learn route
 def learn():
     # user hit submit button
     if request.method == 'POST':
+        # get grid size
+        global grid 
+        grid = request.get_json()[0]
+        print("GRID SIZE: "+str(grid))
         # get coords of bed
-        coordsBed = request.get_json()[0]
+        coordsBed = request.get_json()[1]
+        print(coordsBed)
+        print(coordsBed[0]['left'])
         #TO DO get desk coords
         # coordsDesk = request.get_json()[1]
         # print(coords)
@@ -293,14 +293,14 @@ def learn():
             res['feedback'] = 'please place the bed inside the room!!!'  
             
         # check if facing toward door
-        elif coordsBed['angle'] == 0 and coordsBed['left'] >= 24*grid and coordsBed['left'] <= 25*grid:
+        elif coordsBed[0]['angle'] == 0 and coordsBed[0]['left'] >= 24*grid and coordsBed[0]['left'] <= 25*grid:
             res['status'] = 'no'
             res['feedback'] = 'the bed should not face toward the door!'
             # done learning the lesson
             bad_lessons[0]['complete'] = True
         
         #check if has window backing
-        elif coordsBed['angle'] == 0 and round(coordsBed['left']) >= 450 and round(coordsBed['top'])==50:
+        elif coordsBed[0]['angle'] == 0 and round(coordsBed[0]['left']) >= 450 and round(coordsBed[0]['top'])==50:
             res['status'] = 'no'
             res['feedback'] = 'the bed should have a solid backing - not a window!'
             # done learning the lesson
