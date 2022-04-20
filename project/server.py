@@ -227,14 +227,16 @@ def is_in_room(coords):
     print("w is", w)
     print("h is", h)
 
-    # check x-axis
     check_x = True
-    if x < (18 * grid) or (x+w) > (29 * grid):
+    check_y = True
+
+    # check x-axis
+    if x < 24 or x+w > 40:
         check_x = False
     # check y-axis
-    check_y = True
-    if y < (2*grid) or (y+h) > (20 * grid):
+    if y < 2 or y+h > 28:
         check_y = False
+
     # print('y', y)
     print("cy: ", check_y)
     print("cx: ", check_x)
@@ -245,14 +247,15 @@ def is_in_corner(coords):
     y = round(coords[0]['top']/grid)
     w = round(coords[0]['width']/grid)
     h = round(coords[0]['height']/grid)
+    a = coords[0]['angle']
 
     corner = False
 
-    if a==270 and x==450 and y==53:
+    if a==270 and x==24 and y==2:
         corner = True
-    elif a==90 and x==525 and y==50:
+    elif a==90 and x==28 and y==2:
         corner = True
-    elif a==180 and x==453 and y==300:
+    elif a==180 and x==24 and y==16:
         corner = True
     
     return corner
@@ -293,14 +296,14 @@ def learn():
             res['feedback'] = 'please place the bed inside the room!!!'  
             
         # check if facing toward door
-        elif coordsBed[0]['angle'] == 0 and coordsBed[0]['left'] >= 24*grid and coordsBed[0]['left'] <= 25*grid:
+        elif coordsBed[0]['angle'] == 0 and round(coordsBed[0]['left']/grid) >= 33:
             res['status'] = 'no'
             res['feedback'] = 'the bed should not face toward the door!'
             # done learning the lesson
             bad_lessons[0]['complete'] = True
         
         #check if has window backing
-        elif coordsBed[0]['angle'] == 0 and round(coordsBed[0]['left']) >= 450 and round(coordsBed[0]['top'])==50:
+        elif coordsBed[0]['angle'] == 0 and round(coordsBed[0]['left']/grid) >= 24 and round(coordsBed[0]['top']/grid)==2:
             res['status'] = 'no'
             res['feedback'] = 'the bed should have a solid backing - not a window!'
             # done learning the lesson
