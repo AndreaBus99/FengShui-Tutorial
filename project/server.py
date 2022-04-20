@@ -74,47 +74,47 @@ good_lessons = [
         "complete": False,
         "feedback" : "Great! It is good practice in a college dorm (or smaller rooms in general) to position the bed in a corner."
     },
-    # {
-    #     "good_id" : "2",
-    #     "good_title" : "Large clear space",
-    #     "complte": "false",
-    #     "good_feedback" : "Excellent! You’ve identified another good rule. For a college dorm, it’s good to have a (relatively) large open space. Clearing out space will clear your mind and prevent distractions."
-    # },
-    # {
-    #     "good_id" : "3",
-    #     "good_title" : "Desk should have view of door",
-    #     "good_feedback" : "Amazing! It’s good to have your desk allow a view of the door. Try to always position the desk so that the door is in sight!"
+    {
+        "good_id" : "2",
+        "good_title" : "Large clear space",
+        "complte": "false",
+        "good_feedback" : "Excellent! You’ve identified another good rule. For a college dorm, it’s good to have a (relatively) large open space. Clearing out space will clear your mind and prevent distractions."
+    },
+    {
+        "good_id" : "3",
+        "good_title" : "Desk should have view of door",
+        "good_feedback" : "Amazing! It’s good to have your desk allow a view of the door. Try to always position the desk so that the door is in sight!"
 
-    # },
-    # {
-    #     "good_id" : "4",
-    #     "good_title" : "Desk close to window",
-    #     "good_feedback" : "Nicely done! It’s good to have the desk close to the window. Having the desk close to the window allows for nice natural lighting during the day!"
-    # }
+    },
+    {
+        "good_id" : "4",
+        "good_title" : "Desk close to window",
+        "good_feedback" : "Nicely done! It’s good to have the desk close to the window. Having the desk close to the window allows for nice natural lighting during the day!"
+    }
 ]
 
 bad_lessons = [
-    # {
-    #     "bad_id" : "1",
-    #     "bad_title" : "Bed should not backed by window",
-    #     "bad_feedback" : "Oh dear! In Feng Shui for a good night’s sleep your bed needs to be backed by something solid, like a wall - not a window where something could sneak up on you"
-    # },
+    {
+        "bad_id" : "1",
+        "bad_title" : "Bed should not backed by window",
+        "bad_feedback" : "Oh dear! In Feng Shui for a good night’s sleep your bed needs to be backed by something solid, like a wall - not a window where something could sneak up on you"
+    },
     {
         "id" : "2",
         "title" : "Bed should not be in line with door",
         "complete": False,
         "feedback" : "Oh no! In Feng Shui it is bad to have your bed directly in line with the door, because “the chi (energy) is too intense”. It is known as “dead man’s position” or 'coffin position'."
     },
-    # {
-    #     "bad_id" : "3",
-    #     "bad_title" : "Desk should not be facing away from door",
-    #     "bad_feedback" : "Oh dear! In Feng Shui people try to not have their backs against the door as this could lead to one feeling vulnerable. Imagine all the things that could sneak up on you!"
-    # },
-    # {
-    #     "bad_id" : "4",
-    #     "bad_title" : "Bed and desk should not be too close",
-    #     "bad_feedback" : "Oops! In Feng Shui, the bed is seen as an area for rest and the desk a workspace. Try to not have the bed and desk so close for some Feng Shui work life balance!"
-    # }
+    {
+        "bad_id" : "3",
+        "bad_title" : "Desk should not be facing away from door",
+        "bad_feedback" : "Oh dear! In Feng Shui people try to not have their backs against the door as this could lead to one feeling vulnerable. Imagine all the things that could sneak up on you!"
+    },
+    {
+        "bad_id" : "4",
+        "bad_title" : "Bed and desk should not be too close",
+        "bad_feedback" : "Oops! In Feng Shui, the bed is seen as an area for rest and the desk a workspace. Try to not have the bed and desk so close for some Feng Shui work life balance!"
+    }
 ]
 
 mc_quiz_questions = [
@@ -215,13 +215,10 @@ def get_progress():
 
 # helper function to check location of furniture
 # return boolean
-def is_in_room(coords):
+def is_in_room(c):
     # get coords and degree
-    x = round(coords[0]['left']/grid)
-    y = round(coords[0]['top']/grid)
-    w = round(coords[0]['width']/grid)
-    h = round(coords[0]['height']/grid)
-    a = coords[0]['angle']
+    x,y,w,h =c['left'], c['top'], c['width'], c['height']
+    a = c['angle']
     print("x is", x)
     print("y is", y)
     print("w is", w)
@@ -241,13 +238,17 @@ def is_in_room(coords):
     print("cy: ", check_y)
     print("cx: ", check_x)
     return check_x and check_y
+# check if facing toward door
+def is_facing_door(c):
+    return c['angle'] == 0 and c['left'] >= 33
 
-def is_in_corner(coords):
-    x = round(coords[0]['left']/grid)
-    y = round(coords[0]['top']/grid)
-    w = round(coords[0]['width']/grid)
-    h = round(coords[0]['height']/grid)
-    a = coords[0]['angle']
+# check if has window backing
+def has_window_backing(c):
+   return c['angle'] == 0 and c['left'] >= 24 and c['top']==2
+# check if in corner
+def is_in_corner(c):
+    x,y,w,h =c['left'], c['top'], c['width'], c['height']
+    a = c['angle']
 
     corner = False
 
@@ -259,6 +260,15 @@ def is_in_corner(coords):
         corner = True
     
     return corner
+
+
+# @TODO:
+# desk's view of door
+def has_view_of_door(c):
+    pass
+# desk's close to window
+def is_close_to_window(c):
+    pass
 
 # ROUTES
 @app.route('/')
@@ -275,12 +285,14 @@ def learn():
     if request.method == 'POST':
         # get grid size
         global grid 
-        grid = request.get_json()[0]
+        data = request.get_json()
+        grid = data['grid']
+        coordsBed = data['bed_coords']
         print("GRID SIZE: "+str(grid))
         # get coords of bed
-        coordsBed = request.get_json()[1]
+        # coordsBed = request.get_json()[1]
         print(coordsBed)
-        print(coordsBed[0]['left'])
+        # print(coordsBed[0]['left'])
         #TO DO get desk coords
         # coordsDesk = request.get_json()[1]
         # print(coords)
@@ -296,14 +308,14 @@ def learn():
             res['feedback'] = 'please place the bed inside the room!!!'  
             
         # check if facing toward door
-        elif coordsBed[0]['angle'] == 0 and round(coordsBed[0]['left']/grid) >= 33:
+        elif is_facing_door(coordsBed):
             res['status'] = 'no'
             res['feedback'] = 'the bed should not face toward the door!'
             # done learning the lesson
             bad_lessons[0]['complete'] = True
         
         #check if has window backing
-        elif coordsBed[0]['angle'] == 0 and round(coordsBed[0]['left']/grid) >= 24 and round(coordsBed[0]['top']/grid)==2:
+        elif has_window_backing(coordsBed):
             res['status'] = 'no'
             res['feedback'] = 'the bed should have a solid backing - not a window!'
             # done learning the lesson
@@ -325,6 +337,9 @@ def learn():
         res['complete'] = "True" if is_learn_done() else "False"
         # progress percentage
         res['progress'] = get_progress()
+        # send lessons learned so far
+        res['good_lessons'] = good_lessons
+        res['bad_lessons'] = bad_lessons
         # return the feedback
         return jsonify(res)
     else:

@@ -180,9 +180,9 @@ function build() {
   // create a wrapper around native canvas element (with id="c")
   let canvas = new fabric.Canvas("c", { selection: false });
   
-  // initialzie room
+  // initialzie room, get the grid size
   let grid = init_room(canvas);
-  console.log("grid size: "+ grid);
+  // console.log("grid size: "+ grid);
 
   // fetch furniture json from flask server and render on canvas
   $.each(furniture,function(index,ui){
@@ -233,8 +233,11 @@ function build() {
       }
     });
     // get coords of bed
-    let coordsBed = getCoordinates(canvas, 'bed');
-    let allData = [grid, coordsBed];
+    // let coordsBed = getCoordinates(canvas, 'bed');
+    let allData = {
+      'grid' : grid,
+      'bed_coords' : getCoordinates(canvas, 'bed', grid) 
+    };
     //TODO - get and send desk coords
     // send coords of bed to server
 		$.ajax({
@@ -246,20 +249,23 @@ function build() {
 			success     :   
 			function(result){
         // result is a json with two fields 1. status 2. feedback 3. complete 4. progress
-        console.log(result);
+        // console.log(result);
         let status    = result['status'];
         let feedback  = result['feedback'];
         let complete  = result['complete'];
         let green_progress  = result['progress'][0];
         let red_progress = result['progress'][1];
-        console.log(green_progress);
+        let good_l = result['good_lessons'];
+        let bad_l = result['bad_lessons'];
+
+        // console.log(green_progress);
         // set progress bar
         $("#green-progress-bar").text(green_progress);
         $("#green-progress-bar").attr('style', "width:" + green_progress + "%");
         $("#red-progress-bar").text(red_progress);
         $("#red-progress-bar").attr('style', "width:" + red_progress + "%");
         // get bed obj
-        mark_furniture(canvas, 'bed', feedback, status)
+        mark_furniture(canvas, 'bed', feedback, status, good_l, bad_l)
         
 
         // if complete, display the message
@@ -280,7 +286,7 @@ function build() {
 
 
 // set filter to object by id
-function mark_furniture(canvas, id, feedback, status) {
+function mark_furniture(canvas, id, feedback, status, good_l, bad_l) {
   canvas.forEachObject(function(obj){
     if (obj !== undefined && obj.id == id) {
 
@@ -311,10 +317,28 @@ function mark_furniture(canvas, id, feedback, status) {
 
       // on click, add lesson text to the lesson learned below progress bard
       rect.on('mousedown', ()=> {
-        console.log('moused clicked!');
+        // console.log('moused clicked!');
         // $("#learn-lesson-learned").append($('<div>').append($('<h3>',{text: feedback})));
-        $("#learn-feedback").text(feedback);
+        $("#lesson").text(feedback);
         canvas.remove(rect);
+        $('#modal').modal('show');
+        $("#lesson-close-btn").click(()=>{
+          $('#modal').modal('hide'); 
+        });
+
+        // render lesson list
+        $('#good-lesson-list').empty();
+        $('#bad-lesson-list').empty();
+        good_l.forEach(l => {
+          if(l['complete']) {
+            $('#good-lesson-list').append($('<li>', {text : l['feedback']}))
+          }
+        });
+        bad_l.forEach(l => {
+          if(l['complete']) {
+            $('#bad-lesson-list').append($('<li>', {text : l['feedback']}))
+          }
+        });
       });
 
       // add to canvas
@@ -328,7 +352,7 @@ function mark_furniture(canvas, id, feedback, status) {
 }
 
 /* get coordinates of object by id*/
-function getCoordinates(canvas, id){
+function getCoordinates(canvas, id, grid){
   var coords = [];
   canvas.forEachObject(function(obj){
     
@@ -337,20 +361,21 @@ function getCoordinates(canvas, id){
       // console.log(obj.getBoundingRect());
       let bb =obj.getBoundingRect(); 
       var prop = {
-        left : bb.left,
-        top : bb.top,
+        left : Math.round(bb.left / grid),
+        top : Math.round(bb.top/grid),
         angle : obj.angle,
         // width : obj.getScaledWidth(),
         // height : obj.getScaledHeight()
-        width : bb.width,
-        height : bb.height
+        width : Math.round(bb.width/grid),
+        height : Math.round(bb.height/grid)
       };
       coords.push(prop);
     }
     
   });
+  console.log(grid);
   console.log(coords);
-  return coords;
+  return coords[0];
 }
 
 // main
