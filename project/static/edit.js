@@ -30,22 +30,22 @@ function disable_scaling(obj){
 }
 
 /* return a fabric object that can be added to canvas */
-function create_item(img_id) {
-  let img = $("#" + img_id);
-  let imgInstance = new fabric.Image(img, {
-    top : 100,
-    left : 100,
-    angle : 0,
+// function create_item(img_id) {
+//   let img = $("#" + img_id);
+//   let imgInstance = new fabric.Image(img, {
+//     top : 100,
+//     left : 100,
+//     angle : 0,
 
-  });
-  // scale to width
-  pug.scaleToWidth(250,false)
-  // disable scaling
-  disable_scaling(imgInstance);
-  canvas.add(imgInstance);
-  // return
-  return imgInstance;
-}
+//   });
+//   // scale to width
+//   // pug.scaleToWidth(250,false)
+//   // disable scaling
+//   disable_scaling(imgInstance);
+//   canvas.add(imgInstance);
+//   // return
+//   return imgInstance;
+// }
 
 
 
@@ -236,7 +236,8 @@ function build() {
     // let coordsBed = getCoordinates(canvas, 'bed');
     let allData = {
       'grid' : grid,
-      'bed_coords' : getCoordinates(canvas, 'bed', grid) 
+      'bed_coords' : getCoordinates(canvas, 'bed', grid),
+      'desk_coords' : getCoordinates(canvas, 'desk', grid)
     };
     //TODO - get and send desk coords
     // send coords of bed to server

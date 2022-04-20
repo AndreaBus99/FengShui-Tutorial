@@ -32,31 +32,36 @@ furniture = [
         "img_url": "../static/images/Bed.JPG" ,
         "width" : 6,
         "height" : 12,
-        "left" : 7,
+        "left" : 6,
         "top" : 2
-        # "img_url" : "https://media.istockphoto.com/vectors/cat-lying-on-the-bed-cute-funny-scene-top-view-cartoon-style-image-vector-id1084804806?k=20&m=1084804806&s=612x612&w=0&h=t_8yAXc40RKVHjQXflR6oDzkwIgQ7fVsEr7proyJHo8="
     },
     {
         "furniture_id": "2",
         "furniture": "desk",
         "img_url": "../static/images/Desk.JPG",
-        "width": 8,
+        "width": 10,
         "height": 4,
-        "left" : 14,
+        "left" : 13,
         "top" : 2
     },
-    # {
-    #     "furniture_id" : "3",
-    #     "furniture" : "door",
-    #     "img_url": "../static/images/_door.png",
-    #     "width" : 100
-    # },
-    # {
-    #     "furniture_id" : "4",
-    #     "furniture" : "window",
-    #     "img_url": "../static/images/_window.jpeg",
-    #     "width" : 100
-    # }
+    {
+        "furniture_id" : "3",
+        "furniture" : "drawers",
+        "img_url": "../static/images/Drawers.JPG",
+        "width" : 8,
+        "height": 4.8,
+        "left" : 13,
+        "top" : 15
+    },
+    {
+        "furniture_id" : "4",
+        "furniture" : "wardrobe",
+        "img_url": "../static/images/Wardrobe.JPG",
+        "width" : 9,
+        "height": 4.8,
+        "left" : 13,
+        "top" : 8
+    }
 ]
 # changes
 
@@ -244,13 +249,23 @@ def is_in_room(c):
     print("cy: ", check_y)
     print("cx: ", check_x)
     return check_x and check_y
+
 # check if facing toward door
 def is_facing_door(c):
     return c['angle'] == 0 and c['left'] >= 33
 
+#check if back against door
+def back_against_door(c):
+    return c['angle'] == 0
+
 # check if has window backing
 def has_window_backing(c):
    return c['angle'] == 0 and c['left'] >= 24 and c['top']==2
+
+# check if desk close to window
+def desk_window(c):
+    return c['top']+c['height'] <= 15
+
 # check if in corner
 def is_in_corner(c):
     x,y,w,h =c['left'], c['top'], c['width'], c['height']
@@ -267,14 +282,9 @@ def is_in_corner(c):
     
     return corner
 
+# check desk has view of door
+# def can_view_door(c):
 
-# @TODO:
-# desk's view of door
-def has_view_of_door(c):
-    pass
-# desk's close to window
-def is_close_to_window(c):
-    pass
 
 # ROUTES
 @app.route('/')
@@ -294,44 +304,58 @@ def learn():
         data = request.get_json()
         grid = data['grid']
         coordsBed = data['bed_coords']
+        coordsDesk = data['desk_coords']
         print("GRID SIZE: "+str(grid))
-        # get coords of bed
-        # coordsBed = request.get_json()[1]
         print(coordsBed)
-        # print(coordsBed[0]['left'])
-        #TO DO get desk coords
-        # coordsDesk = request.get_json()[1]
-        # print(coords)
+        print(coordsDesk)
+
         res = {}
-        # check if desk is in room
-        # if is_in_room(coordsDesk) is False:
-        #     res['status'] = 'no'
-        #     res['feedback'] = 'please place the desk inside the room!!!'  
 
         # check if bed is in room
         if is_in_room(coordsBed) is False:
             res['status'] = 'no'
-            res['feedback'] = 'please place the bed inside the room!!!'  
+            res['feedback'] = 'please place the bed inside the room!!!'
+
+        #check if desk is in room
+        elif is_in_room(coordsDesk) is False:
+            res['status'] = 'no'
+            res['feedback'] = 'please place the desk inside the room!!!'
             
         # check if facing toward door
         elif is_facing_door(coordsBed):
             res['status'] = 'no'
-            res['feedback'] = 'the bed should not face toward the door!'
-            # done learning the lesson
-            bad_lessons[0]['complete'] = True
+            res['feedback'] = bad_lessons[1]['feedback']
+            bad_lessons[1]['complete'] = True
         
         #check if has window backing
         elif has_window_backing(coordsBed):
             res['status'] = 'no'
-            res['feedback'] = 'the bed should have a solid backing - not a window!'
-            # done learning the lesson
-            # bad_lessons[0]['complete'] = True
+            res['feedback'] = bad_lessons[0]['feedback']
+            bad_lessons[0]['complete'] = True
         
         #check if in corner and solid backing
         elif is_in_corner(coordsBed):
             res['status'] = 'yes'
-            res['feedback'] = 'it is good to place the bed in the corner with a solid backing in a dorm room'
+            res['feedback'] = good_lessons[0]['feedback']
             good_lessons[0]['complete'] = True
+
+        # check if desk has back to door
+        elif back_against_door(coordsDesk):
+            res['status'] = 'no'
+            res['feedback'] = bad_lessons[2]['feedback']
+            bad_lessons[2]['complete'] = True
+        
+        # check if desk close to window
+        elif desk_window(coordsDesk):
+            res['status'] = 'yes'
+            res['feedback'] = good_lessons[3]['feedback']
+            good_lessons[3]['complete'] = True
+
+        #check if desk can view door
+        elif can_view_door(coordsDesk):
+            res['status'] = 'yes'
+            res['feedback'] = good_lessons[2]['feedback']
+            good_lessons[2]['complete'] = True
 
         # good layout
         else:
