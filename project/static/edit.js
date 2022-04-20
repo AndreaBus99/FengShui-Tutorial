@@ -250,7 +250,7 @@ function build() {
 			success     :   
 			function(result){
         // result is a json with two fields 1. status 2. feedback 3. complete 4. progress
-        // console.log(result);
+        console.log(result);
         let status    = result['status'];
         let feedback  = result['feedback'];
         let complete  = result['complete'];
@@ -269,17 +269,18 @@ function build() {
         mark_furniture(canvas, 'bed', feedback, status, good_l, bad_l)
         
 
-        // if complete, display the message
+        // if complete, display the message, disable submit button
         if (complete == 'True') {
-          $("#learn-complete-msg").text("You've learned all lessons!");
+          $("#complete-msg").text("Congrats! You've learned all rules! Click on the quiz button on top right to test your learning!");
+          $('#learn-test-submit-btn').prop({"disabled" : true})
         }
 			},
 			error: 
 			function(request, status, error){
 				console.log("Error");
-				console.log(request)
-				console.log(status)
-				console.log(error)
+				console.log(request);
+				console.log(status);
+				console.log(error);
 			}
 		});
   });
