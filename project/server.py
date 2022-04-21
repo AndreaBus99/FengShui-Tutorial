@@ -283,9 +283,43 @@ def is_in_corner(c):
     return corner
 
 # check desk has view of door
-# def can_view_door(c):
+def can_view_door(c):
+    x,y,w,h =c['left'], c['top'], c['width'], c['height']
+    a = c['angle']
+    # angle
+    # print("a)
+    check_angle = a == 90 or a == 270
+    # position
+    check_pos = x >= 33 and x+w <= 40
+    print("check can view door", check_angle, check_pos, a)
+    return check_angle and check_pos
 
 
+# check two objects are two close
+def are_too_close(c1, c2, depth = 1):
+    x1,y1,w1,h1 =c1['left'], c1['top'], c1['width'], c1['height']
+    x2,y2,w2,h2 =c2['left'], c2['top'], c2['width'], c2['height']
+    # if overlap, return false
+    # if x1 >= x2 and x1 <= x2+w2 and 
+    # check up
+    if x1 > x2 + w2 or x1+w1 < x2:
+        up_too_close = False
+    else:
+        up_too_close = True
+    print("up check : ", up_too_close)
+    # check right
+    if y1 > y2 + h2 or y1 + h1 < y2:
+        right_too_close = False
+    else:
+        right_too_close = True
+    print("right check : ", right_too_close)
+
+    print("are too close: ", up_too_close, right_too_close)
+    if depth == 0:
+        return up_too_close or right_too_close
+    return up_too_close or right_too_close or are_too_close(c2,c1,0)
+    
+     
 # ROUTES
 @app.route('/')
 def welcome():
@@ -306,7 +340,7 @@ def learn():
         coordsBed = data['bed_coords']
         coordsDesk = data['desk_coords']
         print("GRID SIZE: "+str(grid))
-        print(coordsBed)
+        # print(coordsBed)
         print(coordsDesk)
 
         res = {}
@@ -314,53 +348,68 @@ def learn():
         # check if bed is in room
         if is_in_room(coordsBed) is False:
             res['status'] = 'no'
+            res['mark'] = 'bed'
             res['feedback'] = 'please place the bed inside the room!!!'
 
         #check if desk is in room
         elif is_in_room(coordsDesk) is False:
             res['status'] = 'no'
+            res['mark'] = 'desk'
             res['feedback'] = 'please place the desk inside the room!!!'
             
         # check if facing toward door
-        elif is_facing_door(coordsBed):
+        elif bad_lessons[1]['complete'] is False and is_facing_door(coordsBed):
             res['status'] = 'no'
+            res['mark'] = 'bed'
             res['feedback'] = bad_lessons[1]['feedback']
             bad_lessons[1]['complete'] = True
         
         #check if has window backing
-        elif has_window_backing(coordsBed):
+        elif bad_lessons[0]['complete'] is False and has_window_backing(coordsBed):
             res['status'] = 'no'
+            res['mark'] = 'bed'
             res['feedback'] = bad_lessons[0]['feedback']
             bad_lessons[0]['complete'] = True
         
         #check if in corner and solid backing
-        elif is_in_corner(coordsBed):
+        elif good_lessons[0]['complete'] is False and is_in_corner(coordsBed):
             res['status'] = 'yes'
+            res['mark'] = 'bed'
             res['feedback'] = good_lessons[0]['feedback']
             good_lessons[0]['complete'] = True
 
         # check if desk has back to door
-        elif back_against_door(coordsDesk):
+        elif  bad_lessons[2]['complete'] is False and back_against_door(coordsDesk):
             res['status'] = 'no'
+            res['mark'] = 'desk'
             res['feedback'] = bad_lessons[2]['feedback']
             bad_lessons[2]['complete'] = True
         
         # check if desk close to window
-        elif desk_window(coordsDesk):
+        elif good_lessons[3]['complete'] is False and desk_window(coordsDesk):
             res['status'] = 'yes'
+            res['mark'] = 'desk'
             res['feedback'] = good_lessons[3]['feedback']
             good_lessons[3]['complete'] = True
 
         #check if desk can view door
-        elif can_view_door(coordsDesk):
+        elif good_lessons[2]['complete'] is False and can_view_door(coordsDesk):
             res['status'] = 'yes'
+            res['mark'] = 'desk'
             res['feedback'] = good_lessons[2]['feedback']
             good_lessons[2]['complete'] = True
+        #check if desk and bed are too close
+        elif bad_lessons[3]['complete'] is False and are_too_close(coordsDesk, coordsBed):
+            res['status'] = 'no'
+            res['mark'] = 'desk'
+            res['feedback'] = bad_lessons[3]['feedback']
+            bad_lessons[3]['complete'] = True
 
         # good layout
         else:
             res['status'] = 'yes'
-            res['feedback'] = 'this is a good choice of placing the bed' 
+            res['feedback'] = 'this is a good choice of placing the bed'
+            res['mark'] = 'bed' 
             good_lessons[0]['complete'] = True
         
         # complete status

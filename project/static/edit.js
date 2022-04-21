@@ -106,34 +106,6 @@ function init_room(canvas) {
     evented: false, //cursor does not change to move on hover
   })
 
-  // var doorOpening = new fabric.Circle({
-  //   radius: 100,
-  //   left: 32 * grid,//+3 to account for room outline strokeWidth
-  //   top: grid*Math.round(16*1.6)+(1.95*grid),
-  //   angle: 180,
-  //   startAngle: 0,
-  //   endAngle: 90,
-  //   stroke: 'lightGrey',
-  //   strokeWidth: 3,
-  //   fill: '',
-  //   strokeDashArray: [5, 5],
-  //   selectable: false, //user cannot move/select outline
-  //   evented: false, //cursor does not change to move on hover
-  // });
-
-  // var doorOpeningLine = new fabric.Rect({
-  //   width: 0,
-  //   height: 100, 
-  //   fill: '', 
-  //   left: 28 * grid,//+3 to account for room outline strokeWidth
-  //   top: 16 * grid,
-  //   selectable: false, //user cannot move/select outline
-  //   evented: false, //cursor does not change to move on hover
-  //   strokeDashArray: [5, 7],
-  //   stroke: 'lightGrey',
-  //   strokeWidth: 3,
-  // })
-
   var widthText = new fabric.Text("8'5\" ft", { 
     left: 32 * grid, 
     top: 1.5*grid,
@@ -254,6 +226,7 @@ function build() {
         let status    = result['status'];
         let feedback  = result['feedback'];
         let complete  = result['complete'];
+        let obj_to_mark = result['mark']
         let green_progress  = result['progress'][0];
         let red_progress = result['progress'][1];
         let good_l = result['good_lessons'];
@@ -266,7 +239,7 @@ function build() {
         $("#red-progress-bar").text(red_progress);
         $("#red-progress-bar").attr('style', "width:" + red_progress + "%");
         // get bed obj
-        mark_furniture(canvas, 'bed', feedback, status, good_l, bad_l)
+        mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
         
 
         // if complete, display the message, disable submit button
