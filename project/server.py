@@ -300,24 +300,40 @@ def are_too_close(c1, c2, depth = 1):
     x1,y1,w1,h1 =c1['left'], c1['top'], c1['width'], c1['height']
     x2,y2,w2,h2 =c2['left'], c2['top'], c2['width'], c2['height']
     # if overlap, return false
-    # if x1 >= x2 and x1 <= x2+w2 and 
-    # check up
-    if x1 > x2 + w2 or x1+w1 < x2:
-        up_too_close = False
-    else:
-        up_too_close = True
-    print("up check : ", up_too_close)
-    # check right
-    if y1 > y2 + h2 or y1 + h1 < y2:
-        right_too_close = False
-    else:
-        right_too_close = True
-    print("right check : ", right_too_close)
 
-    print("are too close: ", up_too_close, right_too_close)
-    if depth == 0:
-        return up_too_close or right_too_close
-    return up_too_close or right_too_close or are_too_close(c2,c1,0)
+    xa = x1 + w1/2
+    ya = y1 + h1/2
+    xb = x2 + w2/2
+    yb = y2 + h2/2
+    
+    check_x = False
+    if not(x1 > x2+w2 or x1+w1 < x2):
+        check_x = abs(ya-yb) <= h1/2 + h2/2 +1
+    check_y = False
+    if not(y1 > y2+h2 or y1+h1 < y2):
+        check_y = abs(xa-xb) <= w1/2 + w2/2 +1
+     
+    return check_x or check_y
+
+    # if x1 >= x2 and x1 <= x2+w2 and 
+    # # check up
+    # if x1 > x2 + w2 or x1+w1 < x2:
+    #     up_too_close = False
+    # else:
+    #     up_too_close = abs(y2-y1) < 1
+    # print("xs: ", x1, x2, "ys: ", y1, y2)
+    # print("up check : ", up_too_close)
+    # # check right
+    # if y1 > y2 + h2 or y1 + h1 < y2:
+    #     right_too_close = False
+    # else:
+    #     right_too_close = abs(x2-(x1+w1)) < 1
+    # print("right check : ", right_too_close)
+
+    # print("are too close: ", up_too_close, right_too_close)
+    # if depth == 0:
+    #     return up_too_close or right_too_close
+    # return up_too_close or right_too_close or are_too_close(c2,c1,0)
     
      
 # ROUTES
@@ -408,7 +424,7 @@ def learn():
         # good layout
         else:
             res['status'] = 'yes'
-            res['feedback'] = 'this is a good choice of placing the bed'
+            res['feedback'] = 'this is a good choice of placing the bed' + (";tip:there are more rules to find" if sum(get_progress()) < 200 else " congrats!")
             res['mark'] = 'bed' 
             good_lessons[0]['complete'] = True
         
