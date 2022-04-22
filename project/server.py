@@ -296,7 +296,7 @@ def can_view_door(c):
 
 
 # check two objects are two close
-def are_too_close(c1, c2, depth = 1):
+def are_too_close(c1, c2):
     x1,y1,w1,h1 =c1['left'], c1['top'], c1['width'], c1['height']
     x2,y2,w2,h2 =c2['left'], c2['top'], c2['width'], c2['height']
     # if overlap, return false
