@@ -63,7 +63,30 @@ furniture = [
         "top" : 8
     }
 ]
-# changes
+
+tutorial_steps = [
+    {
+        "id" : "1",
+        "step" : "Welcome",
+        "instruction" : "An important component of Feng Shui is that it is fluid and that there are no strict rules, rather helping guidelines. As such, use this room builder to explore different layouts and see what can be considered good and bad examples of Feng Shui."
+    },
+    {
+        "id" : "2",
+        "step" : "Click and drag",
+        "instruction" : "Click and drag the furniture to arrange it in the room"
+    },
+    {
+        "id" : "3",
+        "step" : "Rotate",
+        "instruction" : "Great job! Click on the furniture, and then click and drag on the square on top to rotate."
+    },
+    {
+        "id" : "4",
+        "step" : "Free arrange",
+        "instruction" : "Well done! Drag and arrange the rest of the furniture and press submit when you’re done."
+    }
+
+]
 
 # relative image urls, use thses in the furniture defined above!!
 img_urls = [
@@ -365,13 +388,13 @@ def learn():
         if is_in_room(coordsBed) is False:
             res['status'] = 'no'
             res['mark'] = 'bed'
-            res['feedback'] = 'please place the bed inside the room!!!'
+            res['feedback'] = 'Please place the bed inside the room!!!'
 
         #check if desk is in room
         elif is_in_room(coordsDesk) is False:
             res['status'] = 'no'
             res['mark'] = 'desk'
-            res['feedback'] = 'please place the desk inside the room!!!'
+            res['feedback'] = 'Please place the desk inside the room!!!'
             
         # check if facing toward door
         elif bad_lessons[1]['complete'] is False and is_facing_door(coordsBed):
@@ -424,7 +447,7 @@ def learn():
         # good layout
         else:
             res['status'] = 'yes'
-            res['feedback'] = 'this is a good choice of placing the bed' + (";tip:there are more rules to find" if sum(get_progress()) < 200 else " congrats!")
+            res['feedback'] = 'This is a good choice of placing the bed' + ("; tip:there are more rules to find" if sum(get_progress()) < 200 else " Congrats!")
             res['mark'] = 'bed' 
             good_lessons[0]['complete'] = True
         
@@ -440,12 +463,62 @@ def learn():
     else:
         return render_template('edit.html', furniture=furniture)
 
+
+"""
+Tutorial route
+"""
+@app.route('/tutorial/<id>', methods = ['GET', 'POST'])
+def tutorial(id):
+
+    # Send if the furniture is inside the room
+    if request.method == 'POST':
+        # get grid size
+        global grid 
+        data = request.get_json()
+        grid = data['grid']
+        coordsBed = data['bed_coords']
+        coordsDesk = data['desk_coords']
+        coordsDrawers = data['drawers_coords']
+        coordsWardrobe = data['wardrobe_coords']
+
+        res = {}
+        # check if bed is in room
+        if is_in_room(coordsBed) is True:
+            res['status'] = 'yes'
+
+        #check if desk is in room
+        elif is_in_room(coordsDesk) is True:
+            res['status'] = 'yes'
+        
+        elif is_in_room(coordsDrawers) is True:
+            res['status'] = 'yes'
+        
+        elif is_in_room(coordsWardrobe) is True:
+            res['status'] = 'yes'
+
+        
+        return jsonify(res)
+
+    else:      
+        # welcome will be only the first step (intro to tutorial)
+        welcome = tutorial_steps[0]
+
+        # steps will be an array of the other 3 rules
+        steps=[]
+        for i in range(1,4):
+            steps.append(tutorial_steps[i])
+        return render_template('tutorial.html', furniture=furniture, tutorial=steps, welcome=welcome)
+
+
+
+
 # TODO: implement this
 @app.route('/quiz_yourself')
 def quiz_yourself():
     mc_quiz = mc_quiz_questions
     tf_quiz = tf_quiz_questions
     return render_template('quiz.html', mc_quiz=mc_quiz, tf_quiz=tf_quiz)
+
 
 
 # @app.route('/search/<keywords>', methods = ['GET', 'POST'])

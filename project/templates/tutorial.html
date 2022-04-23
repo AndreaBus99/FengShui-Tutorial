@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+
+{% block content%}
+
+<!-- dependencies -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/521/fabric.min.js" integrity="sha512-nPzvcIhv7AtvjpNcnbr86eT6zGtiudLiLyVssCWLmvQHgR95VvkLX8mMpqNKWs1TG3Hnf+tvHpnGmpPS3yJIgw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'tutorial.js') }}"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}"> -->
+
+<!-- Getting furniture from server -->
+<script>
+    let welcome = {{welcome|tojson}}
+    let tutorial = {{tutorial|tojson}}
+    let furniture = {{furniture|tojson}}
+    console.log(furniture);
+</script>
+
+<style>
+    .container{
+        margin: 0px !important;
+        padding: 0px !important;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .rowCanvas{
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        width: 100vw;
+        height: 100vh;
+    }
+</style>
+
+<!-- content -->
+<!-- Adding canva grid to html page -->
+<div class="container">
+    <!-- canvas -->
+    <div class="row rowCanvas">
+       <div class="col-md-9 rowCanvas" id="canvasSpace">
+            <canvas id="c"></canvas>
+       </div>
+       <!-- sidebar -->
+       <div class="col-md-3 rowCanvas">
+           <!-- feedback message -->
+           <div class="row">
+                <div class="col-md-12">
+                    <div><h3>Follow the steps to start learning:</h3></div>
+                    <p id="learn-feedback"></p>
+                </div>
+            </div>
+
+            <!-- Overview of tutorial -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="tutorial-start"></div>
+                </div>
+            </div>
+            
+            <!-- List of steps -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <h3>Steps:</h3>
+                    </div>
+                    <ol class="step-list"></ol>
+                </div>
+
+            </div>
+            <!-- submit button -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="submit-button"></div>
+                </div>
+            </div>
+       </div>
+    </div>
+
+    
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" ></span>
+              </button>
+            </div>
+            <div class="modal-body" id = 'lesson'>
+              
+            </div>
+            <div class="modal-footer">
+                <div id="skip-tutorial-btn"></div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="let-me-try-btn">Let me try</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+</div>
+
+
+{% endblock %}
