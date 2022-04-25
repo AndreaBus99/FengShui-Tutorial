@@ -361,25 +361,7 @@ def are_too_close(c1, c2):
      
     return check_x or check_y
 
-    # if x1 >= x2 and x1 <= x2+w2 and 
-    # # check up
-    # if x1 > x2 + w2 or x1+w1 < x2:
-    #     up_too_close = False
-    # else:
-    #     up_too_close = abs(y2-y1) < 1
-    # print("xs: ", x1, x2, "ys: ", y1, y2)
-    # print("up check : ", up_too_close)
-    # # check right
-    # if y1 > y2 + h2 or y1 + h1 < y2:
-    #     right_too_close = False
-    # else:
-    #     right_too_close = abs(x2-(x1+w1)) < 1
-    # print("right check : ", right_too_close)
 
-    # print("are too close: ", up_too_close, right_too_close)
-    # if depth == 0:
-    #     return up_too_close or right_too_close
-    # return up_too_close or right_too_close or are_too_close(c2,c1,0)
     
      
 # ROUTES
@@ -420,6 +402,16 @@ def learn():
             res['status'] = 'no'
             res['mark'] = 'desk'
             res['feedback'] = 'Please place the desk inside the room!!!'
+        #check if wardrobe is in room
+        elif is_in_room(coordsWardrobe) is False:
+            res['status'] = 'no'
+            res['mark'] = 'wardrobe'
+            res['feedback'] = 'Please place the wardrobe inside the room!!!'
+        #check if drawer is in room
+        elif is_in_room(coordsDrawers) is False:
+            res['status'] = 'no'
+            res['mark'] = 'drawers'
+            res['feedback'] = 'Please place the drawers inside the room!!!'
         
         #check if there's open space
         elif good_lessons[1]['complete'] is False and open_space(coordsBed, coordsDesk, coordsDrawers, coordsWardrobe):

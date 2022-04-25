@@ -6,11 +6,7 @@ js for learning portion.
     3. server should maintain 1. location of eahc object, and over all status bar. server should also preserve pre-defined 
 */
 
-// function get_prop_of_item(furniture){
-//   // TODO: code this
-//  let obj = canvas.getActiveObject();
-//  alert(obj.left + "," + obj.top);
-// }
+
 
 /* disable scaling and rotation */
 function disable_scaling(obj){
@@ -29,23 +25,6 @@ function disable_scaling(obj){
   obj.snapAngle = 90;
 }
 
-/* return a fabric object that can be added to canvas */
-// function create_item(img_id) {
-//   let img = $("#" + img_id);
-//   let imgInstance = new fabric.Image(img, {
-//     top : 100,
-//     left : 100,
-//     angle : 0,
-
-//   });
-//   // scale to width
-//   // pug.scaleToWidth(250,false)
-//   // disable scaling
-//   disable_scaling(imgInstance);
-//   canvas.add(imgInstance);
-//   // return
-//   return imgInstance;
-// }
 
 
 
