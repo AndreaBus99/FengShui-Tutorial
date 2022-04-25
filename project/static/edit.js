@@ -308,12 +308,12 @@ function mark_furniture(canvas, id, feedback, status, good_l, bad_l) {
         $('#bad-lesson-list').empty();
         good_l.forEach(l => {
           if(l['complete']) {
-            $('#good-lesson-list').append($('<li>', {text : l['feedback']}))
+            $('#good-lesson-list').append($('<li>', {text : l['summary']}))
           }
         });
         bad_l.forEach(l => {
           if(l['complete']) {
-            $('#bad-lesson-list').append($('<li>', {text : l['feedback']}))
+            $('#bad-lesson-list').append($('<li>', {text : l['summary']}))
           }
         });
       });

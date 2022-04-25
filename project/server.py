@@ -102,27 +102,30 @@ good_lessons = [
         "id" : "1",
         "title" : "Bed in corner",
         "complete": False,
-        "feedback" : "Great! It is good practice in a college dorm (or smaller rooms in general) to position the bed in a corner."
+        "feedback" : "Great! It is good practice in a college dorm (or smaller rooms in general) to position the bed in a corner with a solid backing for a good night's sleep.",
+        "summary" : "Beds should be in the corner with a solid backing (e.g. a wall)."
     },
     {
         "id" : "2",
         "title" : "Large clear space",
         "complte": "false",
         "complete": False,
-        "feedback" : "Excellent! You’ve identified another good rule. Pushing your furniture against the wall can help create a (relatively) large open space. Clearing out space will clear your mind and prevent distractions."
+        "feedback" : "Excellent! You’ve identified another good rule. Pushing your furniture against the wall can help create a (relatively) large open space. Clearing out space will clear your mind and prevent distractions.",
+        "summary" : "Furniture against the wall can help create a large open space."
     },
     {
         "id" : "3",
         "title" : "Desk should have view of door",
         "complete": False,
-        "feedback" : "Amazing! It’s good to have your desk allow a view of the door. Try to always position the desk so that the door is in sight!"
-
+        "feedback" : "Amazing! It’s good to have your desk allow a view of the door. Try to always position the desk so that the door is in sight!",
+        "summary" : "The desk should have a view of the door to reduce vulnerability."
     },
     {
         "id" : "4",
         "title" : "Desk close to window",
         "complete": False,
-        "feedback" : "Nicely done! It’s good to have the desk close to the window. Having the desk close to the window allows for nice natural lighting during the day!"
+        "feedback" : "Nicely done! It’s good to have the desk close to the window. Having the desk close to the window allows for nice natural lighting during the day!",
+        "summary" : "Desks close to the window get good natural light."
     }
 ]
 
@@ -131,25 +134,29 @@ bad_lessons = [
         "id" : "1",
         "title" : "Bed should not backed by window",
         "complete": False,
-        "feedback" : "Oh dear! In Feng Shui for a good night’s sleep your bed needs to be backed by something solid, like a wall - not a window where something could sneak up on you"
+        "feedback" : "Oh dear! In Feng Shui for a good night’s sleep your bed needs to be backed by something solid, like a wall - not a window where something could sneak up on you",
+        "summary" : "Beds should not be backed by windows because they leave you vulnerable."
     },
     {
         "id" : "2",
         "title" : "Bed should not be in line with door",
         "complete": False,
-        "feedback" : "Oh no! In Feng Shui it is bad to have your bed directly in line with the door, because “the chi (energy) is too intense”. It is known as “dead man’s position” or 'coffin position'."
+        "feedback" : "Oh no! In Feng Shui it is bad to have your bed directly in line with the door, because “the chi (energy) is too intense”. It is known as “dead man’s position” or 'coffin position'.",
+        "summary" : "Beds should not be in line with the door, this is the coffin position."
     },
     {
         "id" : "3",
         "title" : "Desk should not be facing away from door",
         "complete": False,
-        "feedback" : "Oh dear! In Feng Shui people try to not have their backs against the door as this could lead to one feeling vulnerable. Imagine all the things that could sneak up on you!"
+        "feedback" : "Oh dear! In Feng Shui people try to not have their backs against the door as this could lead to one feeling vulnerable. Imagine all the things that could sneak up on you!",
+        "summary" : "Desk's should not be facing away from the door."
     },
     {
         "id" : "4",
         "title" : "Bed and desk should not be too close",
         "complete": False,
-        "feedback" : "Oops! In Feng Shui, the bed is seen as an area for rest and the desk a workspace. Try to not have the bed and desk so close for some Feng Shui work life balance!"
+        "feedback" : "Oops! In Feng Shui, the bed is seen as an area for rest and the desk a workspace. Try to not have the bed and desk so close for some Feng Shui work life balance!",
+        "summary" : "Keep the bed and desk separate for work-life balance."
     }
 ]
 
