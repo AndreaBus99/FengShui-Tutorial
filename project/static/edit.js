@@ -209,7 +209,9 @@ function build() {
     let allData = {
       'grid' : grid,
       'bed_coords' : getCoordinates(canvas, 'bed', grid),
-      'desk_coords' : getCoordinates(canvas, 'desk', grid)
+      'desk_coords' : getCoordinates(canvas, 'desk', grid),
+      'drawers_coords' : getCoordinates(canvas, 'drawers', grid),
+      'wardrobe_coords' : getCoordinates(canvas, 'wardrobe', grid)
     };
     //TODO - get and send desk coords
     // send coords of bed to server

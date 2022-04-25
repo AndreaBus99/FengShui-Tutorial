@@ -109,7 +109,7 @@ good_lessons = [
         "title" : "Large clear space",
         "complte": "false",
         "complete": False,
-        "feedback" : "Excellent! You’ve identified another good rule. For a college dorm, it’s good to have a (relatively) large open space. Clearing out space will clear your mind and prevent distractions."
+        "feedback" : "Excellent! You’ve identified another good rule. Pushing your furniture against the wall can help create a (relatively) large open space. Clearing out space will clear your mind and prevent distractions."
     },
     {
         "id" : "3",
@@ -319,6 +319,20 @@ def can_view_door(c):
     print("check can view door", check_angle, check_pos, a)
     return check_angle and check_pos
 
+# check for open space
+def open_space(c1, c2, c3, c4):
+    x1,y1,w1,h1 =c1['left'], c1['top'], c1['width'], c1['height']
+    x2,y2,w2,h2 =c2['left'], c2['top'], c2['width'], c2['height']
+    x3,y3,w3,h3 =c3['left'], c3['top'], c3['width'], c3['height']
+    x4,y4,w4,h4 =c4['left'], c4['top'], c4['width'], c4['height']
+
+    check = False
+
+    #checks if all furniture is pushed against wall
+    if (x1==24 or x1+w1==40) and (x2==24 or x2+w2==40) and (x3==24 or x3+w3==40) and (x4==24 or x4+w4==40):
+        check = True
+
+    return check
 
 # check two objects are two close
 def are_too_close(c1, c2):
@@ -380,6 +394,8 @@ def learn():
         grid = data['grid']
         coordsBed = data['bed_coords']
         coordsDesk = data['desk_coords']
+        coordsDrawers = data['drawers_coords']
+        coordsWardrobe = data['wardrobe_coords']
         print("GRID SIZE: "+str(grid))
         # print(coordsBed)
         print(coordsDesk)
@@ -397,6 +413,13 @@ def learn():
             res['status'] = 'no'
             res['mark'] = 'desk'
             res['feedback'] = 'Please place the desk inside the room!!!'
+        
+        #check if there's open space
+        elif good_lessons[1]['complete'] is False and open_space(coordsBed, coordsDesk, coordsDrawers, coordsWardrobe):
+            res['status'] = 'yes'
+            res['mark'] = 'bed' # is there a way to select room outline?
+            res['feedback'] = good_lessons[1]['feedback']
+            good_lessons[1]['complete'] = True
             
         # check if facing toward door
         elif bad_lessons[1]['complete'] is False and is_facing_door(coordsBed):
@@ -439,6 +462,7 @@ def learn():
             res['mark'] = 'desk'
             res['feedback'] = good_lessons[2]['feedback']
             good_lessons[2]['complete'] = True
+
         #check if desk and bed are too close
         elif bad_lessons[3]['complete'] is False and are_too_close(coordsDesk, coordsBed):
             res['status'] = 'no'
