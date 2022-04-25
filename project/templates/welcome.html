@@ -8,22 +8,11 @@
 <!-- <script type="text/javascript" src="{{ url_for('static', filename = 'welcome.js') }}"></script> -->
 <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
 
-
-
-
-<!-- 
-    @TODO:
-        1. fix the image..... idk why its' not working lol
-
- -->
-
-
-
 <!-- content -->
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <img src="../assets/placeholder.png" alt="home page image" class="img-fluid">
+            <img src={{homepage_image|tojson}} alt="home page image" class="img-fluid">
         </div>
         <div class="col-md-6">
             <!-- caption -->

@@ -25,6 +25,8 @@ app = Flask(__name__)
 global variables to maintain
     2. quiz score, correct answer for each question
 """
+homepage_image = "https://i.pinimg.com/564x/17/0c/5d/170c5dd798020fb9a8a9a2f2087ee50f.jpg"
+
 furniture = [
     {
         "furniture_id" : "1",
@@ -362,7 +364,7 @@ def are_too_close(c1, c2):
 # ROUTES
 @app.route('/')
 def welcome():
-    return render_template('welcome.html')
+    return render_template('welcome.html', homepage_image = homepage_image)
 
 """
 learn route
