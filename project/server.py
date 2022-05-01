@@ -241,6 +241,7 @@ def is_learn_done():
         if l['complete'] is False:
             return False
     return True
+
 # count progress so far
 def get_progress():
     # total = len(good_lessons) + len(bad_lessons)
@@ -416,7 +417,7 @@ def learn():
         #check if there's open space
         elif good_lessons[1]['complete'] is False and open_space(coordsBed, coordsDesk, coordsDrawers, coordsWardrobe):
             res['status'] = 'yes'
-            res['mark'] = 'bed' # is there a way to select room outline?
+            res['mark'] = 'room_outline' # is there a way to select room outline?
             res['feedback'] = good_lessons[1]['feedback']
             good_lessons[1]['complete'] = True
             

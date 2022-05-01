@@ -54,6 +54,7 @@ function init_room(canvas) {
 
   // create room outline
   var room_outline = new fabric.Rect({
+    id: 'room_outline',
     width: grid*16, //8.5 ft - 275
     height: grid*Math.round(16*1.6), //14 ft - 4503.0*Math.ceil(n/3.0)
     fill: '', 
@@ -106,12 +107,13 @@ function init_room(canvas) {
     evented: false, //cursor does not change to move on hover
   });
 
-  var roomOutlineGroup = new fabric.Group([ widthText, heightText, room_outline, window, door ], {
+  var roomOutlineExtra = new fabric.Group([ widthText, heightText, window, door ], {
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
   });
 
-  canvas.add(roomOutlineGroup);
+  canvas.add(room_outline)
+  canvas.add(roomOutlineExtra);
 
   return grid;
 }
