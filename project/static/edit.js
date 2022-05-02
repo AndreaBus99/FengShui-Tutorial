@@ -205,15 +205,26 @@ function build() {
 			success     :   
 			function(result){
         // result is a json with two fields 1. status 2. feedback 3. complete 4. progress
-        console.log(result);
-        let status    = result['status'];
-        let feedback  = result['feedback'];
-        let complete  = result['complete'];
-        let obj_to_mark = result['mark']
-        let green_progress  = result['progress'][0];
-        let red_progress = result['progress'][1];
-        let good_l = result['good_lessons'];
-        let bad_l = result['bad_lessons'];
+        console.log("result: "+JSON.stringify(result));
+
+        //get general info first
+        let green_progress  = result[0]['progress'][0];
+        let red_progress = result[0]['progress'][1];
+        let good_l = result[0]['good_lessons'];
+        let bad_l = result[0]['bad_lessons'];
+        let complete  = result[0]['complete'];
+
+        console.log("result.length: "+ Object.keys(result).length);
+
+        for(let i=1; i<Object.keys(result).length; i++){
+          let status    = result[i]['status'];
+          let feedback  = result[i]['feedback'];
+          let obj_to_mark = result[i]['mark'];
+
+          console.log("status check, status: "+ status);
+          // get bed obj
+          mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
+        }
 
         // console.log(green_progress);
         // set progress bar
@@ -221,9 +232,6 @@ function build() {
         $("#green-progress-bar").attr('style', "width:" + green_progress + "%");
         $("#red-progress-bar").text(red_progress);
         $("#red-progress-bar").attr('style', "width:" + red_progress + "%");
-        // get bed obj
-        mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
-        
 
         // if complete, display the message, disable submit button
         if (complete == 'True') {
