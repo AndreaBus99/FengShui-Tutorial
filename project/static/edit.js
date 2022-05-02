@@ -132,7 +132,7 @@ function handle_learn_submit() {
 function build() {
   // create a wrapper around native canvas element (with id="c")
   let canvas = new fabric.Canvas("c", { selection: false });
-  
+
   // initialzie room, get the grid size
   let grid = init_room(canvas);
   // console.log("grid size: "+ grid);
@@ -145,7 +145,6 @@ function build() {
     let height = ui.height * grid;
     let id    = ui.furniture;
 
-    console.log("width: "+width);
     // create image
     let f_image = new Image();
     f_image.onload = function (img) {  
@@ -176,6 +175,8 @@ function build() {
 
   // on click submit button
   $("#learn-test-submit-btn").click(()=>{
+    // change sidebar message
+    $("#sidebar_msg").html("Click on the red/green rectangles to view feedback on your room layout");
     // deselect all objects
     canvas.discardActiveObject().renderAll();
     // clear all alert boxes
@@ -205,15 +206,26 @@ function build() {
 			success     :   
 			function(result){
         // result is a json with two fields 1. status 2. feedback 3. complete 4. progress
-        console.log(result);
-        let status    = result['status'];
-        let feedback  = result['feedback'];
-        let complete  = result['complete'];
-        let obj_to_mark = result['mark']
-        let green_progress  = result['progress'][0];
-        let red_progress = result['progress'][1];
-        let good_l = result['good_lessons'];
-        let bad_l = result['bad_lessons'];
+        console.log("result: "+JSON.stringify(result));
+
+        //get general info first
+        let green_progress  = result[0]['progress'][0];
+        let red_progress = result[0]['progress'][1];
+        let good_l = result[0]['good_lessons'];
+        let bad_l = result[0]['bad_lessons'];
+        let complete  = result[0]['complete'];
+
+        console.log("result.length: "+ Object.keys(result).length);
+
+        for(let i=1; i<Object.keys(result).length; i++){
+          let status    = result[i]['status'];
+          let feedback  = result[i]['feedback'];
+          let obj_to_mark = result[i]['mark'];
+
+          console.log("status check, status: "+ status);
+          // get bed obj
+          mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
+        }
 
         // console.log(green_progress);
         // set progress bar
@@ -221,13 +233,10 @@ function build() {
         $("#green-progress-bar").attr('style', "width:" + green_progress + "%");
         $("#red-progress-bar").text(red_progress);
         $("#red-progress-bar").attr('style', "width:" + red_progress + "%");
-        // get bed obj
-        mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
-        
 
         // if complete, display the message, disable submit button
         if (complete == 'True') {
-          $("#complete-msg").text("Congrats! You've learned all rules! Click on the quiz button on top right to test your learning!");
+          $("#sidebar_msg").text("Congrats! You've learned all rules! Click on the quiz button on top right to test your learning!");
           $('#learn-test-submit-btn').prop({"disabled" : true})
         }
 			},
@@ -297,6 +306,9 @@ function mark_furniture(canvas, id, feedback, status, good_l, bad_l) {
             $('#bad-lesson-list').append($('<li>', {text : l['summary']}))
           }
         });
+
+        // ONLY WORKS WHEN ONE RECT PER PAGE - NEED TO UPDATE CONDITIONAL CHECK AND THEN CHANGE THIS ACCORDINGLY!
+        $("#sidebar_msg").html("Arrange the room again to try find some more tips. Press the submit button when you're done to get feedback");
       });
 
       // add to canvas

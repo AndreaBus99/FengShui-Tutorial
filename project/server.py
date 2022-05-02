@@ -108,7 +108,6 @@ good_lessons = [
     {
         "id" : "2",
         "title" : "Large clear space",
-        "complte": "false",
         "complete": False,
         "feedback" : "Excellent! You’ve identified another good rule. Pushing your furniture against the wall can help create a (relatively) large open space. Clearing out space will clear your mind and prevent distractions.",
         "summary" : "Furniture against the wall can help create a large open space."
@@ -391,99 +390,182 @@ def learn():
         print(coordsDesk)
 
         res = {}
+        count = 1
 
         # check if bed is in room
         if is_in_room(coordsBed) is False:
-            res['status'] = 'no'
-            res['mark'] = 'bed'
-            res['feedback'] = 'Please place the bed inside the room!!!'
-
+            res[count] = {}
+            res[count]['status'] = 'no'
+            res[count]['mark'] = 'bed'
+            res[count]['feedback'] = 'Please place the bed inside the room!!!'
+            count=count+1
         #check if desk is in room
-        elif is_in_room(coordsDesk) is False:
-            res['status'] = 'no'
-            res['mark'] = 'desk'
-            res['feedback'] = 'Please place the desk inside the room!!!'
+        if is_in_room(coordsDesk) is False:
+            res[count] = {}
+            res[count]['status'] = 'no'
+            res[count]['mark'] = 'desk'
+            res[count]['feedback'] = 'Please place the desk inside the room!!!'
+            count=count+1
         #check if wardrobe is in room
-        elif is_in_room(coordsWardrobe) is False:
-            res['status'] = 'no'
-            res['mark'] = 'wardrobe'
-            res['feedback'] = 'Please place the wardrobe inside the room!!!'
+        if is_in_room(coordsWardrobe) is False:
+            res[count] = {}
+            res[count]['status'] = 'no'
+            res[count]['mark'] = 'wardrobe'
+            res[count]['feedback'] = 'Please place the wardrobe inside the room!!!'
+            count=count+1
         #check if drawer is in room
-        elif is_in_room(coordsDrawers) is False:
-            res['status'] = 'no'
-            res['mark'] = 'drawers'
-            res['feedback'] = 'Please place the drawers inside the room!!!'
-        
+        if is_in_room(coordsDrawers) is False:
+            res[count] = {}
+            res[count]['status'] = 'no'
+            res[count]['mark'] = 'drawers'
+            res[count]['feedback'] = 'Please place the drawers inside the room!!!'
+            count=count+1
         #check if there's open space
         elif good_lessons[1]['complete'] is False and open_space(coordsBed, coordsDesk, coordsDrawers, coordsWardrobe):
-            res['status'] = 'yes'
-            res['mark'] = 'room_outline' # is there a way to select room outline?
-            res['feedback'] = good_lessons[1]['feedback']
+            res[count] = {}
+            res[count]['status'] = 'yes'
+            res[count]['mark'] = 'room_outline' # is there a way to select room outline?
+            res[count]['feedback'] = good_lessons[1]['feedback']
             good_lessons[1]['complete'] = True
-            
+            count=count+1
         # check if facing toward door
         elif bad_lessons[1]['complete'] is False and is_facing_door(coordsBed):
-            res['status'] = 'no'
-            res['mark'] = 'bed'
-            res['feedback'] = bad_lessons[1]['feedback']
+            res[count] = {}
+            res[count]['status'] = 'no'
+            res[count]['mark'] = 'bed'
+            res[count]['feedback'] = bad_lessons[1]['feedback']
             bad_lessons[1]['complete'] = True
-        
+            count=count+1
+            # check if desk has back to door
+            if  bad_lessons[2]['complete'] is False and back_against_door(coordsDesk):
+                res[count] = {}
+                res[count]['status'] = 'no'
+                res[count]['mark'] = 'desk'
+                res[count]['feedback'] = bad_lessons[2]['feedback']
+                bad_lessons[2]['complete'] = True
+                count=count+1
+            # check if desk close to window
+            elif good_lessons[3]['complete'] is False and desk_window(coordsDesk):
+                res[count] = {}
+                res[count]['status'] = 'yes'
+                res[count]['mark'] = 'desk'
+                res[count]['feedback'] = good_lessons[3]['feedback']
+                good_lessons[3]['complete'] = True
+                count=count+1
+            #check if desk can view door
+            elif good_lessons[2]['complete'] is False and can_view_door(coordsDesk):
+                res[count] = {}
+                res[count]['status'] = 'yes'
+                res[count]['mark'] = 'desk'
+                res[count]['feedback'] = good_lessons[2]['feedback']
+                good_lessons[2]['complete'] = True
+                count=count+1
         #check if has window backing
         elif bad_lessons[0]['complete'] is False and has_window_backing(coordsBed):
-            res['status'] = 'no'
-            res['mark'] = 'bed'
-            res['feedback'] = bad_lessons[0]['feedback']
+            res[count] = {}
+            res[count]['status'] = 'no'
+            res[count]['mark'] = 'bed'
+            res[count]['feedback'] = bad_lessons[0]['feedback']
             bad_lessons[0]['complete'] = True
-        
+            count=count+1
+            # check if desk has back to door
+            if  bad_lessons[2]['complete'] is False and back_against_door(coordsDesk):
+                res[count] = {}
+                res[count]['status'] = 'no'
+                res[count]['mark'] = 'desk'
+                res[count]['feedback'] = bad_lessons[2]['feedback']
+                bad_lessons[2]['complete'] = True
+                count=count+1
+            # check if desk close to window
+            elif good_lessons[3]['complete'] is False and desk_window(coordsDesk):
+                res[count] = {}
+                res[count]['status'] = 'yes'
+                res[count]['mark'] = 'desk'
+                res[count]['feedback'] = good_lessons[3]['feedback']
+                good_lessons[3]['complete'] = True
+                count=count+1
+            #check if desk can view door
+            elif good_lessons[2]['complete'] is False and can_view_door(coordsDesk):
+                res[count] = {}
+                res[count]['status'] = 'yes'
+                res[count]['mark'] = 'desk'
+                res[count]['feedback'] = good_lessons[2]['feedback']
+                good_lessons[2]['complete'] = True
+                count=count+1
         #check if in corner and solid backing
         elif good_lessons[0]['complete'] is False and is_in_corner(coordsBed):
-            res['status'] = 'yes'
-            res['mark'] = 'bed'
-            res['feedback'] = good_lessons[0]['feedback']
+            res[count] = {}
+            res[count]['status'] = 'yes'
+            res[count]['mark'] = 'bed'
+            res[count]['feedback'] = good_lessons[0]['feedback']
             good_lessons[0]['complete'] = True
-
+            count=count+1
+            # check if desk has back to door
+            if  bad_lessons[2]['complete'] is False and back_against_door(coordsDesk):
+                res[count] = {}
+                res[count]['status'] = 'no'
+                res[count]['mark'] = 'desk'
+                res[count]['feedback'] = bad_lessons[2]['feedback']
+                bad_lessons[2]['complete'] = True
+                count=count+1
+            # check if desk close to window
+            elif good_lessons[3]['complete'] is False and desk_window(coordsDesk):
+                res[count] = {}
+                res[count]['status'] = 'yes'
+                res[count]['mark'] = 'desk'
+                res[count]['feedback'] = good_lessons[3]['feedback']
+                good_lessons[3]['complete'] = True
+                count=count+1
+            #check if desk can view door
+            elif good_lessons[2]['complete'] is False and can_view_door(coordsDesk):
+                res[count] = {}
+                res[count]['status'] = 'yes'
+                res[count]['mark'] = 'desk'
+                res[count]['feedback'] = good_lessons[2]['feedback']
+                good_lessons[2]['complete'] = True
+                count=count+1
         # check if desk has back to door
         elif  bad_lessons[2]['complete'] is False and back_against_door(coordsDesk):
-            res['status'] = 'no'
-            res['mark'] = 'desk'
-            res['feedback'] = bad_lessons[2]['feedback']
+            res[count] = {}
+            res[count]['status'] = 'no'
+            res[count]['mark'] = 'desk'
+            res[count]['feedback'] = bad_lessons[2]['feedback']
             bad_lessons[2]['complete'] = True
-        
+            count=count+1
         # check if desk close to window
         elif good_lessons[3]['complete'] is False and desk_window(coordsDesk):
-            res['status'] = 'yes'
-            res['mark'] = 'desk'
-            res['feedback'] = good_lessons[3]['feedback']
+            res[count] = {}
+            res[count]['status'] = 'yes'
+            res[count]['mark'] = 'desk'
+            res[count]['feedback'] = good_lessons[3]['feedback']
             good_lessons[3]['complete'] = True
-
+            count=count+1
         #check if desk can view door
         elif good_lessons[2]['complete'] is False and can_view_door(coordsDesk):
-            res['status'] = 'yes'
-            res['mark'] = 'desk'
-            res['feedback'] = good_lessons[2]['feedback']
+            res[count] = {}
+            res[count]['status'] = 'yes'
+            res[count]['mark'] = 'desk'
+            res[count]['feedback'] = good_lessons[2]['feedback']
             good_lessons[2]['complete'] = True
-
+            count=count+1
         #check if desk and bed are too close
         elif bad_lessons[3]['complete'] is False and are_too_close(coordsDesk, coordsBed):
-            res['status'] = 'no'
-            res['mark'] = 'desk'
-            res['feedback'] = bad_lessons[3]['feedback']
+            res[count] = {}
+            res[count]['status'] = 'no'
+            res[count]['mark'] = 'desk'
+            res[count]['feedback'] = bad_lessons[3]['feedback']
             bad_lessons[3]['complete'] = True
-
-        # good layout
-        else:
-            res['status'] = 'yes'
-            res['feedback'] = 'This is a good choice of placing the bed' + ("; tip:there are more rules to find" if sum(get_progress()) < 200 else " Congrats!")
-            res['mark'] = 'bed' 
-            good_lessons[0]['complete'] = True
+            count=count+1
         
+        count = 0
+        res[count] = {}
         # complete status
-        res['complete'] = "True" if is_learn_done() else "False"
+        res[count]['complete'] = "True" if is_learn_done() else "False"
         # progress percentage
-        res['progress'] = get_progress()
+        res[count]['progress'] = get_progress()
         # send lessons learned so far
-        res['good_lessons'] = good_lessons
-        res['bad_lessons'] = bad_lessons
+        res[count]['good_lessons'] = good_lessons
+        res[count]['bad_lessons'] = bad_lessons
         # return the feedback
         return jsonify(res)
     else:
