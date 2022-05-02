@@ -13,6 +13,7 @@ This is the flask backend for homeworks in UI COMS 4111.
     3. quiz page -> GET POST methods to receive the user's answer and return feedback, maintain scores for user
 """
 
+from tkinter import scrolledtext
 from flask import Flask
 from flask import render_template
 from flask import Response, request, jsonify
@@ -241,7 +242,6 @@ def is_learn_done():
         if l['complete'] is False:
             return False
     return True
-
 # count progress so far
 def get_progress():
     # total = len(good_lessons) + len(bad_lessons)
@@ -362,11 +362,14 @@ def are_too_close(c1, c2):
      
     return check_x or check_y
 
+#check if post requests are valid quiz questions
+def check_if_good(id):
+
 
     
      
 # ROUTES
-@app.route('/')
+@app.route('/') 
 def welcome():
     return render_template('welcome.html', homepage_image = homepage_image)
 
@@ -417,7 +420,7 @@ def learn():
         #check if there's open space
         elif good_lessons[1]['complete'] is False and open_space(coordsBed, coordsDesk, coordsDrawers, coordsWardrobe):
             res['status'] = 'yes'
-            res['mark'] = 'room_outline' # is there a way to select room outline?
+            res['mark'] = 'bed' # is there a way to select room outline?
             res['feedback'] = good_lessons[1]['feedback']
             good_lessons[1]['complete'] = True
             
@@ -535,215 +538,32 @@ def tutorial(id):
             steps.append(tutorial_steps[i])
         return render_template('tutorial.html', furniture=furniture, tutorial=steps, welcome=welcome)
 
-
-
-
-# TODO: implement this
-@app.route('/quiz_yourself')
-def quiz_yourself():
+"""
+Quiz route
+"""
+@app.route('/quiz_yourself/<id>', methods = ['GET', 'POST'])
+def quiz_yourself(id):
     mc_quiz = mc_quiz_questions
     tf_quiz = tf_quiz_questions
-    return render_template('quiz.html', mc_quiz=mc_quiz, tf_quiz=tf_quiz)
-
-
-
-# @app.route('/search/<keywords>', methods = ['GET', 'POST'])
-# def search_result(keywords):
-#     """given keywords, search the database and return matching results
-    
-#     Args:
-#         keywords(str): keywords
-#     Returns:
-#         json object of array. each element in the array is a json object
-#         of matching result. If none matches, [].
-
-#     """
-#     matches = []
-#     # find entries with matching keywords in title/description
-#     for entry in restaurants:
-#         desc = entry["desc"]
-#         name = entry["name"]
-#         dish = entry["dishes"]
-#         openStatus = entry['open_status']
-#         # 
-#         # booleans, checck substring match for three fields:
-#         inName = name.lower().find(keywords.lower()) != -1
-#         inDesc = desc.lower().find(keywords.lower()) != -1
-#         inOpenStatus = openStatus.lower().find(keywords.lower()) != -1
-#         inDish = any(keywords.lower() in string.lower() for string in dish)
-
-#         # if found any in above conditions -> return
-#         if inName or inDesc or inDish or inOpenStatus :   # lower case matching
-#         # if name.find(keywords) != -1:       # case sensitive searching
-#             matches.append(entry)
-
-#     # back to client
-#     data = {"matches": matches, "keywords": keywords}
-#     return render_template('search_result.html',
-#                             search_results=data)
-
-
-
-# @app.route('/get3', methods=['GET', 'POST'])
-# def getThree():
-#     """randomly choose three items from restaruants, return to client
-    
-#     Args:
-#         None
-#     Returns:
-#         json object of three elements in restaurants.
-#     """
-#     res = []
-#     for i in range(3):
-#         res.append(restaurants[i])
-#         # res.append(restaurants[random.randint(0, len(restaurants)-1)])
-#     return jsonify(res)
-
-# @app.route('/view/<id>', methods=['GET', 'POST'])
-# def view(id):
-#     """ render a template page using a given `id`
-    
-#     Args:
-#         id(int): id for the specific entry
-#     Returns:
-#         renders view.html using entry
-#     """
-#     # print(request)
-#     if request.method == 'GET':
-#         entry = None
+    currentMultipleChoiceQuestion = mc_quiz_questions[id]
+    currentTrueFalseQuestion = tf_quiz_questions[id]
+    if request.method == 'POST':
+        global score
+        data = request.get_json() 
+        user_answer = data['answer']
+        res = {}
         
-#         for r in restaurants:
-#             if r["id"] == int(id):
-#                 entry = r
-#                 break
-        
-#         return render_template('view.html', entry = entry)
-#     else:
-#         # updated = jsonify(request.get_data())
-#         # updated = request.get_data()
-#         # data = request.form['name']
-#         # print("test:   ", data)
-#         updated = {
-#             "id" : int(request.form['id']),
-#             "name" : request.form['name'],
-#             "desc" : request.form['desc'],
-#             "image_url" : request.form['image_url'],
-#             "rating" : request.form['rating'],
-#             "pricing" : request.form['pricing'],
-#             "dishes" : [s.strip() for s in request.form['dishes'].split(',')],
-#             "similar_res" : [s.strip() for s in request.form['similar_res'].split(',')],
-#             "open_status" : request.form['open_status'],
-#             "hours" : request.form['hours']
-#         }
-
-#         print([s.strip() for s in request.form['dishes'].split(',')])
-#         # print(updated)
-#         for i in range(len(restaurants)):
-#             r = restaurants[i]
-#             if r['id'] == updated['id']:
-#                 restaurants[i] = updated
-#                 print(restaurants[0])
-#                 print('found')
-#                 # print('updated:' , updated) 
-#                 break
-#         # print()
-#         return render_template('view.html', entry = updated)
-
-
-# @app.route('/add', methods = ['GET', 'POST'])
-# def add():
-#     if request.method == 'GET':
-#         return render_template('add.html')
-#     else:
-#         global current_id
-
-#         data = request.get_json()
-        
-#         data["id"] = current_id
-#         newID = current_id
-#         current_id += 1
-#         print(data)
-
-#         res = {
-#             "newID" : newID
-#         }
-#         restaurants.append(data)
-
-#         return jsonify(res)
-
-
-
-
-# @app.route('/edit/<id>', methods = ['GET', 'POST'])
-# def edit(id):
-#     if request.method == 'GET':
-#         entry = None
-#         for r in restaurants:
-#             if r["id"] == int(id):
-#                 entry = r
-#                 break
-#         return render_template('edit.html', entry = entry)
-#     else:
-#         # pass
-#         # post request, saves the edited entry
-#         updated = request.get_json()
-#         print(updated)
-#         for i in range(len(restaurants)):
-#             r = restaurants[i]
-#             if r['id'] == updated['id']:
-#                 restaurants[i] = updated 
-#                 break
-        
-#         # res = {
-#         #     "id" : id
-#         # }
-
-#         # return jsonify(res)
-    
-
-# # @app.route('/edit_save', methods = ['GET', 'POST'])
-# # def edit():
-# #     global current_id
-# #     data = request.get_json()
-# #     for i in range(len(restaurants)):
-# #         r = restaurants[i]
-# #         if r['id'] == data['id']:
-# #             restaurants[i] = data
-# #             break
-# #     return 
+        # check if MC or TF question
+        if (user_answer == 'True' or user_answer == 'False'):
+            if user_answer == tf_quiz_questions[id+1]['tf_answer']:
+                res['score'] = score + 1
+            else:
+                res['score'] = scroll
             
-# # ROUTE : save sales
-# # @app.route('/save_sale', methods=['GET', 'POST'])
-# # def save_sale():
-# #     global current_id
-
-
-# #     jsonData = request.get_json()
-# #     # print(jsonData, file=sys.stderr)
-
-# #     # retreive info
-# #     salesperson = jsonData["salesperson"]
-# #     client = jsonData["client"]
-# #     reams = jsonData["reams"]
-# #     # update client if needed
-# #     if client not in clients:
-# #         clients.append(client)
-# #     # update id
-    
-# #     newID = current_id
-
-# #     # prepare new entry
-# #     newSaleEntry = {
-# #         "id"            : newID,
-# #         "salesperson"   : salesperson,
-# #         "client"        : client,
-# #         "reams"         : reams
-# #     }
-    
-# #     current_id += 1
-# #     sales.append(newSaleEntry)
-
-# #     return jsonify(sales=sales, clients=clients)
+        res['correct'] = False
+        return jsonify(res)
+    else :
+        return render_template('quiz.html', mc_quiz=mc_quiz, tf_quiz=tf_quiz)
 
 if __name__ == '__main__':
     app.run(debug=True)

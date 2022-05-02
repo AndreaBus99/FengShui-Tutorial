@@ -4,11 +4,16 @@
 {% block content%}
 
 <!-- dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'quiz.js') }}"></script>
 <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
 
-
-
+<script>
+    const mc_quiz_questions={{mc_quiz_questions|tojson}}
+    const tf_quiz_questions={{tf_quiz_questions|tojson}}
+    console.log(mc_quiz_questions);
+    console.log(tf_quiz_questions);
+</script>
 <!-- 
 TODO:
     1. how to handle the quiz start page? do we really need it?
@@ -17,7 +22,6 @@ TODO:
     <div class="row">
         <!-- current quiz score -->
         <div class="col-md-3 quiz-score">
-            This will be the quiz portion, will be implemented later
         </div>
         <!-- body of question -->
         <div class="col-md-6">
