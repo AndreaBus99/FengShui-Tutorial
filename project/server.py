@@ -52,7 +52,7 @@ furniture = [
         "furniture" : "drawers",
         "img_url": "../static/images/Drawers.JPG",
         "width" : 8,
-        "height": 4.8,
+        "height": 4.3,
         "left" : 13,
         "top" : 15
     },
@@ -61,7 +61,7 @@ furniture = [
         "furniture" : "wardrobe",
         "img_url": "../static/images/Wardrobe.JPG",
         "width" : 9,
-        "height": 4.8,
+        "height": 4.3,
         "left" : 13,
         "top" : 8
     }

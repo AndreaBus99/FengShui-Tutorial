@@ -24,10 +24,6 @@ function disable_scaling(obj){
   });
   obj.snapAngle = 90;
 }
-
-
-
-
 /* return position properties of a furniture */
 function get_prop_of_item(furniture){
      // TODO: code this
@@ -38,10 +34,8 @@ function get_prop_of_item(furniture){
 
 // initialize grids, room layout
 function init_room(canvas) {
-
   let canvasWidth =  $('#canvasSpace').width();
   let canvasHeight = $('#canvasSpace').height();
-
   let grid = canvasWidth/50;
 
   canvas.setDimensions({width:canvasWidth, height:canvasHeight});
@@ -76,6 +70,16 @@ function init_room(canvas) {
     evented: false, //cursor does not change to move on hover
   })
 
+  var windowText = new fabric.Text("Window", { 
+    left: 32 * grid, 
+    top: 2.8*grid,
+    fontSize: 18,
+    originX: 'center',
+    originY: 'center', 
+    selectable: false, //user cannot move/select outline
+    evented: false, //cursor does not change to move on hover
+  });
+
   var door = new fabric.Rect({
     width: grid*6,
     height: grid*0.5, 
@@ -85,6 +89,16 @@ function init_room(canvas) {
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
   })
+
+  var doorText = new fabric.Text("Door", { 
+    left: 36 * grid, 
+    top: grid*Math.round(16*1.6)+(1.95*grid),
+    fontSize: 18,
+    originX: 'center',
+    originY: 'center', 
+    selectable: false, //user cannot move/select outline
+    evented: false, //cursor does not change to move on hover
+  });
 
   var widthText = new fabric.Text("8'5\" ft", { 
     left: 32 * grid, 
@@ -107,7 +121,7 @@ function init_room(canvas) {
     evented: false, //cursor does not change to move on hover
   });
 
-  var roomOutlineExtra = new fabric.Group([ widthText, heightText, window, door ], {
+  var roomOutlineExtra = new fabric.Group([ widthText, heightText, window, door, windowText, doorText ], {
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
   });
@@ -135,7 +149,6 @@ function build() {
   
   // initialzie room, get the grid size
   let grid = init_room(canvas);
-  // console.log("grid size: "+ grid);
 
   // fetch furniture json from flask server and render on canvas
   $.each(furniture,function(index,ui){
@@ -145,13 +158,14 @@ function build() {
     let height = ui.height * grid;
     let id    = ui.furniture;
 
-    console.log("width: "+width);
     // create image
     let f_image = new Image();
     f_image.onload = function (img) {  
       let f_entity = new fabric.Image(f_image, {
         left: ui.left * grid,//position image on loading
-        top: ui.top * grid
+        top: ui.top * grid,
+        borderColor: "red",//TO DO: change to accent color
+        cornerColor: "red", //TO DO: change to accent color
       });
       // set width
       f_entity.scaleToWidth(width,false);
@@ -186,7 +200,6 @@ function build() {
       }
     });
     // get coords of bed
-    // let coordsBed = getCoordinates(canvas, 'bed');
     let allData = {
       'grid' : grid,
       'bed_coords' : getCoordinates(canvas, 'bed', grid),
@@ -194,8 +207,7 @@ function build() {
       'drawers_coords' : getCoordinates(canvas, 'drawers', grid),
       'wardrobe_coords' : getCoordinates(canvas, 'wardrobe', grid)
     };
-    //TODO - get and send desk coords
-    // send coords of bed to server
+    // send coords of furniture to server
 		$.ajax({
 			type        :   "POST",
 			url         :   "learn",
@@ -214,19 +226,16 @@ function build() {
         let bad_l = result[0]['bad_lessons'];
         let complete  = result[0]['complete'];
 
-        console.log("result.length: "+ Object.keys(result).length);
-
+        // for each rule/check found
         for(let i=1; i<Object.keys(result).length; i++){
           let status    = result[i]['status'];
           let feedback  = result[i]['feedback'];
           let obj_to_mark = result[i]['mark'];
 
-          console.log("status check, status: "+ status);
-          // get bed obj
+          // highlight the relevant furniture
           mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
         }
 
-        // console.log(green_progress);
         // set progress bar
         $("#green-progress-bar").text(green_progress);
         $("#green-progress-bar").attr('style', "width:" + green_progress + "%");
