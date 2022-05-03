@@ -24,10 +24,6 @@ function disable_scaling(obj){
   });
   obj.snapAngle = 90;
 }
-
-
-
-
 /* return position properties of a furniture */
 function get_prop_of_item(furniture){
      // TODO: code this
@@ -38,10 +34,8 @@ function get_prop_of_item(furniture){
 
 // initialize grids, room layout
 function init_room(canvas) {
-
   let canvasWidth =  $('#canvasSpace').width();
   let canvasHeight = $('#canvasSpace').height();
-
   let grid = canvasWidth/50;
 
   canvas.setDimensions({width:canvasWidth, height:canvasHeight});
@@ -76,6 +70,16 @@ function init_room(canvas) {
     evented: false, //cursor does not change to move on hover
   })
 
+  var windowText = new fabric.Text("Window", { 
+    left: 32 * grid, 
+    top: 2.8*grid,
+    fontSize: 18,
+    originX: 'center',
+    originY: 'center', 
+    selectable: false, //user cannot move/select outline
+    evented: false, //cursor does not change to move on hover
+  });
+
   var door = new fabric.Rect({
     width: grid*6,
     height: grid*0.5, 
@@ -85,6 +89,16 @@ function init_room(canvas) {
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
   })
+
+  var doorText = new fabric.Text("Door", { 
+    left: 36 * grid, 
+    top: grid*Math.round(16*1.6)+(1.95*grid),
+    fontSize: 18,
+    originX: 'center',
+    originY: 'center', 
+    selectable: false, //user cannot move/select outline
+    evented: false, //cursor does not change to move on hover
+  });
 
   var widthText = new fabric.Text("8'5\" ft", { 
     left: 32 * grid, 
@@ -107,7 +121,7 @@ function init_room(canvas) {
     evented: false, //cursor does not change to move on hover
   });
 
-  var roomOutlineExtra = new fabric.Group([ widthText, heightText, window, door ], {
+  var roomOutlineExtra = new fabric.Group([ widthText, heightText, window, door, windowText, doorText ], {
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
   });
@@ -154,7 +168,9 @@ function build() {
     f_image.onload = function (img) {  
       let f_entity = new fabric.Image(f_image, {
         left: ui.left * grid,//position image on loading
-        top: ui.top * grid
+        top: ui.top * grid,
+        borderColor: "red",//TO DO: change to accent color
+        cornerColor: "red", //TO DO: change to accent color
       });
       // set width
       f_entity.scaleToWidth(width,false);
@@ -177,6 +193,7 @@ function build() {
     });
   });
 
+
   // on click submit button
   $("#learn-test-submit-btn").click(()=>{
     // deselect all objects
@@ -189,7 +206,6 @@ function build() {
       }
     });
     // get coords of bed
-    // let coordsBed = getCoordinates(canvas, 'bed');
     let allData = {
       'grid' : grid,
       'bed_coords' : getCoordinates(canvas, 'bed', grid),
@@ -197,8 +213,7 @@ function build() {
       'drawers_coords' : getCoordinates(canvas, 'drawers', grid),
       'wardrobe_coords' : getCoordinates(canvas, 'wardrobe', grid)
     };
-    //TODO - get and send desk coords
-    // send coords of bed to server
+    // send coords of furniture to server
 		$.ajax({
 			type        :   "POST",
 			url         :   "learn",
@@ -226,10 +241,6 @@ function build() {
         $("#guidance").text(guide_new);
         // console.log(green_progress);
         // set progress bar
-        // $("#green-progress-bar").text(green_progress);
-        // $("#green-progress-bar").attr('style', "width:" + green_progress + "%");
-        // $("#red-progress-bar").text(red_progress);
-        // $("#red-progress-bar").attr('style', "width:" + red_progress + "%");
         $("#progress-bar").text(progress + " %");
         $("#progress-bar").attr('style', "width:" + progress + "%");
         // get bed obj
@@ -238,8 +249,8 @@ function build() {
 
         // if complete, display the message, disable submit button
         if (complete == 'True') {
-          $("#complete-msg").text("Congrats! You've learned all rules! Click on the quiz button on top right to test your learning!");
-          $('#learn-test-submit-btn').prop({"disabled" : true})
+          $('#learn-test-submit-btn').prop({"disabled" : true});
+          
         }
 			},
 			error: 

@@ -45,7 +45,7 @@ furniture = [
         "furniture" : "drawers",
         "img_url": "../static/images/Drawers.JPG",
         "width" : 8,
-        "height": 4.8,
+        "height": 4.3,
         "left" : 13,
         "top" : 15
     },
@@ -103,7 +103,6 @@ good_lessons = [
     {
         "id" : "2",
         "title" : "Large clear space",
-        "complte": "false",
         "complete": False,
         "feedback" : "Excellent! You’ve identified another good rule. Pushing your furniture against the wall can help create a (relatively) large open space. Clearing out space will clear your mind and prevent distractions.",
         "summary" : "Furniture against the wall can help create a large open space.",
@@ -235,7 +234,7 @@ tf_quiz_questions = [
 def is_learn_done():
     # completed all good ones
     for l in good_lessons:
-        print(l)
+        # print(l)
         if l['complete'] is False:
             return False
     # completed all good ones
@@ -407,6 +406,42 @@ def no_new_rules_triggered(gc, bc):
     pass
 
 
+def deskChecks(res, coordsDesk, coordsBed):
+    count = len(res)+1
+    # check if desk has back to door
+    if  bad_lessons[2]['complete'] is False and back_against_door(coordsDesk):
+        res[count] = {}
+        res[count]['status'] = 'no'
+        res[count]['mark'] = 'desk'
+        res[count]['feedback'] = bad_lessons[2]['feedback']
+        bad_lessons[2]['complete'] = True
+        count=count+1
+    # check if desk close to window
+    elif good_lessons[3]['complete'] is False and desk_window(coordsDesk):
+        res[count] = {}
+        res[count]['status'] = 'yes'
+        res[count]['mark'] = 'desk'
+        res[count]['feedback'] = good_lessons[3]['feedback']
+        good_lessons[3]['complete'] = True
+        count=count+1
+    #check if desk can view door
+    elif good_lessons[2]['complete'] is False and can_view_door(coordsDesk):
+        res[count] = {}
+        res[count]['status'] = 'yes'
+        res[count]['mark'] = 'desk'
+        res[count]['feedback'] = good_lessons[2]['feedback']
+        good_lessons[2]['complete'] = True
+        count=count+1
+    #check if desk and bed are too close
+    elif bad_lessons[3]['complete'] is False and are_too_close(coordsDesk, coordsBed):
+        res[count] = {}
+        res[count]['status'] = 'no'
+        res[count]['mark'] = 'desk'
+        res[count]['feedback'] = bad_lessons[3]['feedback']
+        bad_lessons[3]['complete'] = True
+        count=count+1
+    return res
+     
 # ROUTES
 @app.route('/')
 def welcome():
@@ -416,13 +451,15 @@ def welcome():
 learn route
 
 """
-
+# track user state
 cur_state = 0
 stuck_counter = 0
+prev_layout = None
 @app.route('/learn', methods = ['GET', 'POST'])
 def learn():
     global cur_state
     global stuck_counter
+    global prev_layout
     guidance = {
         # start state
         0 : {
@@ -467,6 +504,10 @@ def learn():
         # keep track of if user been stuck or not
         good_lessons_copy = copy.deepcopy(good_lessons)
         bad_lessons_copy = copy.deepcopy(bad_lessons)
+        # if prev_layout is None or layout_not_changed(prev_layout, ):
+        #     res['status'] = 'no'
+        #     res['mark'] = 'room_outline'
+        #     res['feedback'] = 'rearrange the layout'
         # check if bed is in room
         if is_in_room(coordsBed) is False:
             res['status'] = 'no'
@@ -480,11 +521,7 @@ def learn():
             res['mark'] = 'desk'
             res['feedback'] = 'Please place the desk inside the room!'
             cur_state = 1
-        #check if wardrobe is in room
-        # elif is_in_room(coordsWardrobe) is False:
-        #     res['status'] = 'no'
-        #     res['mark'] = 'wardrobe'
-        #     res['feedback'] = 'Please place the wardrobe inside the room!!!'
+
         #check if drawer is in room
         elif is_in_room(coordsDrawers) is False:
             res['status'] = 'no'
@@ -495,13 +532,14 @@ def learn():
         #check if there's open space
         elif good_lessons[1]['complete'] is False and open_space(coordsBed, coordsDesk, coordsDrawers):
             res['status'] = 'yes'
-            res['mark'] = 'bed' # is there a way to select room outline?
+            res['mark'] = 'room_outline' # is there a way to select room outline?
             res['feedback'] = good_lessons[1]['feedback']
             good_lessons[1]['complete'] = True
             cur_state = 2
             
         # check if facing toward door
         elif bad_lessons[1]['complete'] is False and is_facing_door(coordsBed):
+            # res[= {}
             res['status'] = 'no'
             res['mark'] = 'bed'
             res['feedback'] = bad_lessons[1]['feedback']
@@ -510,6 +548,7 @@ def learn():
         
         #check if has window backing
         elif bad_lessons[0]['complete'] is False and has_window_backing(coordsBed):
+            # res[count] = {}
             res['status'] = 'no'
             res['mark'] = 'bed'
             res['feedback'] = bad_lessons[0]['feedback']
@@ -565,6 +604,8 @@ def learn():
             # good_lessons[0]['complete'] = True
             cur_state = 5
         
+
+        
         # complete status
         res['complete'] = "True" if is_learn_done() else "False"
         # progress percentage
@@ -572,7 +613,9 @@ def learn():
         # send lessons learned so far
         res['good_lessons'] = good_lessons
         res['bad_lessons'] = bad_lessons
+
         # check if user failed to find any rule
+        # track and update user's state
         if cur_state != 1 and no_new_rules_triggered(good_lessons_copy, bad_lessons_copy):
             stuck_counter += 1
         else:
@@ -580,18 +623,15 @@ def learn():
             # either curstate is 1 or found some new rule
             if cur_state != 1:
                 cur_state = 3
-            # else:   # learned new rule
-            #     cur_state = 4
-            # print("same-good", same_good)
         if stuck_counter >= 2:
             cur_state = 2
         
         # return the feedback
-        # print("next guidance is : ", guidance[cur_state])
+        # if done, display the congrats msg
         if is_learn_done():
             cur_state = 6
 
-        # guidance
+        # set guidance message based on current state
         res['guidance'] = guidance[cur_state]
         return jsonify(res)
     else:
