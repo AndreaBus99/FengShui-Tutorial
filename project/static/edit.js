@@ -225,26 +225,32 @@ function build() {
         // result is a json with two fields 1. status 2. feedback 3. complete 4. progress
         // console.log(result);
         
-        let status    = result['status'];
-        let feedback  = result['feedback'];
-        let complete  = result['complete'];
-        
-        let obj_to_mark = result['mark']
-        let learned_progress  = result['progress'][0];
-        let all_progress = result['progress'][1];
+        //get general info first
+        let learned_progress  = result[0]['progress'][0];
+        let all_progress = result[0]['progress'][1];
         let progress = Math.round(learned_progress / all_progress * 100)
-        let good_l = result['good_lessons'];
-        let bad_l = result['bad_lessons'];
-        let guide_new = result['guidance']['text'];
+        let good_l = result[0]['good_lessons'];
+        let bad_l = result[0]['bad_lessons'];
+        let complete  = result[0]['complete'];
+        let guide_new = result[0]['guidance']['text'];
+
+        // for each rule/check found        
+        for(let i=1; i<Object.keys(result).length; i++){
+          let status    = result[i]['status'];
+          let feedback  = result[i]['feedback'];
+          let obj_to_mark = result[i]['mark'];
+
+          // highlight the relevant furniture
+          mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
+        }
+        
+  
         // update guidance 
-        // console.log("!!!!!!! g is : " + guide_new);
         $("#guidance").text(guide_new);
         // console.log(green_progress);
         // set progress bar
         $("#progress-bar").text(progress + " %");
         $("#progress-bar").attr('style', "width:" + progress + "%");
-        // get bed obj
-        mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
         
 
         // if complete, display the message, disable submit button
