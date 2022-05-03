@@ -20,7 +20,7 @@ app = Flask(__name__)
 global variables to maintain
     2. quiz score, correct answer for each question
 """
-homepage_image = "https://i.pinimg.com/564x/17/0c/5d/170c5dd798020fb9a8a9a2f2087ee50f.jpg"
+homepage_image = "https://i.redd.it/m4io3grlhtr41.jpg"
 
 furniture = [
     {

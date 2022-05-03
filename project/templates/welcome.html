@@ -8,8 +8,31 @@
 <!-- <script type="text/javascript" src="{{ url_for('static', filename = 'welcome.js') }}"></script> -->
 <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
 
+<style>
+    #learn-more-btn{
+        background-color: lightblue;
+        color: #2a3b5e;
+        border: 0px;
+    }
+    
+    .row{
+        margin:20px;
+    }
+
+    .capsule{
+        margin-top:10px;
+        background-color: white; 
+        height: 100%;
+        overflow:auto;
+        border-radius: 25px;
+    }
+
+    
+
+
+</style>
 <!-- content -->
-<div class="container">
+<div class="container capsule">
     <div class="row">
         <div class="col-md-6">
             <img src={{homepage_image|tojson}} alt="home page image" class="img-fluid">
@@ -39,7 +62,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <a href="/tutorial/1">
-                        <button type="button" class="btn btn-primary btn-lg btn-block">Learn More</button>
+                        <button type="button" id="learn-more-btn" class="btn btn-primary btn-lg btn-block">Learn More</button>
                     </a>
                 </div>
             </div>

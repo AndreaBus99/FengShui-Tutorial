@@ -260,7 +260,7 @@ function start_of_tutorial(){
     $(".modal-title").append("Tutorial")
 
     // Append a button for skipping the tutorial
-    $("#skip-tutorial-btn").append($("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Skip tutorial</button>"))
+    $("#skip-tutorial-btn").append($("<button id='skip-tutorial' type='button' class='btn btn-secondary' data-dismiss='modal'>Skip tutorial</button>"))
 
     // When this button is clicked redirect to the learning portion
     $("#skip-tutorial-btn").click(()=>{
