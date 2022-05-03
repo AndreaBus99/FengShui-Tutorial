@@ -243,8 +243,8 @@ function build() {
           // highlight the relevant furniture
           mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
         }
-        clicked_colored = false;
-        $('#learn-test-submit-btn').prop({"disabled" : true });
+        // clicked_colored = false;
+        // $('#learn-test-submit-btn').prop({"disabled" : true });
   
         // update guidance 
         $("#guidance").text(guide_new);
@@ -306,7 +306,7 @@ function mark_furniture(canvas, id, feedback, status, good_l, bad_l) {
       rect.on('mousedown', ()=> {
         // console.log('moused clicked!');
         // $("#learn-lesson-learned").append($('<div>').append($('<h3>',{text: feedback})));
-        $('#learn-test-submit-btn').prop({"disabled" : false });
+        // $('#learn-test-submit-btn').prop({"disabled" : false });
         $("#lesson").text(feedback);
         canvas.remove(rect);
         $('#modal').modal('show');
