@@ -5,6 +5,7 @@ Backend server for group 1 UI final project
 """
 
 from genericpath import samefile
+from re import I
 from tkinter import scrolledtext
 from flask import Flask
 from flask import render_template
@@ -168,17 +169,19 @@ bad_lessons = [
 
 mc_quiz_questions = [
     {
-        "mc_quiz_id" : "1",
+        "id" : "0",
+        "type" : "MC",
         "mc_image" : "",#to be filled
         "mc_question" : "What are some potential issues with the room shown above?",
         "option_1" : "Bed direction",
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
         "answer" : "Bed direction",
-        "mc_next_question" : "2"
+        "next_question" : "2"
     },
     {
-        "mc_quiz_id" : "2",
+        "id" : "1",
+        "type": "MC",
         "mc_image" : "", #to be filled
         "mc_question" : "What are some potential issues with the room shown above?",
         "option_1" : "Bed direction",
@@ -188,7 +191,8 @@ mc_quiz_questions = [
         "mc_next_question" : "3"
     },
     {
-        "mc_quiz_id" : "3",
+        "id" : "2",
+        "type" : "MC",
         "mc_image" : "",#to be filled
         "mc_question":  "What are some positive things about this layout?",
         "option_1" : "Bed is in the corner and open space",
@@ -198,20 +202,22 @@ mc_quiz_questions = [
         "mc_next_question" : "4",
     },
     {
-        "mc_quiz_id" : "4",
+        "id" : "3",
+        "type" : "MC",
         "mc_image" : "",#to be filled
         "mc_question" : "What are some negative things about this layout?",
         "option_1" : "Bed is in the corner and open space",
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
         "answer" : "Desk location (people have their backs against the door)",
-        "mc_next_question" : "end"
+        "mc_next_question" : "5"
     }
 ]
 
 tf_quiz_questions = [
     {
-        "tf_quiz_id" : "1",
+        "id" : "5",
+        "type" : "TF",
         "tf_image" : "",#to be filled
         "tf_question" : "Desk should be close to the window",
         "true" : "True",
@@ -221,7 +227,8 @@ tf_quiz_questions = [
 
     },
     {
-        "tf_quiz_id" : "2",
+        "id" : "6",
+        "type" : "TF",
         "tf_image" : "", #to be filled
         "tf_question" : "Desk should face door",
         "true" : "True",
@@ -708,6 +715,7 @@ def tutorial(id):
 """
 Quiz route
 """
+current_score = 0
 @app.route('/quiz_yourself/<id>', methods = ['GET', 'POST'])
 def quiz_yourself(id):
     global current_score
@@ -729,6 +737,6 @@ def quiz_yourself(id):
         server_response['corrections'] = current_question['answer'] 
       return jsonify(server_response)
     else:
-        return render_template('quiz.html', quiz_questions = current_question) 
+        return render_template('quiz.html', quiz_question=current_question, score=current_score) 
 if __name__ == '__main__':
     app.run(debug=True)
