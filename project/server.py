@@ -308,7 +308,7 @@ def back_against_door(c):
 
 # check if has window backing
 def has_window_backing(c):
-   return c['angle'] == 0 and c['left'] >= 24 and c['top']==2
+   return c['angle'] == 0 and c['left'] >= 24 and c['top'] <= 4
 
 # check if desk close to window
 def desk_window(c):
@@ -318,14 +318,21 @@ def desk_window(c):
 def is_in_corner(c):
     x,y,w,h =c['left'], c['top'], c['width'], c['height']
     a = c['angle']
-    corner = False
-
-    if a==270 and x==24 and y==2:
-        corner = True
-    elif a==90 and x==28 and y==2:
-        corner = True
-    elif a==180 and x==24 and y==16:
-        corner = True
+    # corner = False
+    if is_in_room(c):
+        if y == 2:
+            if x == 24 or x == 28:
+                return True
+        if y == 16:
+            if x == 24 or x == 28:
+                return True
+    return False
+    # if a==270 and x==24 and y==2:
+    #     corner = True
+    # elif a==90 and x==28 and y==2:
+    #     corner = True
+    # elif a==180 and x==24 and y==16:
+    #     corner = True
     
     return corner
 
@@ -468,13 +475,15 @@ def learn():
         0 : {
             "text" : "Arrange the furniture in the room and click submit to learn about some Feng Shui principles",
         },
+        # some furniture not in room
         1 : {
             "text" : "Please put all the furniture inside the room",
         },
+        # all furniture in room
         4 : {
             "text" : "Great! Now that all the furniture is in the room, create a layout and then click submit to learn more"
         },
-        # user is stuck
+        # user is stuck (no rule found twice)
         2 : {
             "text" : "Hmm, seems like you are stuck. Hint:" + gen_tip_for_next_rule(),
         },
@@ -482,9 +491,11 @@ def learn():
         3 : {
             "text" : "Great! You've found some rules, click on the red/green box to learn about it"
         },
+        # no rule ofund for once
         5 : {
             "text" : "You didn't find new rules, try a different layout"
         },
+        # completed learning
         6 : {
             "text" : "Congrats! Review the rules and quiz yourself!"
         }
