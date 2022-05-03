@@ -1,24 +1,17 @@
 # coding=utf-8
 
 """
-UNI: rl3250
-Name: Ruize Li
-
-This is the flask backend for homeworks in UI COMS 4111.
-
-
-@TODO:
-    1. welcome page
-    2. learn page -> GET POST methods to receive locations of objects and return corresponding feedback/hints
-    3. quiz page -> GET POST methods to receive the user's answer and return feedback, maintain scores for user
+Backend server for group 1 UI final project
 """
 
+from genericpath import samefile
 from tkinter import scrolledtext
 from flask import Flask
 from flask import render_template
 from flask import Response, request, jsonify
 import random
 import sys
+import copy
 app = Flask(__name__)
 
 """
@@ -56,15 +49,15 @@ furniture = [
         "left" : 13,
         "top" : 15
     },
-    {
-        "furniture_id" : "4",
-        "furniture" : "wardrobe",
-        "img_url": "../static/images/Wardrobe.JPG",
-        "width" : 9,
-        "height": 4.8,
-        "left" : 13,
-        "top" : 8
-    }
+    # {
+    #     "furniture_id" : "4",
+    #     "furniture" : "wardrobe",
+    #     "img_url": "../static/images/Wardrobe.JPG",
+    #     "width" : 9,
+    #     "height": 4.8,
+    #     "left" : 13,
+    #     "top" : 8
+    # }
 ]
 
 tutorial_steps = [
@@ -104,7 +97,8 @@ good_lessons = [
         "title" : "Bed in corner",
         "complete": False,
         "feedback" : "Great! It is good practice in a college dorm (or smaller rooms in general) to position the bed in a corner with a solid backing for a good night's sleep.",
-        "summary" : "Beds should be in the corner with a solid backing (e.g. a wall)."
+        "summary" : "Beds should be in the corner with a solid backing (e.g. a wall).",
+        "tip" : "try placing the bed in a corner..?"
     },
     {
         "id" : "2",
@@ -112,21 +106,24 @@ good_lessons = [
         "complte": "false",
         "complete": False,
         "feedback" : "Excellent! You’ve identified another good rule. Pushing your furniture against the wall can help create a (relatively) large open space. Clearing out space will clear your mind and prevent distractions.",
-        "summary" : "Furniture against the wall can help create a large open space."
+        "summary" : "Furniture against the wall can help create a large open space.",
+        "tip" : "try placing all furnitures in corner..?"
     },
     {
         "id" : "3",
         "title" : "Desk should have view of door",
         "complete": False,
         "feedback" : "Amazing! It’s good to have your desk allow a view of the door. Try to always position the desk so that the door is in sight!",
-        "summary" : "The desk should have a view of the door to reduce vulnerability."
+        "summary" : "The desk should have a view of the door to reduce vulnerability.",
+        "tip" : "what if im at my desk and try to view the door when i turn left/right?"
     },
     {
         "id" : "4",
         "title" : "Desk close to window",
         "complete": False,
         "feedback" : "Nicely done! It’s good to have the desk close to the window. Having the desk close to the window allows for nice natural lighting during the day!",
-        "summary" : "Desks close to the window get good natural light."
+        "summary" : "Desks close to the window get good natural light.",
+        "tip" : "it'd be great to sit and have a view outside window.."
     }
 ]
 
@@ -136,28 +133,32 @@ bad_lessons = [
         "title" : "Bed should not backed by window",
         "complete": False,
         "feedback" : "Oh dear! In Feng Shui for a good night’s sleep your bed needs to be backed by something solid, like a wall - not a window where something could sneak up on you",
-        "summary" : "Beds should not be backed by windows because they leave you vulnerable."
+        "summary" : "Beds should not be backed by windows because they leave you vulnerable.",
+        "tip" : "try sleeping back to window..?"
     },
     {
         "id" : "2",
         "title" : "Bed should not be in line with door",
         "complete": False,
         "feedback" : "Oh no! In Feng Shui it is bad to have your bed directly in line with the door, because “the chi (energy) is too intense”. It is known as “dead man’s position” or 'coffin position'.",
-        "summary" : "Beds should not be in line with the door, this is the coffin position."
+        "summary" : "Beds should not be in line with the door, this is the coffin position.",
+        "tip" : "try alinging bed with door?"
     },
     {
         "id" : "3",
         "title" : "Desk should not be facing away from door",
         "complete": False,
         "feedback" : "Oh dear! In Feng Shui people try to not have their backs against the door as this could lead to one feeling vulnerable. Imagine all the things that could sneak up on you!",
-        "summary" : "Desk's should not be facing away from the door."
+        "summary" : "Desk's should not be facing away from the door.",
+        "tip" : "what if having my back towards the door?"
     },
     {
         "id" : "4",
         "title" : "Bed and desk should not be too close",
         "complete": False,
         "feedback" : "Oops! In Feng Shui, the bed is seen as an area for rest and the desk a workspace. Try to not have the bed and desk so close for some Feng Shui work life balance!",
-        "summary" : "Keep the bed and desk separate for work-life balance."
+        "summary" : "Keep the bed and desk separate for work-life balance.",
+        "tip" : "what if bed and desk are right next to each other?"
     }
 ]
 
@@ -255,7 +256,9 @@ def get_progress():
     for l in bad_lessons:
         if l['complete'] is True:
             bad += 1
+    return [good + bad, len(good_lessons) + len(bad_lessons)]
     return [round(good / len(good_lessons) * 100), round(bad / len(bad_lessons) * 100)]
+
 
 # helper function to check location of furniture
 # return boolean
@@ -263,10 +266,10 @@ def is_in_room(c):
     # get coords and degree
     x,y,w,h =c['left'], c['top'], c['width'], c['height']
     a = c['angle']
-    print("x is", x)
-    print("y is", y)
-    print("w is", w)
-    print("h is", h)
+    # print("x is", x)
+    # print("y is", y)
+    # print("w is", w)
+    # print("h is", h)
 
     check_x = True
     check_y = True
@@ -279,8 +282,8 @@ def is_in_room(c):
         check_y = False
 
     # print('y', y)
-    print("cy: ", check_y)
-    print("cx: ", check_x)
+    # print("cy: ", check_y)
+    # print("cx: ", check_x)
     return check_x and check_y
 
 # check if facing toward door
@@ -304,16 +307,25 @@ def is_in_corner(c):
     x,y,w,h =c['left'], c['top'], c['width'], c['height']
     a = c['angle']
 
-    corner = False
-
-    if a==270 and x==24 and y==2:
-        corner = True
-    elif a==90 and x==28 and y==2:
-        corner = True
-    elif a==180 and x==24 and y==16:
-        corner = True
+    # corner = False
+    # if is_in_room(c):
+    #     if x == 24 or x + w ==
+    # if a==270 and x==24 and y==2:
+    #     corner = True
+    # elif a==90 and x==28 and y==2:
+    #     corner = True
+    # elif a==180 and x==24 and y==16:
+    #     corner = True
+    # print("is in corner  x, y, x+w, y+h: ", x, y, x+w, y+h )
+    if is_in_room(c):
+        if x == 24:
+            if y == 2 or y+h == 28:
+                return True
+        if x+w == 40:
+            if y == 2 or y+h == 28:
+                return True
     
-    return corner
+    return False
 
 # check desk has view of door
 def can_view_door(c):
@@ -324,20 +336,20 @@ def can_view_door(c):
     check_angle = a == 90 or a == 270
     # position
     check_pos = x >= 33 and x+w <= 40
-    print("check can view door", check_angle, check_pos, a)
+    # print("check can view door", check_angle, check_pos, a)
     return check_angle and check_pos
 
 # check for open space
-def open_space(c1, c2, c3, c4):
+def open_space(c1, c2, c3):
     x1,y1,w1,h1 =c1['left'], c1['top'], c1['width'], c1['height']
     x2,y2,w2,h2 =c2['left'], c2['top'], c2['width'], c2['height']
     x3,y3,w3,h3 =c3['left'], c3['top'], c3['width'], c3['height']
-    x4,y4,w4,h4 =c4['left'], c4['top'], c4['width'], c4['height']
+    # x4,y4,w4,h4 =c4['left'], c4['top'], c4['width'], c4['height']
 
     check = False
 
     #checks if all furniture is pushed against wall
-    if (x1==24 or x1+w1==40) and (x2==24 or x2+w2==40) and (x3==24 or x3+w3==40) and (x4==24 or x4+w4==40):
+    if (x1==24 or x1+w1==40) and (x2==24 or x2+w2==40) and (x3==24 or x3+w3==40):
         check = True
 
     return check
@@ -364,12 +376,39 @@ def are_too_close(c1, c2):
 
 #check if post requests are valid quiz questions
 def check_if_good(id):
+    pass
 
 
-    
-     
+def gen_tip_for_next_rule():
+    # pick a unlearned rule, and generate some random shit tip for user
+    for l in good_lessons:
+        if l['complete'] is False:
+            # print("trying to learn  : ", l)
+            return l['tip']
+    for l in bad_lessons:
+        if l['complete'] is False:
+            # print("trying to learn  : ", l)
+            return l['tip']
+    return ""
+    pass
+
+# return True if no new rules are learned
+# False otherwise
+def no_new_rules_triggered(gc, bc):
+    g = good_lessons
+    b = bad_lessons
+    for l1, l2 in zip(g, gc):
+        if l1['complete'] != l2['complete']:
+            return False
+    for l1, l2 in zip(b, bc):
+        if l1['complete'] != l2['complete']:
+            return False
+    return True
+    pass
+
+
 # ROUTES
-@app.route('/') 
+@app.route('/')
 def welcome():
     return render_template('welcome.html', homepage_image = homepage_image)
 
@@ -377,8 +416,39 @@ def welcome():
 learn route
 
 """
+
+cur_state = 0
+stuck_counter = 0
 @app.route('/learn', methods = ['GET', 'POST'])
 def learn():
+    global cur_state
+    global stuck_counter
+    guidance = {
+        # start state
+        0 : {
+            "text" : "Arrange the furnitures, and click submit to learn about rules!",
+        },
+        1 : {
+            "text" : "please put all furnitures inside room",
+        },
+        4 : {
+            "text" : "great, now you have furnitures in the room. arrange them and click submit to learn"
+        },
+        # user is stuck
+        2 : {
+            "text" : "hmm, seems like you are stuck. Hint:" + gen_tip_for_next_rule(),
+        },
+        # found rule !
+        3 : {
+            "text" : "Great! You've found one rule, click on red/green box to learn about it"
+        },
+        5 : {
+            "text" : "you didn't find new rules, try different layouts"
+        },
+        6 : {
+            "text" : "Congrats! Review the rules and quiz your self!"
+        }
+    }
     # user hit submit button
     if request.method == 'POST':
         # get grid size
@@ -388,41 +458,47 @@ def learn():
         coordsBed = data['bed_coords']
         coordsDesk = data['desk_coords']
         coordsDrawers = data['drawers_coords']
-        coordsWardrobe = data['wardrobe_coords']
-        print("GRID SIZE: "+str(grid))
+        # coordsWardrobe = data['wardrobe_coords']
+        # print("GRID SIZE: "+str(grid))
         # print(coordsBed)
-        print(coordsDesk)
+        # print(coordsDesk)
 
         res = {}
-
+        # keep track of if user been stuck or not
+        good_lessons_copy = copy.deepcopy(good_lessons)
+        bad_lessons_copy = copy.deepcopy(bad_lessons)
         # check if bed is in room
         if is_in_room(coordsBed) is False:
             res['status'] = 'no'
             res['mark'] = 'bed'
-            res['feedback'] = 'Please place the bed inside the room!!!'
+            res['feedback'] = 'Please place the bed inside the room!'
+            cur_state = 1
 
         #check if desk is in room
         elif is_in_room(coordsDesk) is False:
             res['status'] = 'no'
             res['mark'] = 'desk'
-            res['feedback'] = 'Please place the desk inside the room!!!'
+            res['feedback'] = 'Please place the desk inside the room!'
+            cur_state = 1
         #check if wardrobe is in room
-        elif is_in_room(coordsWardrobe) is False:
-            res['status'] = 'no'
-            res['mark'] = 'wardrobe'
-            res['feedback'] = 'Please place the wardrobe inside the room!!!'
+        # elif is_in_room(coordsWardrobe) is False:
+        #     res['status'] = 'no'
+        #     res['mark'] = 'wardrobe'
+        #     res['feedback'] = 'Please place the wardrobe inside the room!!!'
         #check if drawer is in room
         elif is_in_room(coordsDrawers) is False:
             res['status'] = 'no'
             res['mark'] = 'drawers'
-            res['feedback'] = 'Please place the drawers inside the room!!!'
+            res['feedback'] = 'Please place the drawers inside the room!'
+            cur_state = 1
         
         #check if there's open space
-        elif good_lessons[1]['complete'] is False and open_space(coordsBed, coordsDesk, coordsDrawers, coordsWardrobe):
+        elif good_lessons[1]['complete'] is False and open_space(coordsBed, coordsDesk, coordsDrawers):
             res['status'] = 'yes'
             res['mark'] = 'bed' # is there a way to select room outline?
             res['feedback'] = good_lessons[1]['feedback']
             good_lessons[1]['complete'] = True
+            cur_state = 2
             
         # check if facing toward door
         elif bad_lessons[1]['complete'] is False and is_facing_door(coordsBed):
@@ -430,6 +506,7 @@ def learn():
             res['mark'] = 'bed'
             res['feedback'] = bad_lessons[1]['feedback']
             bad_lessons[1]['complete'] = True
+            cur_state = 2
         
         #check if has window backing
         elif bad_lessons[0]['complete'] is False and has_window_backing(coordsBed):
@@ -437,6 +514,7 @@ def learn():
             res['mark'] = 'bed'
             res['feedback'] = bad_lessons[0]['feedback']
             bad_lessons[0]['complete'] = True
+            cur_state = 2
         
         #check if in corner and solid backing
         elif good_lessons[0]['complete'] is False and is_in_corner(coordsBed):
@@ -444,6 +522,7 @@ def learn():
             res['mark'] = 'bed'
             res['feedback'] = good_lessons[0]['feedback']
             good_lessons[0]['complete'] = True
+            cur_state = 2
 
         # check if desk has back to door
         elif  bad_lessons[2]['complete'] is False and back_against_door(coordsDesk):
@@ -451,6 +530,7 @@ def learn():
             res['mark'] = 'desk'
             res['feedback'] = bad_lessons[2]['feedback']
             bad_lessons[2]['complete'] = True
+            cur_state = 2
         
         # check if desk close to window
         elif good_lessons[3]['complete'] is False and desk_window(coordsDesk):
@@ -458,6 +538,7 @@ def learn():
             res['mark'] = 'desk'
             res['feedback'] = good_lessons[3]['feedback']
             good_lessons[3]['complete'] = True
+            cur_state = 2
 
         #check if desk can view door
         elif good_lessons[2]['complete'] is False and can_view_door(coordsDesk):
@@ -465,6 +546,7 @@ def learn():
             res['mark'] = 'desk'
             res['feedback'] = good_lessons[2]['feedback']
             good_lessons[2]['complete'] = True
+            cur_state = 2
 
         #check if desk and bed are too close
         elif bad_lessons[3]['complete'] is False and are_too_close(coordsDesk, coordsBed):
@@ -472,13 +554,16 @@ def learn():
             res['mark'] = 'desk'
             res['feedback'] = bad_lessons[3]['feedback']
             bad_lessons[3]['complete'] = True
+            cur_state = 2
 
-        # good layout
+        # stuck, no rules found
         else:
-            res['status'] = 'yes'
-            res['feedback'] = 'This is a good choice of placing the bed' + ("; tip:there are more rules to find" if sum(get_progress()) < 200 else " Congrats!")
-            res['mark'] = 'bed' 
-            good_lessons[0]['complete'] = True
+            res['status'] = 'no'
+            # res['feedback'] = 'This is a good choice of placing the bed' + ("; tip:there are more rules to find" if sum(get_progress()) < 200 else " Congrats!")
+            res['feedback'] = 'you didnt find new rules..'
+            res['mark'] = 'none' 
+            # good_lessons[0]['complete'] = True
+            cur_state = 5
         
         # complete status
         res['complete'] = "True" if is_learn_done() else "False"
@@ -487,10 +572,30 @@ def learn():
         # send lessons learned so far
         res['good_lessons'] = good_lessons
         res['bad_lessons'] = bad_lessons
+        # check if user failed to find any rule
+        if cur_state != 1 and no_new_rules_triggered(good_lessons_copy, bad_lessons_copy):
+            stuck_counter += 1
+        else:
+            stuck_counter = 0
+            # either curstate is 1 or found some new rule
+            if cur_state != 1:
+                cur_state = 3
+            # else:   # learned new rule
+            #     cur_state = 4
+            # print("same-good", same_good)
+        if stuck_counter >= 2:
+            cur_state = 2
+        
         # return the feedback
+        # print("next guidance is : ", guidance[cur_state])
+        if is_learn_done():
+            cur_state = 6
+
+        # guidance
+        res['guidance'] = guidance[cur_state]
         return jsonify(res)
     else:
-        return render_template('edit.html', furniture=furniture)
+        return render_template('edit.html', furniture=furniture, guidance = guidance[0])
 
 
 """

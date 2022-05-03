@@ -136,6 +136,9 @@ function build() {
   // initialzie room, get the grid size
   let grid = init_room(canvas);
   // console.log("grid size: "+ grid);
+  // render guidance title
+  console.log("guidance is  : " + guidance)
+  $("#guidance").text(guidance['text']);
 
   // fetch furniture json from flask server and render on canvas
   $.each(furniture,function(index,ui){
@@ -145,7 +148,7 @@ function build() {
     let height = ui.height * grid;
     let id    = ui.furniture;
 
-    console.log("width: "+width);
+    // console.log("width: "+width);
     // create image
     let f_image = new Image();
     f_image.onload = function (img) {  
@@ -205,22 +208,30 @@ function build() {
 			success     :   
 			function(result){
         // result is a json with two fields 1. status 2. feedback 3. complete 4. progress
-        console.log(result);
+        // console.log(result);
+        
         let status    = result['status'];
         let feedback  = result['feedback'];
         let complete  = result['complete'];
+        
         let obj_to_mark = result['mark']
-        let green_progress  = result['progress'][0];
-        let red_progress = result['progress'][1];
+        let learned_progress  = result['progress'][0];
+        let all_progress = result['progress'][1];
+        let progress = Math.round(learned_progress / all_progress * 100)
         let good_l = result['good_lessons'];
         let bad_l = result['bad_lessons'];
-
+        let guide_new = result['guidance']['text'];
+        // update guidance 
+        // console.log("!!!!!!! g is : " + guide_new);
+        $("#guidance").text(guide_new);
         // console.log(green_progress);
         // set progress bar
-        $("#green-progress-bar").text(green_progress);
-        $("#green-progress-bar").attr('style', "width:" + green_progress + "%");
-        $("#red-progress-bar").text(red_progress);
-        $("#red-progress-bar").attr('style', "width:" + red_progress + "%");
+        // $("#green-progress-bar").text(green_progress);
+        // $("#green-progress-bar").attr('style', "width:" + green_progress + "%");
+        // $("#red-progress-bar").text(red_progress);
+        // $("#red-progress-bar").attr('style', "width:" + red_progress + "%");
+        $("#progress-bar").text(progress + " %");
+        $("#progress-bar").attr('style', "width:" + progress + "%");
         // get bed obj
         mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
         
@@ -331,8 +342,8 @@ function getCoordinates(canvas, id, grid){
     }
     
   });
-  console.log(grid);
-  console.log(coords);
+  // console.log(grid);
+  // console.log(coords);
   return coords[0];
 }
 
