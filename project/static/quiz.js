@@ -10,8 +10,7 @@
 
 // fetch json from server, render template
 function render_question(){
-    console.log(tf_quiz_questions);
-    console.log(mc_quiz_questions);
+    $("#quiz-score").html("<div>Hello world/<div>");
 }
 
 // handle submit button click
@@ -31,5 +30,5 @@ function handle_quiz_review(){
     
 // ready
 $(document).ready(()=>{
-    render_questions();
+    render_question();
 });
