@@ -80,6 +80,11 @@ tutorial_steps = [
         "id" : "4",
         "step" : "Free arrange",
         "instruction" : "Well done! Drag and arrange the rest of the furniture and press submit when you’re done."
+    },
+    {
+        "id" : "5",
+        "step" : "Transition to lear",
+        "instruction" : "Now we’re going to highlight good elements of Feng Shui arrangement and bad elements. Remember Feng Shui isn’t a rigid set of rules - all rooms have constraints so sometimes a layout can have good and bad aspects - or things may contradict slightly. It’s up to you to decide what is best overall, we’re just giving you the knowledge you need to make these decisions."
     }
 
 ]
@@ -658,22 +663,22 @@ def tutorial(id):
         coordsBed = data['bed_coords']
         coordsDesk = data['desk_coords']
         coordsDrawers = data['drawers_coords']
-        coordsWardrobe = data['wardrobe_coords']
+        # coordsWardrobe = data['wardrobe_coords']
 
         res = {}
         # check if bed is in room
-        if is_in_room(coordsBed) is True:
+        if is_in_room(coordsBed) is True or is_in_room(coordsDesk) is True or is_in_room(coordsDrawers) is True:
             res['status'] = 'yes'
 
-        #check if desk is in room
-        elif is_in_room(coordsDesk) is True:
-            res['status'] = 'yes'
+        # #check if desk is in room
+        # elif is_in_room(coordsDesk) is True:
+        #     res['status'] = 'yes'
         
-        elif is_in_room(coordsDrawers) is True:
-            res['status'] = 'yes'
+        # elif is_in_room(coordsDrawers) is True:
+        #     res['status'] = 'yes'
         
-        elif is_in_room(coordsWardrobe) is True:
-            res['status'] = 'yes'
+        # elif is_in_room(coordsWardrobe) is True:
+        #     res['status'] = 'yes'
 
         
         return jsonify(res)
@@ -684,7 +689,7 @@ def tutorial(id):
 
         # steps will be an array of the other 3 rules
         steps=[]
-        for i in range(1,4):
+        for i in range(1,5):
             steps.append(tutorial_steps[i])
         return render_template('tutorial.html', furniture=furniture, tutorial=steps, welcome=welcome)
 

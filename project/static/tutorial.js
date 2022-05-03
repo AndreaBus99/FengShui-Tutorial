@@ -201,7 +201,6 @@ function build() {
 
         // If the furniture is inside the room
         if(result.status == 'yes'){
-  
           // Move to the next step of tutorial (rotating)
           drag_to_rotate()
         }
@@ -378,8 +377,34 @@ function rotate_to_free(angle){
   // Once the submit button is clicked, go to the learning portion
   if(current_url == "http://127.0.0.1:5000/tutorial/4")
     $('.submit-button').click(function(){
-      window.location.href= "/learn"
+      window.history.pushState({},'', "/tutorial/"+5);
+      transition()
     })
+}
+
+function transition(){
+  let current_url=$(location).attr('href')
+
+  if(current_url == "http://127.0.0.1:5000/tutorial/5"){
+
+    // Get the correct instruction for transition
+    let transition = tutorial[3]['instruction']
+
+    // Change the title of the modal
+    $(".modal-title").html("Great job placing everything!")
+
+    $("#lesson").text(transition);
+    $('#modal').modal('show');
+
+    $("#let-me-try-btn").html('Start learning!')
+
+    //Once clicked 'start learning' go to learn view
+    $("#let-me-try-btn").click(()=>{
+      $('#modal').modal('hide'); 
+      window.location.href= "/learn";
+    })
+  }
+
 }
   
   // main
