@@ -143,6 +143,11 @@ function init_room(canvas) {
 function handle_learn_submit() {
 }
 
+// enable button can be clicked or not
+function disable_click(can) {
+  $("#learn-test-submit-btn").prop("disabled",can);
+}
+
 
 let clicked_colored = true;
 
@@ -196,7 +201,7 @@ function build() {
       top: Math.round(options.target.top / grid) * grid,
     });
   });
-
+  disable_click(true);
 
   // on click submit button
   $("#learn-test-submit-btn").click(()=>{
@@ -237,6 +242,27 @@ function build() {
         let bad_l = result[0]['bad_lessons'];
         let complete  = result[0]['complete'];
         let guide_new = result[0]['guidance']['text'];
+        
+        // disable click until changed layout
+        disable_click(true);
+        // good count
+        let good_count = 0;
+        good_l.forEach(l => {
+          if(l['complete']) {
+            good_count++;
+          }
+        });
+        let bad_count = 0;
+        bad_l.forEach(l => {
+          if(l['complete']) {
+            bad_count++;
+          }
+        });
+        console.log("gc : " + good_count);
+        console.log("bc : " + bad_count);
+        // update count
+        $("#good_rules_count").text(good_count);
+        $("#bad_rules_count").text(bad_count);
 
         // for each rule/check found        
         for(let i=1; i<Object.keys(result).length; i++){
@@ -252,7 +278,6 @@ function build() {
   
         // update guidance 
         $("#guidance").text(guide_new);
-        // console.log(green_progress);
         // set progress bar
         $("#progress-bar").text(progress + " %");
         $("#progress-bar").attr('style', "width:" + progress + "%");
@@ -272,6 +297,10 @@ function build() {
 				console.log(error);
 			}
 		});
+  });
+
+  canvas.on("object:moving", function (options) {
+    disable_click(false);
   });
 }
 

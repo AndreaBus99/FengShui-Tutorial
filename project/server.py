@@ -4,6 +4,7 @@
 Backend server for group 1 UI final project
 """
 
+from cgitb import reset
 from genericpath import samefile
 from re import I
 from tkinter import scrolledtext
@@ -451,7 +452,15 @@ def deskChecks(res, coordsDesk, coordsBed):
         bad_lessons[3]['complete'] = True
         count=count+1
     return res
-     
+
+
+# reset all lessons
+def reset_lessons():
+    for l in good_lessons:
+        l['complete'] = False
+    for l in bad_lessons:
+        l['complete'] = False
+
 # ROUTES
 @app.route('/')
 def welcome():
@@ -672,7 +681,7 @@ Tutorial route
 """
 @app.route('/tutorial/<id>', methods = ['GET', 'POST'])
 def tutorial(id):
-
+    reset_lessons()
     # Send if the furniture is inside the room
     if request.method == 'POST':
         # get grid size
@@ -718,6 +727,7 @@ Quiz route
 current_score = 0
 @app.route('/quiz_yourself/<id>', methods = ['GET', 'POST'])
 def quiz_yourself(id):
+    reset_lessons()
     global current_score
     global track_location
     current_question = quiz_questions[int(id)]
