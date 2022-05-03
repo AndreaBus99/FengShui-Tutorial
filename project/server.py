@@ -5,6 +5,7 @@ Backend server for group 1 UI final project
 """
 
 from genericpath import samefile
+from re import I
 from tkinter import scrolledtext
 from flask import Flask
 from flask import render_template
@@ -168,70 +169,77 @@ bad_lessons = [
 
 mc_quiz_questions = [
     {
-        "mc_quiz_id" : "1",
+        "id" : "0",
+        "type" : "MC",
         "mc_image" : "",#to be filled
         "mc_question" : "What are some potential issues with the room shown above?",
         "option_1" : "Bed direction",
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
-        "mc_answer" : "Bed direction",
-        "mc_next_question" : "2"
+        "answer" : "Bed direction",
+        "next_question" : "2"
     },
     {
-        "mc_quiz_id" : "2",
+        "id" : "1",
+        "type": "MC",
         "mc_image" : "", #to be filled
         "mc_question" : "What are some potential issues with the room shown above?",
         "option_1" : "Bed direction",
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
-        "mc_answer" : "Bed and desk proximity",
+        "answer" : "Bed and desk proximity",
         "mc_next_question" : "3"
     },
     {
-        "mc_quiz_id" : "3",
+        "id" : "2",
+        "type" : "MC",
         "mc_image" : "",#to be filled
         "mc_question":  "What are some positive things about this layout?",
         "option_1" : "Bed is in the corner and open space",
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
-        "mc_answer" : "Bed is in the corner and open space",
+        "answer" : "Bed is in the corner and open space",
         "mc_next_question" : "4",
     },
     {
-        "mc_quiz_id" : "4",
+        "id" : "3",
+        "type" : "MC",
         "mc_image" : "",#to be filled
         "mc_question" : "What are some negative things about this layout?",
         "option_1" : "Bed is in the corner and open space",
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
-        "mc_answer" : "Desk location (people have their backs against the door)",
-        "mc_next_question" : "end"
+        "answer" : "Desk location (people have their backs against the door)",
+        "mc_next_question" : "5"
     }
 ]
 
 tf_quiz_questions = [
     {
-        "tf_quiz_id" : "1",
+        "id" : "5",
+        "type" : "TF",
         "tf_image" : "",#to be filled
         "tf_question" : "Desk should be close to the window",
         "true" : "True",
         "false" : "False",
-        "tf_answer" : "True",
+        "answer" : "True",
         "tf_next_question" : "2"
 
     },
     {
-        "tf_quiz_id" : "2",
+        "id" : "6",
+        "type" : "TF",
         "tf_image" : "", #to be filled
         "tf_question" : "Desk should face door",
         "true" : "True",
         "false" : "False",
-        "tf_answer" : "True",
+        "answer" : "True",
         "tf_next_question" : "end"
     },
 
 ]
 
+quiz_questions = mc_quiz_questions + tf_quiz_questions
 
 
 # check if user has learned all lessions
@@ -300,7 +308,7 @@ def back_against_door(c):
 
 # check if has window backing
 def has_window_backing(c):
-   return c['angle'] == 0 and c['left'] >= 24 and c['top']==2
+   return c['angle'] == 0 and c['left'] >= 24 and c['top'] <= 4
 
 # check if desk close to window
 def desk_window(c):
@@ -310,14 +318,21 @@ def desk_window(c):
 def is_in_corner(c):
     x,y,w,h =c['left'], c['top'], c['width'], c['height']
     a = c['angle']
-    corner = False
-
-    if a==270 and x==24 and y==2:
-        corner = True
-    elif a==90 and x==28 and y==2:
-        corner = True
-    elif a==180 and x==24 and y==16:
-        corner = True
+    # corner = False
+    if is_in_room(c):
+        if y == 2:
+            if x == 24 or x == 28:
+                return True
+        if y == 16:
+            if x == 24 or x == 28:
+                return True
+    return False
+    # if a==270 and x==24 and y==2:
+    #     corner = True
+    # elif a==90 and x==28 and y==2:
+    #     corner = True
+    # elif a==180 and x==24 and y==16:
+    #     corner = True
     
     return corner
 
@@ -460,13 +475,15 @@ def learn():
         0 : {
             "text" : "Arrange the furniture in the room and click submit to learn about some Feng Shui principles",
         },
+        # some furniture not in room
         1 : {
             "text" : "Please put all the furniture inside the room",
         },
+        # all furniture in room
         4 : {
             "text" : "Great! Now that all the furniture is in the room, create a layout and then click submit to learn more"
         },
-        # user is stuck
+        # user is stuck (no rule found twice)
         2 : {
             "text" : "Hmm, seems like you are stuck. Hint:" + gen_tip_for_next_rule(),
         },
@@ -474,9 +491,11 @@ def learn():
         3 : {
             "text" : "Great! You've found some rules, click on the red/green box to learn about it"
         },
+        # no rule ofund for once
         5 : {
             "text" : "You didn't find new rules, try a different layout"
         },
+        # completed learning
         6 : {
             "text" : "Congrats! Review the rules and quiz yourself!"
         }
@@ -696,29 +715,28 @@ def tutorial(id):
 """
 Quiz route
 """
+current_score = 0
 @app.route('/quiz_yourself/<id>', methods = ['GET', 'POST'])
 def quiz_yourself(id):
-    mc_quiz = mc_quiz_questions
-    tf_quiz = tf_quiz_questions
-    currentMultipleChoiceQuestion = mc_quiz_questions[id]
-    currentTrueFalseQuestion = tf_quiz_questions[id]
-    if request.method == 'POST':
-        global score
-        data = request.get_json() 
-        user_answer = data['answer']
-        res = {}
-        
-        # check if MC or TF question
-        if (user_answer == 'True' or user_answer == 'False'):
-            if user_answer == tf_quiz_questions[id+1]['tf_answer']:
-                res['score'] = score + 1
-            else:
-                res['score'] = scroll
-            
-        res['correct'] = False
-        return jsonify(res)
-    else :
-        return render_template('quiz.html', mc_quiz=mc_quiz, tf_quiz=tf_quiz)
+    global current_score
+    global track_location
+    current_question = quiz_questions[int(id)]
 
+    if request.method == 'POST':    
+      user_response = request.get_json()
+      server_response = {}
+
+      chosen_answer =  user_response['selected']
+      if (chosen_answer == current_question['answer']):
+        server_response['feedback'] = 'correct'
+        current_score = current_score + 1
+        server_response['score'] = current_score
+      else:
+        server_response['feedback'] = 'incorrect'
+        server_response['score'] = current_score
+        server_response['corrections'] = current_question['answer'] 
+      return jsonify(server_response)
+    else:
+        return render_template('quiz.html', quiz_question=current_question, score=current_score) 
 if __name__ == '__main__':
     app.run(debug=True)
