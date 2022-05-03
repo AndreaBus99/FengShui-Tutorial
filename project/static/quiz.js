@@ -17,10 +17,15 @@ function render_question(){
     //Set question and answers
     switch (quiz_question['type']) {
         case "MC":
-            setMultipleChoiceContent()   
+            setMultipleChoiceContent();
+            break 
         case "TF":
             setTrueFalseContent();
+            break
     }
+    // set submit button
+    $('.quiz-buttons').append($("<button type='button' class='btn btn-primary' id='learn-test-submit-btn' style='float: right;'>Submit</button>"));
+    $('.quiz-buttons').append($("<button type='button' class='btn btn-primary' id='learn-test-submit-btn' style='float: right;'>Review</button>"))
 }
 
 // set content if multiple choice
@@ -39,9 +44,13 @@ const setTrueFalseContent = () => {
     $(".quiz-choices").append(`<div>${quiz_question['option_3']}</div>`);
 }
 
+const setFeedbackContent = (response) => {
+    //set content based on feedback
+}
+
 // handle submit button click
 function handle_quiz_submit(){
-    //...
+   //Enable only if 
 }
 
 // handle next button click
