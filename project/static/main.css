@@ -1,16 +1,5 @@
-canvas {
-    border: 1px solid #ccc;
-}
-
 #header{
     background-color: lightgray;
-    padding: 25px
-}
-
-.row{
-    padding-top: 5px;
-    padding-bottom: 5px;
-
 }
 
 body{
@@ -19,6 +8,16 @@ body{
 
 #nav{
     background-color: #a6a6a6;
+}
+
+button{
+    background-color: lightblue;
+}
+
+.btn{
+    background-color: lightblue;
+    border: 0px;
+    color: black;
 }
 
 

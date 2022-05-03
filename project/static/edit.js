@@ -52,7 +52,7 @@ function init_room(canvas) {
     width: grid*16, //8.5 ft - 275
     height: grid*Math.round(16*1.6), //14 ft - 4503.0*Math.ceil(n/3.0)
     fill: '', 
-    stroke: 'black',
+    stroke: 'grey',
     strokeWidth: 3,
     left: 24 * grid,
     top: 2 * grid,
@@ -74,6 +74,7 @@ function init_room(canvas) {
     left: 32 * grid, 
     top: 2.8*grid,
     fontSize: 18,
+    fontFamily: 'system-ui',
     originX: 'center',
     originY: 'center', 
     selectable: false, //user cannot move/select outline
@@ -94,6 +95,7 @@ function init_room(canvas) {
     left: 36 * grid, 
     top: grid*Math.round(16*1.6)+(1.95*grid),
     fontSize: 18,
+    fontFamily: 'system-ui',
     originX: 'center',
     originY: 'center', 
     selectable: false, //user cannot move/select outline
@@ -104,6 +106,7 @@ function init_room(canvas) {
     left: 32 * grid, 
     top: 1.5*grid,
     fontSize: 24,
+    fontFamily: 'system-ui',
     originX: 'center',
     originY: 'center', 
     selectable: false, //user cannot move/select outline
@@ -114,6 +117,7 @@ function init_room(canvas) {
     left: 41*grid, 
     top: 2*grid+(grid*Math.round(16*1.6)/2),
     fontSize: 24,
+    fontFamily: 'system-ui',
     originX: 'center',
     originY: 'center', 
     angle: 90,
@@ -169,8 +173,8 @@ function build() {
       let f_entity = new fabric.Image(f_image, {
         left: ui.left * grid,//position image on loading
         top: ui.top * grid,
-        borderColor: "red",//TO DO: change to accent color
-        cornerColor: "red", //TO DO: change to accent color
+        borderColor: "#2a3b5e",//TO DO: change to accent color
+        cornerColor: "#2a3b5e", //TO DO: change to accent color
       });
       // set width
       f_entity.scaleToWidth(width,false);
