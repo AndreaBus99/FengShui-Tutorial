@@ -233,7 +233,7 @@ quiz_questions = [
         "option_1" : "True",
         "option_2" : "False",
         "answer" : "True",
-        "next_question" : "6"
+        "next_question" : "end"
     }
 ]
 

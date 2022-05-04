@@ -81,7 +81,14 @@ const handleQuizSubmit = () => {
     };
     alert(`Your answer is ${feedback}`);
     //POST request on the current field
-    sendRequest(data, nextUrl);
+    let end = quiz_question['next_question'] == 'end';
+    if (end) {
+        window.location.href = '/quiz_end';
+    }
+    else {
+        sendRequest(data, nextUrl);
+    }
+    
 
 }
 
@@ -100,6 +107,7 @@ function handle_quiz_review(){
 const sendRequest = (data, nextUrl) => {
     console.log("in send req");
     // console.log("data : " + )
+    
     
     console.log('next url : ' + nextUrl); 
     $.ajax({
@@ -121,7 +129,7 @@ const sendRequest = (data, nextUrl) => {
             // if (quiz_question['next_question'] == 'end'){
                 // window.location.href = '/quiz_end/'
             // } else {
-            // window.location.href = '/quiz_yourself/' + nextUrl;
+            window.location.href = '/quiz_yourself/' + nextUrl;
             // }
             
         },
