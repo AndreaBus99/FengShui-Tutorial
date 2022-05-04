@@ -730,25 +730,13 @@ def quiz_yourself(id):
     global current_score
     current_question = quiz_questions[int(id)]
     if request.method == 'POST':    
-    #   server_response = {}
-
-    #   chosen_answer =  user_response['selected']
-    #   if (chosen_answer == current_question['answer']):
-    #     server_response['feedback'] = 'correct'
-    #     current_score = current_score + 1
-    #     server_response['score'] = current_score
-    #   else:
-    #     server_response['feedback'] = 'incorrect'
-    #     server_response['score'] = current_score
-    #     server_response['corrections'] = current_question['answer'] 
-    
         user_response = request.get_json()
         user_current_score = user_response['score']
         server_response = {}
         if (user_response['status'] == 'incorrect'):
             server_response['score'] = user_current_score
         else:
-            server_response['score'] = user_current_score
+            server_response['score'] = user_current_score + 1
         return jsonify(server_response)
     else:
         return render_template('quiz.html', quiz_question=current_question, score=current_score) 

@@ -71,10 +71,15 @@ const handleQuizSubmit = () => {
     const feedback = correct ? 'correct' : 'incorrect';
     const nextScore = correct ? score+1 : score;
 
-    alert(`Your answer is ${feedback}`);
+    const nextUrl = quiz_question['next_question'];
 
+    const data = { 
+        'status': correct ? 'correct' : 'incorrect',
+        'score' : score,
+    };
+    alert(`Your answer is ${feedback}`);
     //POST request on the current field
-    sendRequest()
+    sendRequest(data, nextUrl);
 
 }
 
@@ -90,54 +95,18 @@ function handle_quiz_review(){
 }
 
 // AJAX for request
-const sendRequest = (data) => { 
+const sendRequest = (data, nextUrl) => { 
     $.ajax({
         type        :   "POST",
-        url         :   "quiz_yourself" + 1,
+        url         :   nextUrl,
         dataType    :   "json",
         contentType :   "application/json; charset=utf-8",
         data        :   JSON.stringify(data),
-        success     :   
-        function(result){
-    // result is a json with two fields 1. status 2. feedback 3. complete 4. progress
-    // console.log(result);
-    
-    //get general info first
-    let learned_progress  = result[0]['progress'][0];
-    let all_progress = result[0]['progress'][1];
-    let progress = Math.round(learned_progress / all_progress * 100)
-    let good_l = result[0]['good_lessons'];
-    let bad_l = result[0]['bad_lessons'];
-    let complete  = result[0]['complete'];
-    let guide_new = result[0]['guidance']['text'];
-
-    // for each rule/check found        
-    for(let i=1; i<Object.keys(result).length; i++){
-      let status    = result[i]['status'];
-      let feedback  = result[i]['feedback'];
-      let obj_to_mark = result[i]['mark'];
-
-      // highlight the relevant furniture
-      mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
-    }
-    // clicked_colored = false;
-    // $('#learn-test-submit-btn').prop({"disabled" : true });
-
-    // update guidance 
-    $("#guidance").text(guide_new);
-    // console.log(green_progress);
-    // set progress bar
-    $("#progress-bar").text(progress + " %");
-    $("#progress-bar").attr('style', "width:" + progress + "%");
-    
-
-    // if complete, display the message, disable submit button
-    if (complete == 'True') {
-      $('#submit-btn').prop({"disabled" : true});
-    }
+        success     :   function(result){
+            console.log(nextUrl);
+            window.location.href = `http://127.0.0.1:5000/quiz_yourself/${nextUrl}`;
         },
-        error: 
-        function(request, status, error){
+        error       :   function(request, status, error){
             console.log("Error");
             console.log(request);
             console.log(status);
