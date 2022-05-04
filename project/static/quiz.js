@@ -73,7 +73,7 @@ const handleQuizSubmit = () => {
     const nextScore = correct ? score+1 : score;
 
     const nextUrl = quiz_question['next_question'];
-    console.log("quiz q  is : " + JSON.stringify(quiz_question));
+    // console.log("quiz q  is : " + JSON.stringify(quiz_question));
     // console.log("next url is : " + nextUrl);
     const data = { 
         'status': correct ? 'correct' : 'incorrect',
@@ -99,7 +99,8 @@ function handle_quiz_review(){
 // AJAX for request
 const sendRequest = (data, nextUrl) => {
     console.log("in send req");
-    console.log("data : " + data)
+    // console.log("data : " + )
+    
     console.log('next url : ' + nextUrl); 
     $.ajax({
         type        :   "POST",
@@ -111,12 +112,18 @@ const sendRequest = (data, nextUrl) => {
             // console.log("res : " + result);
             quiz_question = result['next_q']
             let new_score = result['score'];
-            console.log("score recvd is : " + new_score)
+            // console.log("score recvd is : " + new_score)
             $("#score-display").text(new_score);
 
-
-            // console.log(nextUrl);
-            window.location.href = '/quiz_yourself/' + nextUrl;
+            console.log("quiz q : " + JSON.stringify(quiz_question));
+            // console.log("")
+            // end page
+            // if (quiz_question['next_question'] == 'end'){
+                // window.location.href = '/quiz_end/'
+            // } else {
+            // window.location.href = '/quiz_yourself/' + nextUrl;
+            // }
+            
         },
         error       :   function(request, status, error){
             console.log("Error");

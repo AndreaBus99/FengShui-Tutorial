@@ -9,7 +9,7 @@ from genericpath import samefile
 from http import server
 from re import I
 from tkinter import scrolledtext
-from flask import Flask
+from flask import Flask, redirect
 from flask import render_template
 from flask import Response, request, jsonify
 import random
@@ -169,7 +169,7 @@ bad_lessons = [
     }
 ]
 
-mc_quiz_questions = [
+quiz_questions = [
     {
         "id" : "0",
         "type" : "MC",
@@ -179,7 +179,7 @@ mc_quiz_questions = [
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
         "answer" : "Bed-direction",
-        "next_question" : "2"
+        "next_question" : "1"
     },
     {
         "id" : "1",
@@ -190,7 +190,7 @@ mc_quiz_questions = [
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
         "answer" : "Bed-and-desk-proximity",
-        "next_question" : "3"
+        "next_question" : "2"
     },
     {
         "id" : "2",
@@ -201,7 +201,7 @@ mc_quiz_questions = [
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
         "answer" : "Bed-is-in-the-corner-and-open-space",
-        "next_question" : "4",
+        "next_question" : "3",
     },
     {
         "id" : "3",
@@ -212,35 +212,31 @@ mc_quiz_questions = [
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
         "answer" : "Desk-location-(people-have-their-backs-against-the-door)",
-        "next_question" : "5"
-    }
-]
-
-tf_quiz_questions = [
+        "next_question" : "4"
+    },
     {
-        "id" : "5",
+        "id" : "4",
         "type" : "TF",
         "image" : "../static/images/quiz/quiz5.png",#to be filled
         "question" : "Desk should be close to the window",
         "option_1" : "True",
         "option_2" : "False",
         "answer" : "True",
-        "next_question" : "2"
+        "next_question" : "5"
 
     },
     {
-        "id" : "6",
+        "id" : "5",
         "type" : "TF",
         "image" : "../static/images/quiz/quiz6.png", #to be filled
         "question" : "Desk should face door",
         "option_1" : "True",
         "option_2" : "False",
         "answer" : "True",
-        "next_question" : "end"
+        "next_question" : "6"
     }
 ]
 
-quiz_questions = mc_quiz_questions + tf_quiz_questions
 
 
 # check if user has learned all lessions
@@ -729,10 +725,18 @@ current_score = 0
 def quiz_yourself(id):
     reset_lessons()
     global current_score
+    # go to end page
+    if id == '6':
+        return render_template('quiz_end.html', score = current_score)
+        
+        
+    
     # print("id sent is : ", id)
     current_question = quiz_questions[int(id)]
     # post method
-    if request.method == 'POST':    
+    if request.method == 'POST':   
+
+        
         user_response = request.get_json()
         # user_current_score = user_response['score']
         server_response = {}
@@ -748,5 +752,9 @@ def quiz_yourself(id):
     else:
         print("score sending is : ", current_score)
         return render_template('quiz.html', quiz_question=current_question, score=current_score) 
+# quiz end
+@app.route('/quiz_end', methods = ['GET', 'POST'])
+def quiz_end():
+    return render_template('quiz_end.html', score=current_score)
 if __name__ == '__main__':
     app.run(debug=True)
