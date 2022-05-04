@@ -52,7 +52,7 @@ function init_room(canvas) {
     width: grid*16, //8.5 ft - 275
     height: grid*Math.round(16*1.6), //14 ft - 4503.0*Math.ceil(n/3.0)
     fill: '', 
-    stroke: 'black',
+    stroke: 'grey',
     strokeWidth: 3,
     left: 24 * grid,
     top: 2 * grid,
@@ -74,6 +74,8 @@ function init_room(canvas) {
     left: 32 * grid, 
     top: 2.8*grid,
     fontSize: 18,
+    fill: 'grey',
+    fontFamily: 'system-ui',
     originX: 'center',
     originY: 'center', 
     selectable: false, //user cannot move/select outline
@@ -94,6 +96,8 @@ function init_room(canvas) {
     left: 36 * grid, 
     top: grid*Math.round(16*1.6)+(1.95*grid),
     fontSize: 18,
+    fill: 'grey',
+    fontFamily: 'system-ui',
     originX: 'center',
     originY: 'center', 
     selectable: false, //user cannot move/select outline
@@ -104,6 +108,7 @@ function init_room(canvas) {
     left: 32 * grid, 
     top: 1.5*grid,
     fontSize: 24,
+    fontFamily: 'system-ui',
     originX: 'center',
     originY: 'center', 
     selectable: false, //user cannot move/select outline
@@ -114,6 +119,7 @@ function init_room(canvas) {
     left: 41*grid, 
     top: 2*grid+(grid*Math.round(16*1.6)/2),
     fontSize: 24,
+    fontFamily: 'system-ui',
     originX: 'center',
     originY: 'center', 
     angle: 90,
@@ -137,6 +143,11 @@ function init_room(canvas) {
 
 // handle submit button
 function handle_learn_submit() {
+}
+
+// enable button can be clicked or not
+function disable_click(can) {
+  $("#learn-test-submit-btn").prop("disabled",can);
 }
 
 
@@ -169,8 +180,8 @@ function build() {
       let f_entity = new fabric.Image(f_image, {
         left: ui.left * grid,//position image on loading
         top: ui.top * grid,
-        borderColor: "red",//TO DO: change to accent color
-        cornerColor: "red", //TO DO: change to accent color
+        borderColor: "#2a3b5e",//TO DO: change to accent color
+        cornerColor: "#2a3b5e", //TO DO: change to accent color
       });
       // set width
       f_entity.scaleToWidth(width,false);
@@ -192,7 +203,7 @@ function build() {
       top: Math.round(options.target.top / grid) * grid,
     });
   });
-
+  disable_click(true);
 
   // on click submit button
   $("#learn-test-submit-btn").click(()=>{
@@ -233,6 +244,27 @@ function build() {
         let bad_l = result[0]['bad_lessons'];
         let complete  = result[0]['complete'];
         let guide_new = result[0]['guidance']['text'];
+        
+        // disable click until changed layout
+        disable_click(true);
+        // good count
+        let good_count = 0;
+        good_l.forEach(l => {
+          if(l['complete']) {
+            good_count++;
+          }
+        });
+        let bad_count = 0;
+        bad_l.forEach(l => {
+          if(l['complete']) {
+            bad_count++;
+          }
+        });
+        console.log("gc : " + good_count);
+        console.log("bc : " + bad_count);
+        // update count
+        $("#good_rules_count").text(good_count);
+        $("#bad_rules_count").text(bad_count);
 
         // for each rule/check found        
         for(let i=1; i<Object.keys(result).length; i++){
@@ -248,7 +280,6 @@ function build() {
   
         // update guidance 
         $("#guidance").text(guide_new);
-        // console.log(green_progress);
         // set progress bar
         $("#progress-bar").text(progress + " %");
         $("#progress-bar").attr('style', "width:" + progress + "%");
@@ -268,6 +299,10 @@ function build() {
 				console.log(error);
 			}
 		});
+  });
+
+  canvas.on("object:moving", function (options) {
+    disable_click(false);
   });
 }
 

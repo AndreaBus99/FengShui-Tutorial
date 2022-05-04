@@ -24,6 +24,15 @@
 
     <title>Fengshui College Dorm</title>
   </head>
+  <style>
+
+    #nav-color{
+      background-color: #2a3b5e;
+    }
+    .navbar-brand, .nav-link{
+      color: white;
+    }
+  </style>
   <body>
     <!-- Navbar 
     @TODO:
@@ -31,7 +40,7 @@
       2. add href link for each itme
     
     -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg" id="nav-color">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">Fengshui College Dorm</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -52,7 +61,7 @@
       </div>
     </nav>
 
-    <div class="container" id="body-container">
+    <div class="container-fluid" id="body-container">
       {% block content %} {% endblock %}
     </div>
   </body>
