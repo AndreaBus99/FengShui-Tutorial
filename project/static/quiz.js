@@ -12,7 +12,7 @@
 const renderQuestion = () => {
     // Set score
     const url = $(location).attr('href');
-    $(".quiz-score").text(`Score: ${score}/6`);
+    $("#score-display").text(score);
 
     //Set question and answers based on question type
     switch (quiz_question['type']) {
@@ -33,7 +33,7 @@ const renderQuestion = () => {
 const setMultipleChoiceContent = () => {
     $(".quiz-prompt").text(quiz_question['mc_question']);
     $(".quiz-image").attr("src", quiz_question['mc_image'])
-    console.log(quiz_question);
+    // console.log(quiz_question);
     $(".quiz-choices").append(`<div class="form-check">
     <input type="radio" class="form-check-input" id="radio1" name="optradio" value=${quiz_question['option_1'].split(" ").join('-')} checked>${quiz_question['option_1']}
     <label class="form-check-label" for="radio1"></label></div>`);
@@ -72,7 +72,8 @@ const handleQuizSubmit = () => {
     const nextScore = correct ? score+1 : score;
 
     const nextUrl = quiz_question['next_question'];
-
+    console.log("quiz q  is : " + JSON.stringify(quiz_question));
+    // console.log("next url is : " + nextUrl);
     const data = { 
         'status': correct ? 'correct' : 'incorrect',
         'score' : score,
@@ -95,16 +96,26 @@ function handle_quiz_review(){
 }
 
 // AJAX for request
-const sendRequest = (data, nextUrl) => { 
+const sendRequest = (data, nextUrl) => {
+    console.log("in send req");
+    console.log("data : " + data)
+    console.log('next url : ' + nextUrl); 
     $.ajax({
         type        :   "POST",
-        url         :   nextUrl,
+        url         :   "/quiz_yourself/" + nextUrl,
         dataType    :   "json",
         contentType :   "application/json; charset=utf-8",
         data        :   JSON.stringify(data),
         success     :   function(result){
-            console.log(nextUrl);
-            window.location.href = `http://127.0.0.1:5000/quiz_yourself/${nextUrl}`;
+            // console.log("res : " + result);
+            quiz_question = result['next_q']
+            let new_score = result['score'];
+            console.log("score recvd is : " + new_score)
+            $("#score-display").text(new_score);
+
+
+            // console.log(nextUrl);
+            window.location.href = '/quiz_yourself/' + nextUrl;
         },
         error       :   function(request, status, error){
             console.log("Error");

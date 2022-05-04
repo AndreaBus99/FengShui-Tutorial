@@ -6,6 +6,7 @@ Backend server for group 1 UI final project
 
 from cgitb import reset
 from genericpath import samefile
+from http import server
 from re import I
 from tkinter import scrolledtext
 from flask import Flask
@@ -189,7 +190,7 @@ mc_quiz_questions = [
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
         "answer" : "Bed-and-desk-proximity",
-        "mc_next_question" : "3"
+        "next_question" : "3"
     },
     {
         "id" : "2",
@@ -200,7 +201,7 @@ mc_quiz_questions = [
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
         "answer" : "Bed-is-in-the-corner-and-open-space",
-        "mc_next_question" : "4",
+        "next_question" : "4",
     },
     {
         "id" : "3",
@@ -211,7 +212,7 @@ mc_quiz_questions = [
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
         "answer" : "Desk-location-(people-have-their-backs-against-the-door)",
-        "mc_next_question" : "5"
+        "next_question" : "5"
     }
 ]
 
@@ -224,7 +225,7 @@ tf_quiz_questions = [
         "true" : "True",
         "false" : "False",
         "answer" : "True",
-        "tf_next_question" : "2"
+        "next_question" : "2"
 
     },
     {
@@ -235,7 +236,7 @@ tf_quiz_questions = [
         "true" : "True",
         "false" : "False",
         "answer" : "True",
-        "tf_next_question" : "end"
+        "next_question" : "end"
     }
 ]
 
@@ -728,17 +729,24 @@ current_score = 0
 def quiz_yourself(id):
     reset_lessons()
     global current_score
+    # print("id sent is : ", id)
     current_question = quiz_questions[int(id)]
+    # post method
     if request.method == 'POST':    
         user_response = request.get_json()
-        user_current_score = user_response['score']
+        # user_current_score = user_response['score']
         server_response = {}
-        if (user_response['status'] == 'incorrect'):
-            server_response['score'] = user_current_score
-        else:
-            server_response['score'] = user_current_score + 1
+        if (user_response['status'] == 'correct'):
+            current_score += 1
+        
+        
+        # update next q and score
+        server_response['next_q'] = current_question
+        server_response['score'] = current_score
+        print("score sending is : ", current_score)
         return jsonify(server_response)
     else:
+        print("score sending is : ", current_score)
         return render_template('quiz.html', quiz_question=current_question, score=current_score) 
 if __name__ == '__main__':
     app.run(debug=True)
