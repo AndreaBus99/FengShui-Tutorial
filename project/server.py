@@ -173,8 +173,8 @@ mc_quiz_questions = [
     {
         "id" : "0",
         "type" : "MC",
-        "mc_image" : "../static/images/quiz/quiz1.png",#to be filled
-        "mc_question" : "What are some potential issues with the room shown above?",
+        "image" : "../static/images/quiz/quiz1.png",#to be filled
+        "question" : "What are some potential issues with the room shown above?",
         "option_1" : "Bed direction",
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
@@ -184,8 +184,8 @@ mc_quiz_questions = [
     {
         "id" : "1",
         "type": "MC",
-        "mc_image" : "../static/images/quiz/quiz2.png", #to be filled
-        "mc_question" : "What are some potential issues with the room shown above?",
+        "image" : "../static/images/quiz/quiz2.png", #to be filled
+        "question" : "What are some potential issues with the room shown above?",
         "option_1" : "Bed direction",
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
@@ -195,8 +195,8 @@ mc_quiz_questions = [
     {
         "id" : "2",
         "type" : "MC",
-        "mc_image" : "../static/images/quiz/quiz3.png",#to be filled
-        "mc_question":  "What are some positive things about this layout?",
+        "image" : "../static/images/quiz/quiz3.png",#to be filled
+        "question":  "What are some positive things about this layout?",
         "option_1" : "Bed is in the corner and open space",
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
@@ -206,8 +206,8 @@ mc_quiz_questions = [
     {
         "id" : "3",
         "type" : "MC",
-        "mc_image" : "../static/images/quiz/quiz4.png",#to be filled
-        "mc_question" : "What are some negative things about this layout?",
+        "image" : "../static/images/quiz/quiz4.png",#to be filled
+        "question" : "What are some negative things about this layout?",
         "option_1" : "Bed is in the corner and open space",
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
@@ -220,10 +220,10 @@ tf_quiz_questions = [
     {
         "id" : "5",
         "type" : "TF",
-        "tf_image" : "",#to be filled
-        "tf_question" : "Desk should be close to the window",
-        "true" : "True",
-        "false" : "False",
+        "image" : "../static/images/quiz/quiz5.png",#to be filled
+        "question" : "Desk should be close to the window",
+        "option_1" : "True",
+        "option_2" : "False",
         "answer" : "True",
         "next_question" : "2"
 
@@ -231,10 +231,10 @@ tf_quiz_questions = [
     {
         "id" : "6",
         "type" : "TF",
-        "tf_image" : "", #to be filled
-        "tf_question" : "Desk should face door",
-        "true" : "True",
-        "false" : "False",
+        "image" : "../static/images/quiz/quiz6.png", #to be filled
+        "question" : "Desk should face door",
+        "option_1" : "True",
+        "option_2" : "False",
         "answer" : "True",
         "next_question" : "end"
     }

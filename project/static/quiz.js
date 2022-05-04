@@ -31,8 +31,8 @@ const renderQuestion = () => {
 // set content if multiple choice
 // todo -- make clickable and add onclock information
 const setMultipleChoiceContent = () => {
-    $(".quiz-prompt").text(quiz_question['mc_question']);
-    $(".quiz-image").attr("src", quiz_question['mc_image'])
+    $(".quiz-prompt").text(quiz_question['question']);
+    $(".quiz-image").attr("src", quiz_question['image'])
     // console.log(quiz_question);
     $(".quiz-choices").append(`<div class="form-check">
     <input type="radio" class="form-check-input" id="radio1" name="optradio" value=${quiz_question['option_1'].split(" ").join('-')} checked>${quiz_question['option_1']}
@@ -46,7 +46,8 @@ const setMultipleChoiceContent = () => {
 }
 
 const setTrueFalseContent = () => {
-    $(".quiz-prompt").text(quiz_question['tf_question']);
+    $(".quiz-prompt").text(quiz_question['question']);
+    $(".quiz-image").attr("src", quiz_question['image'])
     $(".quiz-choices").append(`<div class="form-check">
     <input type="radio" class="form-check-input" id="radio1" name="optradio" value=${quiz_question['option_1']} checked>${quiz_question['option_1']}
     <label class="form-check-label" for="radio1"></label>`);
