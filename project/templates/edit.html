@@ -28,8 +28,10 @@
     }
 
     .rowCanvas{
-        padding-top: 0px !important;
+        /* padding-top: 0px !important;
         padding-bottom: 0px !important;
+        padding-left: 0px !important; */
+        padding: 0px !important;
         width: 100vw;
         height: 100vh;
     }
@@ -62,17 +64,30 @@
     .progressRow{
         padding: 5px;
     }
-
+    
     .rulesHeader{
-        font-size: 18px;
+        font-size: large;
     }
 
     .rulesList{
-        font-size: 14px;
+        font-size: small;
     }
 
     .rules{
-        padding-top: 10px;
+        padding-top: medium;
+    }
+
+    .textProgress{
+        display: inline-block;
+        color: grey;
+        font-size: small;
+    }
+
+    button:disabled,
+    button[disabled]{
+        border: 1px solid #999999;
+        background-color: #cccccc;
+        color: #666666;
     }
 </style>
 
@@ -85,7 +100,7 @@
             <canvas id="c"></canvas>
        </div>
        <!-- sidebar -->
-       <div class="col-md-3 rowCanvas">
+       <div class="col-md-3">
            <!-- feedback message -->
            <div class="row">
                 <div class="col-md-12">
@@ -99,14 +114,14 @@
                 </div>
                 <div class="col-md-9">
                     <div class="progress">
-                        <div id = 'progress-bar'class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
-                      </div>
+                        <div id ='progress-bar' class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
                 </div>
             </div>
             <!-- submit button -->
             <div class="row">
                 <div class="col-md-12">
-                    <button type="button" class="btn btn-primary text-right" id="learn-test-submit-btn" style="float: right;">Submit</button> 
+                    <button type="button" class="btn text-right" id="learn-test-submit-btn" style="float: right;">Submit</button> 
                 </div>
             </div>
             <div class="row">
@@ -117,11 +132,17 @@
             <div class="row rules">
                 <div class="col-md-12">
                     <div class="rulesHeader">
-                        Good Rules (<span id="good_rules_count">0</span> / 4 found)
+                        Good Rules 
+                        <div class="textProgress">
+                            (<span id="good_rules_count">0</span> / 4 found)
+                        </div>
                     </div>
                     <ul id="good-lesson-list" class="rulesList"></ul>
                     <div class="rulesHeader">
-                        Bad Rules (<span id="bad_rules_count">0</span> / 4 found)
+                        Bad Rules 
+                        <div class="textProgress">
+                            (<span id="bad_rules_count">0</span> / 4 found)
+                        </div>
                     </div>
                     <ul id="bad-lesson-list" class="rulesList"></ul>
                 </div>
