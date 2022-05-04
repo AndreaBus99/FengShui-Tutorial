@@ -171,45 +171,45 @@ mc_quiz_questions = [
     {
         "id" : "0",
         "type" : "MC",
-        "mc_image" : "",#to be filled
+        "mc_image" : "../static/images/quiz/quiz1.png",#to be filled
         "mc_question" : "What are some potential issues with the room shown above?",
         "option_1" : "Bed direction",
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
-        "answer" : "Bed direction",
+        "answer" : "Bed-direction",
         "next_question" : "2"
     },
     {
         "id" : "1",
         "type": "MC",
-        "mc_image" : "", #to be filled
+        "mc_image" : "../static/images/quiz/quiz2.png", #to be filled
         "mc_question" : "What are some potential issues with the room shown above?",
         "option_1" : "Bed direction",
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
-        "answer" : "Bed and desk proximity",
+        "answer" : "Bed-and-desk-proximity",
         "mc_next_question" : "3"
     },
     {
         "id" : "2",
         "type" : "MC",
-        "mc_image" : "",#to be filled
+        "mc_image" : "../static/images/quiz/quiz3.png",#to be filled
         "mc_question":  "What are some positive things about this layout?",
         "option_1" : "Bed is in the corner and open space",
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
-        "answer" : "Bed is in the corner and open space",
+        "answer" : "Bed-is-in-the-corner-and-open-space",
         "mc_next_question" : "4",
     },
     {
         "id" : "3",
         "type" : "MC",
-        "mc_image" : "",#to be filled
+        "mc_image" : "../static/images/quiz/quiz4.png",#to be filled
         "mc_question" : "What are some negative things about this layout?",
         "option_1" : "Bed is in the corner and open space",
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
-        "answer" : "Desk location (people have their backs against the door)",
+        "answer" : "Desk-location-(people-have-their-backs-against-the-door)",
         "mc_next_question" : "5"
     }
 ]
@@ -235,8 +235,7 @@ tf_quiz_questions = [
         "false" : "False",
         "answer" : "True",
         "tf_next_question" : "end"
-    },
-
+    }
 ]
 
 quiz_questions = mc_quiz_questions + tf_quiz_questions
@@ -719,23 +718,28 @@ current_score = 0
 @app.route('/quiz_yourself/<id>', methods = ['GET', 'POST'])
 def quiz_yourself(id):
     global current_score
-    global track_location
     current_question = quiz_questions[int(id)]
-
     if request.method == 'POST':    
-      user_response = request.get_json()
-      server_response = {}
+    #   server_response = {}
 
-      chosen_answer =  user_response['selected']
-      if (chosen_answer == current_question['answer']):
-        server_response['feedback'] = 'correct'
-        current_score = current_score + 1
-        server_response['score'] = current_score
-      else:
-        server_response['feedback'] = 'incorrect'
-        server_response['score'] = current_score
-        server_response['corrections'] = current_question['answer'] 
-      return jsonify(server_response)
+    #   chosen_answer =  user_response['selected']
+    #   if (chosen_answer == current_question['answer']):
+    #     server_response['feedback'] = 'correct'
+    #     current_score = current_score + 1
+    #     server_response['score'] = current_score
+    #   else:
+    #     server_response['feedback'] = 'incorrect'
+    #     server_response['score'] = current_score
+    #     server_response['corrections'] = current_question['answer'] 
+    
+        user_response = request.get_json()
+        user_current_score = user_response['score']
+        server_response = {}
+        if (user_response['status'] == 'incorrect'):
+            server_response['score'] = user_current_score
+        else:
+            server_response['score'] = user_current_score
+        return jsonify(server_response)
     else:
         return render_template('quiz.html', quiz_question=current_question, score=current_score) 
 if __name__ == '__main__':

@@ -11,8 +11,6 @@
 <script>
     const quiz_question={{quiz_question|tojson}}
     const score = {{score|tojson}}
-    console.log(quiz_questions);
-    console.log(tf_quiz_questions);
 </script>
 <!-- 
 TODO:
@@ -28,7 +26,7 @@ TODO:
             <!-- image -->
             <div class="row">
                 <div class="col-md-12">
-                    <img src="" alt="image of quiz" class="quiz-image">
+                    <img src="" alt="image of quiz" class="quiz-image" style="height: 300px; width: 300px;"/>
                 </div>
             </div>
             <!-- question prompt -->
@@ -37,7 +35,7 @@ TODO:
                 </div>
             </div>
             <!-- options -->
-            <div class="row quiz-choices">
+            <div class="quiz-choices">
                 <!-- create divs representing choices here... -->
             </div>
             <!-- system status percentage -->
