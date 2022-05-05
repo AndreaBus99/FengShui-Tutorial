@@ -71,25 +71,26 @@ const handleQuizSubmit = () => {
     const correct = (answer === quiz_question['answer']);
     const feedback = correct ? 'correct' : 'incorrect';
     const nextScore = correct ? score+1 : score;
-
+    const modalText = correct ? `Correct! Great job` : `Not quite, the correct answer is ${quiz_question['answer'].split('-').join(' ')}`;
     const nextUrl = quiz_question['next_question'];
-    // console.log("quiz q  is : " + JSON.stringify(quiz_question));
-    // console.log("next url is : " + nextUrl);
     const data = { 
         'status': correct ? 'correct' : 'incorrect',
         'score' : score,
     };
-    alert(`Your answer is ${feedback}`);
-    //POST request on the current field
-    let end = quiz_question['next_question'] == 'end';
-    if (end) {
-        window.location.href = '/quiz_end';
-    }
-    else {
-        sendRequest(data, nextUrl);
-    }
-    
 
+    $('#quiz-modal').modal('show');
+    $(".modal-title").html(modalText);
+    $("#quiz-modal").click(()=>{
+        $('#modal').modal('hide'); 
+        //POST request on the current field
+        let end = quiz_question['next_question'] == 'end';
+        if (end) {
+            window.location.href = '/quiz_end';
+        }
+        else {
+            sendRequest(data, nextUrl);
+        }
+    })
 }
 
 // handle next button click

@@ -725,18 +725,17 @@ current_score = 0
 def quiz_yourself(id):
     reset_lessons()
     global current_score
+    if (current_score >= 6):
+        current_score = 0
+    
     # go to end page
     if id == '6':
         return render_template('quiz_end.html', score = current_score)
-        
-        
-    
     # print("id sent is : ", id)
     current_question = quiz_questions[int(id)]
     # post method
     if request.method == 'POST':   
 
-        
         user_response = request.get_json()
         # user_current_score = user_response['score']
         server_response = {}
