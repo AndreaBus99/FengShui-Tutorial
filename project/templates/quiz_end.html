@@ -5,6 +5,7 @@
 
 <!-- dependencies -->
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'quiz_end.js') }}"></script>
 <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
 <script>
     let score = {{score|tojson}};
@@ -15,13 +16,15 @@
     <!-- quiz score -->
     <div class="row">
         <div class="col-md-8 col-md-offset-4">
-        Great Job! You got <span id='quiz-end-score'></span> questions correct.
+        Great Job! You got <span id='quiz-end-score'>1</span> question(s) correct.
         </div>
     </div>
     <!-- button -->
     <div class="row">
         <div class="col-md-8 col-md-offset-4">
-            <button type="button" class="btn btn-primary btn-lg">Back to learn more</button>
+            <a href="/quiz_yourself/0">
+                <button type="button" class="btn btn-primary btn-lg" ahref>Restart</button>
+            </a>
         </div> 
     </div>
 </div>

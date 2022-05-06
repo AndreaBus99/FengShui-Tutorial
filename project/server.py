@@ -15,6 +15,7 @@ from flask import Response, request, jsonify
 import random
 import sys
 import copy
+import json
 app = Flask(__name__)
 
 """
@@ -746,6 +747,7 @@ def quiz_yourself(id):
     global feedback
     if id == '0' or id >= ('6'):
         current_score = 0
+        feedback.clear()
     # go to end page
     if id == '6':
         if (len(feedback) == 0):
@@ -772,6 +774,10 @@ def quiz_yourself(id):
 @app.route('/quiz_end', methods = ['GET', 'POST'])
 def quiz_end():
     global current_score
-    return render_template('quiz_end.html', score=current_score)
+    global feedback
+
+    #need to convert feedback set to a list, because sets are not natively JSON serializable
+    feedback_list = list(feedback)
+    return render_template('quiz_end.html', score=current_score, feedback = json.dumps(feedback_list))
 if __name__ == '__main__':
     app.run(debug=True)
