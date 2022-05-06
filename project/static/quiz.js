@@ -41,7 +41,7 @@ const renderQuestion = () => {
             break
     }
     // set submit button
-    $('.quiz-choices').append($("<button type='button' class='btn btn-primary' id='submit-btn' style='float: right; margin: 10vh;'>Submit Answer</button>"))
+    $('.submit').append($("<button type='button' class='btn btn-primary' id='submit-btn' style='float: right;'>Submit Answer</button>"))
     $("#submit-btn").click(handleQuizSubmit);
 }
 

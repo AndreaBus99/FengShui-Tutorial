@@ -12,22 +12,67 @@
     let quiz_question={{quiz_question|tojson}}
     let score = {{score|tojson}}
 </script>
+
+<style>
+    .capsule{
+        margin-top:10px;
+        background-color: white; 
+        height: 100%;
+        overflow:auto;
+        border-radius: 25px;
+    }
+    .images{
+        margin-top: 20px;
+        margin-bottom: 20px;
+        height: 400px;
+        display: flex;
+        justify-content: center;
+    }
+    .quiz-image{
+        border: 2px solid lightgray;
+    }
+
+    .score{
+        margin: 20px;
+        background-color: rgb(241, 241, 241);
+        border-radius: 25px;
+        padding:5px;
+        text-align: center;
+        color: darkgray;
+    }
+
+    .submit{  
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .quiz-choices{
+        margin-bottom: 20px;
+    }
+    .quiz-prompt{
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+</style>
 <!-- 
 TODO:
     1. how to handle the quiz start page? do we really need it?
  -->
-<div class="container">
+<div class="container capsule">
     <div class="row">
         <!-- current quiz score -->
         <div class="col-md-3 quiz-score" id="current-score">
-            Score <span id = 'score-display'>0</span> / 6
+            <div class="score">
+                Score <span id = 'score-display'>0</span> / 6
+            </div>
         </div>
         <!-- body of question -->
         <div class="col-md-6">
             <!-- image -->
             <div class="row">
-                <div class="col-md-12">
-                    <img src="" alt="image of quiz" class="quiz-image" style="height: 300px; width: 300px;"/>
+                <div class="col-md-12 images">
+                    <img src="" alt="image of quiz" class="img-fluid quiz-image rounded" />
                 </div>
             </div>
             <!-- question prompt -->
@@ -43,6 +88,9 @@ TODO:
             <div class="row quiz-percentage">
 
             </div>
+        </div>
+        <div class ="col-md-3">
+            <div class="submit"></div>
         </div>
         <!-- buttons 
             if q not answered -> render ONLY submit button
