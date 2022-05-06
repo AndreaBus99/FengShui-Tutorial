@@ -8,7 +8,8 @@
 <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
 <script>
     let score = {{score|tojson}};
-    console.log(document.getElementById('quiz-end-score'));
+    let feedback = {{feedback|tojson}}
+    console.log(score);
 </script>
 <div class="container">
     <!-- quiz score -->

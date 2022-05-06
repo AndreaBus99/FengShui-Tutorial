@@ -181,7 +181,8 @@ quiz_questions = [
         "answer" : "Bed-direction",
         "next_question" : "1",
         "good_support": "Sleeping well at night is important.",
-        "bad_support": "Remember from the tutorial--which way should you be facing while sleeping?"
+        "bad_support": "Remember from the tutorial--which way should you be facing while sleeping?",
+        "category": "Furniture orientation"
     },
     {
         "id" : "1",
@@ -194,7 +195,8 @@ quiz_questions = [
         "answer" : "Bed-and-desk-proximity",
         "next_question" : "2",
         "good_support": "Nice job observing how important proximity is between certain furniture items!",
-        "bad_support": "Hmm, some furniture items look too close to each other here. Which are they?"
+        "bad_support": "Hmm, some furniture items look too close to each other here. Which are they?",
+        "category": "Furniture proximity"
     },
     {
         "id" : "2",
@@ -207,7 +209,8 @@ quiz_questions = [
         "answer" : "Bed-is-in-the-corner-and-open-space",
         "next_question" : "3",
         "good_support": "As you remember, having open space is important to adhere to good Fengshui principles.",
-        "bad_support": "Remember, having more of ____ space is a good thing!"
+        "bad_support": "Remember, having more of ____ space is a good thing!",
+        "category": "Idenitifying open space"
     },
     {
         "id" : "3",
@@ -220,7 +223,8 @@ quiz_questions = [
         "answer" : "Desk-location-(people-have-their-backs-against-the-door)",
         "next_question" : "4",
         "good_support": "Good job remembering that exposing your back is a vulnerability!",
-        "bad_support": "Hint: what becomes exposed in this position?"
+        "bad_support": "Hint: what becomes exposed in this position?",
+        "category": "Furniture orientation"
     },
     {
         "id" : "4",
@@ -232,7 +236,8 @@ quiz_questions = [
         "answer" : "True",
         "next_question" : "5",
         "good_support": "Natural sunlight! Yes!",
-        "bad_support": "What do we get by having a desk by the window?"
+        "bad_support": "What do we get by having a desk by the window?",
+        "category": "Furniture proximity"
     },
     {
         "id" : "5",
@@ -244,7 +249,8 @@ quiz_questions = [
         "answer" : "True",
         "next_question" : "end",
         "good_support": "Always want to see who's entering your room!",
-        "bad_support": "Remember what happens if we have our backs facing the wall? Bad things!"
+        "bad_support": "Remember what happens if we have our backs facing the wall? Bad things!",
+        "category": "Furniture orientation"
     }
 ]
 
@@ -732,43 +738,40 @@ def tutorial(id):
 Quiz route
 """
 current_score = 0
-feedback = []
+feedback = set()
 @app.route('/quiz_yourself/<id>', methods = ['GET', 'POST'])
 def quiz_yourself(id):
     reset_lessons()
     global current_score
-    if (current_score >= 6 or id == 0):
+    global feedback
+    if id == '0' or id >= ('6'):
         current_score = 0
-    
     # go to end page
     if id == '6':
-        return render_template('quiz_end.html', score = current_score)
+        if (len(feedback) == 0):
+            feedback = []
+        return render_template('quiz_end.html', score = current_score, feedback = feedback)
     # print("id sent is : ", id)
     current_question = quiz_questions[int(id)]
     # post method
     if request.method == 'POST':   
-
+        #process correctness and add to feedback set (no duplicates) if incorrect
         user_response = request.get_json()
-        # user_current_score = user_response['score']
         server_response = {}
         if (user_response['status'] == 'correct'):
             current_score += 1
         else:
-            feedback.append(current_question['answer'])
-        
+            feedback.add(current_question['category'])
         # update next q and score
         server_response['next_q'] = current_question
         server_response['score'] = current_score
-        print("score sending is : ", current_score)
         return jsonify(server_response)
     else:
-        print("score sending is : ", current_score)
         return render_template('quiz.html', quiz_question=current_question, score=current_score) 
 # quiz end
 @app.route('/quiz_end', methods = ['GET', 'POST'])
 def quiz_end():
     global current_score
-    print("the final score is " + str(current_score))
     return render_template('quiz_end.html', score=current_score)
 if __name__ == '__main__':
     app.run(debug=True)
