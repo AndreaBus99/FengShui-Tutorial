@@ -9,10 +9,27 @@
 
 
 // fetch json from server, render template
+
+const GOOD_SENTIMENTS=["Awesome!", "Nice Job!", "Nailed It", "Woo Hoo!", "Way to Go!", "Well Done!"];
+const BAD_SENTIMENTS=["Not Quite!", "Close!", "Think a bit more...", "Not Exactly"];
+const getRandomSentiment = (arr) => {
+    return arr[Math.floor(Math.random()*arr.length)];
+}
 const renderQuestion = () => {
     // Set score
     const url = $(location).attr('href');
     $("#score-display").text(score);
+
+    //show modal on first display
+    if (quiz_question['next_question'] == 1) {
+        $("#quiz-modal").modal('show');
+        $(".modal-title").html("Welcome to the quiz!");
+        $("#modal-btn").text('Start quiz!');
+        $('#quiz-modal-text').html("Now, you'll test all the Fengshui knowledge you've obtained!<br> The quiz consists of 4 multiple choice and 2 true/false questions.");
+        $("#quiz-modal").click(() => {
+            $('#quiz-modal').modal('hide'); 
+        })
+    }
 
     //Set question and answers based on question type
     switch (quiz_question['type']) {
@@ -24,7 +41,7 @@ const renderQuestion = () => {
             break
     }
     // set submit button
-    $('.quiz-buttons').append($("<button type='button' class='btn btn-primary' id='submit-btn' style='float: right; margin: 10vh;'>Submit</button>"))
+    $('.quiz-choices').append($("<button type='button' class='btn btn-primary' id='submit-btn' style='float: right; margin: 10vh;'>Submit Answer</button>"))
     $("#submit-btn").click(handleQuizSubmit);
 }
 
@@ -69,9 +86,8 @@ const handleQuizSubmit = () => {
     // process whether or not it's correct
     const answer = $("input[name='optradio']:checked").val();
     const correct = (answer === quiz_question['answer']);
-    const feedback = correct ? 'correct' : 'incorrect';
-    const nextScore = correct ? score+1 : score;
-    const modalText = correct ? `Correct! Great job` : `Not quite, the correct answer is ${quiz_question['answer'].split('-').join(' ')}`;
+    const modalTitle = correct ? 'Correct! Great Job' : 'Incorrect Answer';
+    const modalText = correct ? `${getRandomSentiment(GOOD_SENTIMENTS)} ${quiz_question['good_support']}` : `${getRandomSentiment(BAD_SENTIMENTS)} ${quiz_question['bad_support']}`;
     const nextUrl = quiz_question['next_question'];
     const data = { 
         'status': correct ? 'correct' : 'incorrect',
@@ -79,9 +95,11 @@ const handleQuizSubmit = () => {
     };
 
     $('#quiz-modal').modal('show');
-    $(".modal-title").html(modalText);
+    $(".modal-title").html(modalTitle);
+    $('#quiz-modal-text').html(modalText);
+    $("#modal-btn").text('Next Question');
     $("#quiz-modal").click(()=>{
-        $('#modal').modal('hide'); 
+        $('#quiz-modal').modal('hide'); 
         //POST request on the current field
         let end = quiz_question['next_question'] == 'end';
         if (end) {
@@ -129,7 +147,7 @@ const sendRequest = (data, nextUrl) => {
             // end page
             // if (quiz_question['next_question'] == 'end'){
                 // window.location.href = '/quiz_end/'
-            // } else {
+            // } else { 
             window.location.href = '/quiz_yourself/' + nextUrl;
             // }
             

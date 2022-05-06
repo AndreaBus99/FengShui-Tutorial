@@ -11,7 +11,6 @@
 <script>
     let quiz_question={{quiz_question|tojson}}
     let score = {{score|tojson}}
-    console.log("score is " + score);
 </script>
 <!-- 
 TODO:
@@ -49,9 +48,6 @@ TODO:
             if q not answered -> render ONLY submit button
             if q answered -> render next AND review
         -->
-        <div class="col-md-3 quiz-buttons">
-            
-        </div>
     </div> 
 
     <div class="modal fade" id="quiz-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -63,12 +59,12 @@ TODO:
                 <span aria-hidden="true" ></span>
               </button>
             </div>
-            <div class="modal-body" id = 'lesson'>
+            <div class="modal-body" id = 'quiz-modal-text'>
               
             </div>
             <div class="modal-footer">
                 <div id="skip-tutorial-btn"></div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="next-question">Next Question</button>
+                <button type="button" id="modal-btn" class="btn btn-secondary" data-dismiss="modal" id="next-question" val="Next Question"></button>
             </div>
           </div>
         </div>

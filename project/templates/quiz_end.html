@@ -4,14 +4,12 @@
 {% block content%}
 
 <!-- dependencies -->
-<script type="text/javascript" src="{{ url_for('static', filename = 'quiz.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
 <script>
-    let score = {{score}};
+    let score = {{score|tojson}};
+    console.log(document.getElementById('quiz-end-score'));
 </script>
-
-
-
 <div class="container">
     <!-- quiz score -->
     <div class="row">

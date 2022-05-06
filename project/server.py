@@ -179,7 +179,9 @@ quiz_questions = [
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
         "answer" : "Bed-direction",
-        "next_question" : "1"
+        "next_question" : "1",
+        "good_support": "Sleeping well at night is important.",
+        "bad_support": "Remember from the tutorial--which way should you be facing while sleeping?"
     },
     {
         "id" : "1",
@@ -190,7 +192,9 @@ quiz_questions = [
         "option_2" : "Bed and desk proximity",
         "option_3" : "Bed positioning relative to walls",
         "answer" : "Bed-and-desk-proximity",
-        "next_question" : "2"
+        "next_question" : "2",
+        "good_support": "Nice job observing how important proximity is between certain furniture items!",
+        "bad_support": "Hmm, some furniture items look too close to each other here. Which are they?"
     },
     {
         "id" : "2",
@@ -202,6 +206,8 @@ quiz_questions = [
         "option_3" : "Desk location (people have their backs against the door)",
         "answer" : "Bed-is-in-the-corner-and-open-space",
         "next_question" : "3",
+        "good_support": "As you remember, having open space is important to adhere to good Fengshui principles.",
+        "bad_support": "Remember, having more of ____ space is a good thing!"
     },
     {
         "id" : "3",
@@ -212,7 +218,9 @@ quiz_questions = [
         "option_2" : "Bed is in the corner",
         "option_3" : "Desk location (people have their backs against the door)",
         "answer" : "Desk-location-(people-have-their-backs-against-the-door)",
-        "next_question" : "4"
+        "next_question" : "4",
+        "good_support": "Good job remembering that exposing your back is a vulnerability!",
+        "bad_support": "Hint: what becomes exposed in this position?"
     },
     {
         "id" : "4",
@@ -222,8 +230,9 @@ quiz_questions = [
         "option_1" : "True",
         "option_2" : "False",
         "answer" : "True",
-        "next_question" : "5"
-
+        "next_question" : "5",
+        "good_support": "Natural sunlight! Yes!",
+        "bad_support": "What do we get by having a desk by the window?"
     },
     {
         "id" : "5",
@@ -233,7 +242,9 @@ quiz_questions = [
         "option_1" : "True",
         "option_2" : "False",
         "answer" : "True",
-        "next_question" : "end"
+        "next_question" : "end",
+        "good_support": "Always want to see who's entering your room!",
+        "bad_support": "Remember what happens if we have our backs facing the wall? Bad things!"
     }
 ]
 
@@ -721,11 +732,12 @@ def tutorial(id):
 Quiz route
 """
 current_score = 0
+feedback = []
 @app.route('/quiz_yourself/<id>', methods = ['GET', 'POST'])
 def quiz_yourself(id):
     reset_lessons()
     global current_score
-    if (current_score >= 6):
+    if (current_score >= 6 or id == 0):
         current_score = 0
     
     # go to end page
@@ -741,7 +753,8 @@ def quiz_yourself(id):
         server_response = {}
         if (user_response['status'] == 'correct'):
             current_score += 1
-        
+        else:
+            feedback.append(current_question['answer'])
         
         # update next q and score
         server_response['next_q'] = current_question
@@ -754,6 +767,8 @@ def quiz_yourself(id):
 # quiz end
 @app.route('/quiz_end', methods = ['GET', 'POST'])
 def quiz_end():
+    global current_score
+    print("the final score is " + str(current_score))
     return render_template('quiz_end.html', score=current_score)
 if __name__ == '__main__':
     app.run(debug=True)
