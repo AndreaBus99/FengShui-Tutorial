@@ -24,15 +24,16 @@ button{
     background-color: lightgray;
 }
 
-/* #progress-bar {
-    width: 0; 
-    margin-left: 5px; 
-    margin-top: 5px
-}
 .modal-header{
     background-color: rgb(236, 236, 236);
     color: black;
     font-weight: bolder;
+}
+
+/* #progress-bar {
+    width: 0; 
+    margin-left: 5px; 
+    margin-top: 5px
 }
 
 
