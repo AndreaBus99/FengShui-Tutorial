@@ -29,6 +29,12 @@ button{
     margin-left: 5px; 
     margin-top: 5px
 }
+.modal-header{
+    background-color: rgb(236, 236, 236);
+    color: black;
+    font-weight: bolder;
+}
+
 
 #progress-container{
     padding-top:20px;
