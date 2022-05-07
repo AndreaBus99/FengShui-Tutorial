@@ -214,8 +214,11 @@ function build() {
       'bed_coords' : getCoordinates(canvas, 'bed', grid),
       'desk_coords' : getCoordinates(canvas, 'desk', grid),
       'drawers_coords' : getCoordinates(canvas, 'drawers', grid),
-      'wardrobe_coords' : getCoordinates(canvas, 'wardrobe', grid),
+      // 'wardrobe_coords' : getCoordinates(canvas, 'wardrobe', grid),
     };
+    // check_rotation(allData)
+    // rotate_to_free(check_rotation(allData),allData)
+
 
     // Receive from server if dragged and dropped furniture is inside room
 		$.ajax({
@@ -231,8 +234,24 @@ function build() {
 
         // If the furniture is inside the room
         if(result.status == 'yes'){
+
+          let current_url=$(location).attr('href')
+
+          // if furniture intial angle has not yet been checked and view is right before rotating
+          if (!checked && current_url == "http://127.0.0.1:5000/tutorial/2") {
+            checked = true;
+            // Call check_rotation to get the initial angles before they are changed
+            check_rotation(allData);
+
+            // let rotate check_rotation(allData);
+            // initial_bed=furniture['bed_coords']['angle']
+            // initial_desk=furniture['desk_coords']['angle']
+            // initial_drawer= furniture['drawers_coords']['angle']
+          }
           // Move to the next step of tutorial (rotating)
-          drag_to_rotate()
+          drag_to_rotate(allData)
+          // check_rotation(allData)
+          // console.log(check_rotation(allData))
         }
 			},
 			error: 
@@ -245,7 +264,7 @@ function build() {
 		});
   });
 }
-
+let checked = false;
 /* get coordinates of object by id*/
 function getCoordinates(canvas, id, grid){
   var coords = [];
@@ -264,7 +283,8 @@ function getCoordinates(canvas, id, grid){
         height : Math.round(bb.height/grid)
       };
       
-      rotate_to_free(prop['angle'])
+      // rotate_to_free(prop, prop['angle'])
+      // console.log(obj, prop['angle'])
       coords.push(prop);
     }
     
@@ -334,11 +354,17 @@ function welcome_to_drag(){
 }
 
 /* function for step 2: clicking, dragging and dropping and step 3: rotation*/
-function drag_to_rotate(){
+function drag_to_rotate(furniture){
 
+  // console.log(furniture['bed_coords']['angle'])
+  let bed_angle=furniture['bed_coords']['angle']
+  let desk_angle=furniture['desk_coords']['angle']
+  let drawers_angle= furniture['drawers_coords']['angle']
+  
   let current_url=$(location).attr('href')
   
   if(current_url == "http://127.0.0.1:5000/tutorial/2"){
+    
     // Get the instruction for this step
     let rotate = tutorial[1]['instruction']
     $("#lesson").text(rotate);
@@ -364,17 +390,48 @@ function drag_to_rotate(){
       $('.step-list').append($('<li>', {text : tutorial[1]['instruction']}))
     }
   }
-
+  // Call rotate_to_free with updated angles as furniture is rotated
+  rotate_to_free(bed_angle,desk_angle,drawers_angle)
 }
+
+
+var initial_bed
+var initial_desk
+var initial_drawer
+
+// function for checking the initial angle before going into rotate step
+function check_rotation(furniture){
+  // console.log("angles", furniture)
+
+  let current_url=$(location).attr('href')
+  
+  // if(current_url == "http://127.0.0.1:5000/tutorial/2"){
+    initial_bed=furniture['bed_coords']['angle']
+    initial_desk=furniture['desk_coords']['angle']
+    initial_drawer= furniture['drawers_coords']['angle']
+
+    // // console.log(bed_angle)
+    return [initial_bed, initial_desk, initial_drawer]
+  // }
+}
+
 
 /* function for step 3: rotating and step 4: do whatever you want */
 // angle parameter is the angle of the objects
-function rotate_to_free(angle){
-  
+function rotate_to_free(bed_angle, desk_angle, drawers_angle){
+
+  console.log("bed_angle", bed_angle)
+  console.log(`bed: ${initial_bed}, desk: ${initial_desk}, drawers: ${initial_drawer}`)
+
   let current_url=$(location).attr('href')
 
   // If the angle is changed (i.e rotation occurs) show the instruction
-  if(angle!= 0 && current_url == "http://127.0.0.1:5000/tutorial/3"){
+  // Compare the angles of each element to the initial angle
+  if( (bed_angle != initial_bed || desk_angle != initial_desk || drawers_angle != initial_drawer) && current_url == "http://127.0.0.1:5000/tutorial/3"){
+
+    // let new_rotate_values = check_rotation(furniture)
+    // console.log(`bed: ${initial_bed}, desk: ${initial_desk}, drawers: ${initial_drawer}`)
+    // console.log(`new bed: ${new_rotate_values[0]}, new desk: ${new_rotate_values[1]}, new drawers: ${new_rotate_values[2]}`)
 
     // Get the correct instruction
     let click_and_drag = tutorial[0]['instruction']
@@ -405,11 +462,13 @@ function rotate_to_free(angle){
   }
 
   // Once the submit button is clicked, go to the learning portion
-  if(current_url == "http://127.0.0.1:5000/tutorial/4")
+  if(current_url == "http://127.0.0.1:5000/tutorial/4"){
     $('.submit-button').click(function(){
       window.history.pushState({},'', "/tutorial/"+5);
       transition()
     })
+  }
+
 }
 
 function transition(){
