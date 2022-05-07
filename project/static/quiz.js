@@ -11,7 +11,7 @@
 // fetch json from server, render template
 
 const GOOD_SENTIMENTS=["Awesome!", "Nice Job!", "Nailed It", "Woo Hoo!", "Way to Go!", "Well Done!"];
-const BAD_SENTIMENTS=["Not Quite!", "Close!", "Think a bit more...", "Not Exactly"];
+const BAD_SENTIMENTS=["Not Quite!", "Close!", "Think a bit more...", "Not Exactly."];
 const getRandomSentiment = (arr) => {
     return arr[Math.floor(Math.random()*arr.length)];
 }
@@ -87,23 +87,25 @@ const handleQuizSubmit = () => {
     const answer = $("input[name='optradio']:checked").val();
     const correct = (answer === quiz_question['answer']);
     const modalTitle = correct ? 'Correct! Great Job' : 'Incorrect Answer';
+    const modalHeader = correct ? 'alert alert-success' : 'alert alert-danger'
     const modalText = correct ? `${getRandomSentiment(GOOD_SENTIMENTS)} ${quiz_question['good_support']}` : `${getRandomSentiment(BAD_SENTIMENTS)} ${quiz_question['bad_support']}`;
     const nextUrl = quiz_question['next_question'];
     const data = { 
         'status': correct ? 'correct' : 'incorrect',
         'score' : score,
     };
-
+    const end = quiz_question['next_question'] == 'end';
+    const buttonText = end ? 'View Results' : 'Next Question';
     $('#quiz-modal').modal('show');
     $(".modal-title").html(modalTitle);
     $('#quiz-modal-text').html(modalText);
-    $("#modal-btn").text('Next Question');
+    $('#modal-header').addClass(modalHeader)
+    $("#modal-btn").text(buttonText);
     $("#quiz-modal").click(()=>{
         $('#quiz-modal').modal('hide'); 
         //POST request on the current field
-        let end = quiz_question['next_question'] == 'end';
         if (end) {
-            window.location.href = '/quiz_end';
+            sendRequestEnd(data);
         }
         else {
             sendRequest(data, nextUrl);
@@ -124,11 +126,6 @@ function handle_quiz_review(){
 
 // AJAX for request
 const sendRequest = (data, nextUrl) => {
-    console.log("in send req");
-    // console.log("data : " + )
-    
-    
-    console.log('next url : ' + nextUrl); 
     $.ajax({
         type        :   "POST",
         url         :   "/quiz_yourself/" + nextUrl,
@@ -160,7 +157,26 @@ const sendRequest = (data, nextUrl) => {
         }
     });
 }
-    
+
+// ajax request to end page
+const sendRequestEnd = (data) => {
+    $.ajax({
+        type        :   "POST",
+        url         :   "/quiz_end",
+        dataType    :   "json",
+        contentType :   "application/json; charset=utf-8",
+        data        :   JSON.stringify(data),
+        success     :   function(result){
+            window.location.href = '/quiz_end';
+        },
+        error       :   function(request, status, error){
+            console.log("Error");
+            console.log(request);
+            console.log(status);
+            console.log(error);
+        }
+    }); 
+}
 // ready
 $(document).ready(()=>{
     renderQuestion();

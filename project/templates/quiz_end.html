@@ -10,22 +10,28 @@
 <script>
     let score = {{score|tojson}};
     let feedback = {{feedback|tojson}}
-    console.log(score);
+    let overall = {{overall|tojson}}
+    let quiz_questions = {{quiz_questions|tojson}}
 </script>
-<div class="container">
-    <!-- quiz score -->
+<div class="jumbotron">
+    <h1 class="display-4">Quiz Results & Summary</h1>
+    <p class="lead" id="brief-result"></p>
+    <hr class="my-4">
+    <ul class="list-group" id="list-group-answers">
+    </ul>
+    <br>
+    <br>
+    <p class="lead" id="improvement">
+    </p>
     <div class="row">
-        <div class="col-md-8 col-md-offset-4">
-        Great Job! You got <span id='quiz-end-score'>1</span> question(s) correct.
-        </div>
-    </div>
-    <!-- button -->
-    <div class="row">
-        <div class="col-md-8 col-md-offset-4">
-            <a href="/quiz_yourself/0">
-                <button type="button" class="btn btn-primary btn-lg" ahref>Restart</button>
+        <div class="col-sm-12 text-center" style="display: inline-block">
+            <a href="http://127.0.0.1:5000/">
+                <button id="btnHomepage" class="btn btn-primary btn-lg center-block" style="width: 250px;">Go to Homepage</button>
             </a>
-        </div> 
+            <a href="/quiz_yourself/0">
+                <button id="btnRestart" class="btn btn-primary btn-lg center-block" Style="width: 250px;">Restart Quiz</button>
+            </a>
+        </div>
     </div>
 </div>
 

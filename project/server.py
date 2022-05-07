@@ -182,8 +182,8 @@ quiz_questions = [
         "answer" : "Bed-direction",
         "next_question" : "1",
         "good_support": "Sleeping well at night is important.",
-        "bad_support": "Remember from the tutorial--which way should you be facing while sleeping?",
-        "category": "Furniture orientation"
+        "bad_support": "Remember from the tutorial--which way should you be facing while asleep?",
+        "category": "Proper furniture orientation and rotation"
     },
     {
         "id" : "1",
@@ -196,8 +196,8 @@ quiz_questions = [
         "answer" : "Bed-and-desk-proximity",
         "next_question" : "2",
         "good_support": "Nice job observing how important proximity is between certain furniture items!",
-        "bad_support": "Hmm, some furniture items look too close to each other here. Which are they?",
-        "category": "Furniture proximity"
+        "bad_support": "Not quite--some furniture items look too close to each other here.",
+        "category": "Correct furniture proximity"
     },
     {
         "id" : "2",
@@ -223,9 +223,9 @@ quiz_questions = [
         "option_3" : "Desk location (people have their backs against the door)",
         "answer" : "Desk-location-(people-have-their-backs-against-the-door)",
         "next_question" : "4",
-        "good_support": "Good job remembering that exposing your back is a vulnerability!",
-        "bad_support": "Hint: what becomes exposed in this position?",
-        "category": "Furniture orientation"
+        "good_support": "Good job on keeping your back not facing the door!",
+        "bad_support": "Hint: you become vulnerable in this room layout. Because of what?",
+        "category": "Proper furniture orientation and rotation"
     },
     {
         "id" : "4",
@@ -238,7 +238,7 @@ quiz_questions = [
         "next_question" : "5",
         "good_support": "Natural sunlight! Yes!",
         "bad_support": "What do we get by having a desk by the window?",
-        "category": "Furniture proximity"
+        "category": "Correct furniture proximity"
     },
     {
         "id" : "5",
@@ -249,9 +249,9 @@ quiz_questions = [
         "option_2" : "False",
         "answer" : "True",
         "next_question" : "end",
-        "good_support": "Always want to see who's entering your room!",
-        "bad_support": "Remember what happens if we have our backs facing the wall? Bad things!",
-        "category": "Furniture orientation"
+        "good_support": "You always want to see who's entering your room!",
+        "bad_support": "Remember what happens if we have our backs facing the wall?",
+        "category": "Proper furniture orientation and rotation"
     }
 ]
 
@@ -740,6 +740,7 @@ Quiz route
 """
 current_score = 0
 feedback = set()
+overall = []
 @app.route('/quiz_yourself/<id>', methods = ['GET', 'POST'])
 def quiz_yourself(id):
     reset_lessons()
@@ -748,12 +749,7 @@ def quiz_yourself(id):
     if id == '0' or id >= ('6'):
         current_score = 0
         feedback.clear()
-    # go to end page
-    if id == '6':
-        if (len(feedback) == 0):
-            feedback = []
-        return render_template('quiz_end.html', score = current_score, feedback = feedback)
-    # print("id sent is : ", id)
+        overall.clear()
     current_question = quiz_questions[int(id)]
     # post method
     if request.method == 'POST':   
@@ -762,8 +758,10 @@ def quiz_yourself(id):
         server_response = {}
         if (user_response['status'] == 'correct'):
             current_score += 1
+            overall.append(True)
         else:
             feedback.add(current_question['category'])
+            overall.append(False)
         # update next q and score
         server_response['next_q'] = current_question
         server_response['score'] = current_score
@@ -775,9 +773,24 @@ def quiz_yourself(id):
 def quiz_end():
     global current_score
     global feedback
-
-    #need to convert feedback set to a list, because sets are not natively JSON serializable
-    feedback_list = list(feedback)
-    return render_template('quiz_end.html', score=current_score, feedback = json.dumps(feedback_list))
+    if (request.method == 'POST'):       
+        #process correctness and add to feedback set (no duplicates) if incorrect
+        user_response = request.get_json()
+        server_response = {}
+        if (user_response['status'] == 'correct'):
+            current_score += 1
+            overall.append(True)
+        else:
+            feedback.add(quiz_questions[-1]['category'])
+            overall.append(False) 
+        #need to convert feedback set to a list, because sets are not natively JSON serializable
+        user_request = request.get_json()
+        score = user_request['score']
+        server_response = {}
+        server_response['final_score'] = current_score 
+        return jsonify(server_response)
+    else:
+        feedback_list = list(feedback)
+        return render_template('quiz_end.html', score=current_score, feedback = json.dumps(feedback_list), overall=overall, quiz_questions = quiz_questions)
 if __name__ == '__main__':
     app.run(debug=True)
