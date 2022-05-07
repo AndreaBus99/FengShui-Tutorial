@@ -45,9 +45,27 @@ const renderQuestion = () => {
             setTrueFalseContent();
             break
     }
+
+    // deselect all options
+    // Explicitly uncheck all of your radio buttons
+    $("input[name='optradio']").prop('checked', false);
+    // Select all label elements within your toggle and remove the active class
+    $("input[name='optradio'] label").removeClass('active');
+
+
+    
     // set submit button
     $('.submit').append($("<button type='button' class='btn btn-primary' id='submit-btn' style='float: right;'>Submit Answer</button>"))
     $("#submit-btn").click(handleQuizSubmit);
+
+    // disable submit button first
+    $('#submit-btn').attr('disabled','disabled');
+
+    // enable submit on selecting option
+    $('.form-check-input').on('change', ()=>{
+        $('#submit-btn').removeAttr('disabled');
+    });
+    
 }
 
 // set content if multiple choice
