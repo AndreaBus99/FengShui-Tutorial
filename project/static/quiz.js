@@ -24,6 +24,7 @@ const renderQuestion = () => {
     if (quiz_question['next_question'] == 1) {
         $("#quiz-modal").modal('show');
         $(".modal-title").html("Welcome to the quiz!");
+        $(".modal-header").addClass('alert alert-primary')
         $("#modal-btn").text('Start quiz!');
         $('#quiz-modal-text').html("Now, you'll test all the Fengshui knowledge you've obtained!<br> The quiz consists of 4 multiple choice and 2 true/false questions.");
         $("#quiz-modal").click(() => {
@@ -99,7 +100,7 @@ const handleQuizSubmit = () => {
     $('#quiz-modal').modal('show');
     $(".modal-title").html(modalTitle);
     $('#quiz-modal-text').html(modalText);
-    $('#modal-header').addClass(modalHeader)
+    $('.modal-header').addClass(modalHeader)
     $("#modal-btn").text(buttonText);
     $("#quiz-modal").click(()=>{
         $('#quiz-modal').modal('hide'); 
