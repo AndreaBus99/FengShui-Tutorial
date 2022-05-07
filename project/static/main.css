@@ -20,4 +20,16 @@ button{
     color: black;
 }
 
+.btn:disabled {
+    background-color: lightgray;
+}
 
+/* #progress-bar {
+    width: 0; 
+    margin-left: 5px; 
+    margin-top: 5px
+}
+
+#progress-container{
+    padding-top:20px;
+} */
