@@ -19,6 +19,10 @@ const renderQuestion = () => {
     // Set score
     const url = $(location).attr('href');
     $("#score-display").text(score);
+    
+    const progress = Math.round((parseInt(quiz_question['id']) / 6) * 100);
+    $("#progress-bar").text(progress + " %");
+    $("#progress-bar").attr('style', "width:" + progress + "%");
 
     //show modal on first display
     if (quiz_question['next_question'] == 1) {
