@@ -275,6 +275,9 @@ function build() {
           // highlight the relevant furniture
           mark_furniture(canvas, obj_to_mark, feedback, status, good_l, bad_l)
         }
+
+        // record how many rectangles will be generated (0/1/2)
+        feedbackCount = Object.keys(result).length-1;
         // clicked_colored = false;
         // $('#learn-test-submit-btn').prop({"disabled" : true });
   
@@ -288,7 +291,6 @@ function build() {
         // if complete, display the message, disable submit button
         if (complete == 'True') {
           $('#learn-test-submit-btn').prop({"disabled" : true});
-          
         }
 			},
 			error: 
@@ -362,6 +364,14 @@ function mark_furniture(canvas, id, feedback, status, good_l, bad_l) {
             $('#bad-lesson-list').append($('<li>', {text : l['summary']}))
           }
         });
+
+        //decrement #feedback rectangles clicked on
+        feedbackCount = feedbackCount-1;
+
+        //update sidebar message back to "arrange furniture"
+        if(feedbackCount==0){
+          $("#guidance").text("Rearrange the room to try find some new tips. Similar layouts may yield unfound tips!");
+        }
       });
 
       // add to canvas

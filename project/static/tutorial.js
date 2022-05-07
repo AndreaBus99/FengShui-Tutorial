@@ -55,10 +55,11 @@ function init_room(canvas) {
 
   // create room outline
   var room_outline = new fabric.Rect({
+    id: 'room_outline',
     width: grid*16, //8.5 ft - 275
     height: grid*Math.round(16*1.6), //14 ft - 4503.0*Math.ceil(n/3.0)
     fill: '', 
-    stroke: 'black',
+    stroke: 'grey',
     strokeWidth: 3,
     left: 24 * grid,
     top: 2 * grid,
@@ -76,6 +77,18 @@ function init_room(canvas) {
     evented: false, //cursor does not change to move on hover
   })
 
+  var windowText = new fabric.Text("Window", { 
+    left: 32 * grid, 
+    top: 2.8*grid,
+    fontSize: 18,
+    fill: 'grey',
+    fontFamily: 'system-ui',
+    originX: 'center',
+    originY: 'center', 
+    selectable: false, //user cannot move/select outline
+    evented: false, //cursor does not change to move on hover
+  });
+
   var door = new fabric.Rect({
     width: grid*6,
     height: grid*0.5, 
@@ -86,10 +99,23 @@ function init_room(canvas) {
     evented: false, //cursor does not change to move on hover
   })
 
+  var doorText = new fabric.Text("Door", { 
+    left: 36 * grid, 
+    top: grid*Math.round(16*1.6)+(1.95*grid),
+    fontSize: 18,
+    fill: 'grey',
+    fontFamily: 'system-ui',
+    originX: 'center',
+    originY: 'center', 
+    selectable: false, //user cannot move/select outline
+    evented: false, //cursor does not change to move on hover
+  });
+
   var widthText = new fabric.Text("8'5\" ft", { 
     left: 32 * grid, 
     top: 1.5*grid,
     fontSize: 24,
+    fontFamily: 'system-ui',
     originX: 'center',
     originY: 'center', 
     selectable: false, //user cannot move/select outline
@@ -100,6 +126,7 @@ function init_room(canvas) {
     left: 41*grid, 
     top: 2*grid+(grid*Math.round(16*1.6)/2),
     fontSize: 24,
+    fontFamily: 'system-ui',
     originX: 'center',
     originY: 'center', 
     angle: 90,
@@ -107,12 +134,13 @@ function init_room(canvas) {
     evented: false, //cursor does not change to move on hover
   });
 
-  var roomOutlineGroup = new fabric.Group([ widthText, heightText, room_outline, window, door ], {
+  var roomOutlineExtra = new fabric.Group([ widthText, heightText, window, door, windowText, doorText ], {
     selectable: false, //user cannot move/select outline
     evented: false, //cursor does not change to move on hover
   });
 
-  canvas.add(roomOutlineGroup);
+  canvas.add(room_outline)
+  canvas.add(roomOutlineExtra);
 
   return grid;
 }
@@ -140,7 +168,9 @@ function build() {
     f_image.onload = function (img) {  
       let f_entity = new fabric.Image(f_image, {
         left: ui.left * grid,//position image on loading
-        top: ui.top * grid
+        top: ui.top * grid,
+        borderColor: "#2a3b5e",//TO DO: change to accent color
+        cornerColor: "#2a3b5e", //TO DO: change to accent color
       });
       // set width
       f_entity.scaleToWidth(width,false);
