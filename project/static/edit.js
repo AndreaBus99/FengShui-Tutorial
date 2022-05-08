@@ -288,8 +288,13 @@ function build() {
         $("#progress-bar").attr('style', "width:" + progress + "%");
         
 
-        // if complete, display the message, disable submit button
+        // if complete, display the message, disable submit button, add button to link to quiz
         if (complete == 'True') {
+          $('#quiz-redirect').removeClass("display");
+          $('#quiz-redirect').click(() => {
+              console.log("fired");
+              window.location.href = '/quiz_yourself/0';
+          })
           $('#learn-test-submit-btn').prop({"disabled" : true});
         }
 			},
