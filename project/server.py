@@ -681,7 +681,7 @@ def learn():
         # return the feedback
         # if done, display the congrats msg
         if is_learn_done():
-            cur_state = 6
+            cur_state = 3       # found new rule
 
         # set guidance message based on current state
         res[count]['guidance'] = guidance[cur_state]
