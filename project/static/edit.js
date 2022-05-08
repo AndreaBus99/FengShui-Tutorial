@@ -150,8 +150,33 @@ function disable_click(can) {
   $("#learn-test-submit-btn").prop("disabled",can);
 }
 
+$(document).on('hide.bs.modal','#modal', function () {
+  // alert('');
+  console.log("in hidden quiz modal, complete is : " + complete + "and check is : " + complete == 'True');
+  if (complete == 'True') {
+    $('#learn-test-submit-btn').prop({"disabled" : true});
+    $("#guidance").text("Congrats! You've learned all rules, Quiz yourself!");
+  }
+//Do stuff here
+});
 
+
+// $('#quiz-modal').on('hidden.bs.modal', function () {
+//   // do something…
+  
+// })
+// display congrats when complete
+$('#lesson-close-btn').click(function () {
+  // if complete, display the message, disable submit button
+  
+});
+
+        
+
+// variables to keep track
 let clicked_colored = true;
+let complete = 'False';
+
 
 /* build the canvas for testing purpose ONLY */
 function build() {
@@ -242,9 +267,9 @@ function build() {
         let progress = Math.round(learned_progress / all_progress * 100)
         let good_l = result[0]['good_lessons'];
         let bad_l = result[0]['bad_lessons'];
-        let complete  = result[0]['complete'];
+        complete  = result[0]['complete'];
         let guide_new = result[0]['guidance']['text'];
-        
+        console.log("complete is  : " + result[0]['complete'] );
         // disable click until changed layout
         disable_click(true);
         // good count
@@ -281,17 +306,19 @@ function build() {
         // clicked_colored = false;
         // $('#learn-test-submit-btn').prop({"disabled" : true });
   
-        // update guidance 
+        // update guidance
+        // if (complete != 'True') {
         $("#guidance").text(guide_new);
+        // }
         // set progress bar
         $("#progress-bar").text(progress + " %");
         $("#progress-bar").attr('style', "width:" + progress + "%");
         
 
-        // if complete, display the message, disable submit button
-        if (complete == 'True') {
-          $('#learn-test-submit-btn').prop({"disabled" : true});
-        }
+        // // if complete, display the message, disable submit button
+        // if (complete == 'True') {
+        //   $('#learn-test-submit-btn').prop({"disabled" : true});
+        // }
 			},
 			error: 
 			function(request, status, error){
@@ -369,7 +396,7 @@ function mark_furniture(canvas, id, feedback, status, good_l, bad_l) {
         feedbackCount = feedbackCount-1;
 
         //update sidebar message back to "arrange furniture"
-        if(feedbackCount==0){
+        if(feedbackCount==0 && complete != 'True'){
           $("#guidance").text("Rearrange the room to try find some new tips. Similar layouts may yield unfound tips!");
         }
       });
