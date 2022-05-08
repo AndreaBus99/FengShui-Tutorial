@@ -11,8 +11,8 @@ const setContent = () => {
         const alertClass = overall[idx] ? 'list-group-item-success' : 'list-group-item-danger' 
         $('#list-group-answers').append(`<li class="list-group-item ${alertClass}">${text}</li>`);
     }  
-    const pText = isPerfect ? `Nice job! You've demonstrating Fengshui mastery` : `Good job. Try to review the concepts in red and try again!`;
-    const modifiedZero = isZero ? `Let's go over the tutorial again.` : pText
+    const pText = isPerfect ? `Nice job! You've demonstrated Fengshui mastery` : `Good job. Try to review the concepts in red and try again!`;
+    const modifiedZero = isZero ? `Let's go through the learning section again.` : pText
     if (isZero) {
         $("#btnRestart").attr('disabled', '');
     }
