@@ -462,12 +462,12 @@ function rotate_to_free(bed_angle, desk_angle, drawers_angle){
   }
 
   // Once the submit button is clicked, go to the learning portion
-  if(current_url == "http://127.0.0.1:5000/tutorial/4"){
+  // if(current_url == "http://127.0.0.1:5000/tutorial/4"){
     $('.submit-button').click(function(){
       window.history.pushState({},'', "/tutorial/"+5);
       transition()
     })
-  }
+  // }
 
 }
 
