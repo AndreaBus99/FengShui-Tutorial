@@ -7,7 +7,6 @@ js for learning portion.
 */
 
 
-
 /* disable scaling and rotation */
 function disable_scaling(obj){
   // disable scaling
@@ -139,8 +138,6 @@ function init_room(canvas) {
 }
 
 
-
-
 // handle submit button
 function handle_learn_submit() {
 }
@@ -150,24 +147,56 @@ function disable_click(can) {
   $("#learn-test-submit-btn").prop("disabled",can);
 }
 
+
+let counter_rule=0
 $(document).on('hide.bs.modal','#modal', function () {
-  // alert('');
-  console.log("in hidden quiz modal, complete is : " + complete + "and check is : " + complete == 'True');
-  if (complete == 'True') {
+  counter_rule += 1
+  console.log(counter_rule)
+  console.log(good[0]['summary'])
+  // for(let i=1; i<Object.keys(result).length; i++){
+  //   let status    = result[i]['status'];
+  //   let feedback  = result[i]['feedback'];
+  //   let obj_to_mark = result[i]['mark'];
+  // }
+
+  // When learn is complete
+  // Display a summary of all the rules
+  if (complete == 'True' && counter_rule >= 8) {
     $('#learn-test-submit-btn').prop({"disabled" : true});
-    $('#quiz-redirect').show();
-    $('#quiz-redirect').click(() => {
+
+    // $('#quiz-redirect').show();
+    // $('#quiz-redirect').click(() => {
+    //   window.location.href = '/quiz_yourself/0';
+    // })
+
+    $(".modal-title").html("Congrats! You've learned all the rules <br> Here is a summary of all the rules you learned:")
+    
+    $("#tip").html("")
+    $("#tip").append("<div class='summary'> Things you should do: </div>");
+    $("#tip").append("<li> "+good[0]['summary']+" </li>");
+    $("#tip").append("<li> "+good[1]['summary']+" </li>");
+    $("#tip").append("<li> "+good[2]['summary']+" </li>");
+    $("#tip").append("<li> "+good[3]['summary']+" </li>");
+    $("#tip").append("<br>");
+    $("#tip").append("<div class='summary'> Things you should not do: </div>");
+    $("#tip").append("<li> "+bad[0]['summary']+" </li>");
+    $("#tip").append("<li> "+bad[1]['summary']+" </li>");
+    $("#tip").append("<li> "+bad[2]['summary']+" </li>");
+    $("#tip").append("<li> "+bad[3]['summary']+" </li>");
+
+    $('#guidances-modal').modal('show');
+
+    // Redirect to the quiz
+    $("#tip-close-btn").html("Go to quiz!")
+    $("#tip-close-btn").click(()=>{
       window.location.href = '/quiz_yourself/0';
-    })
+    });
     $("#guidance").text("Congrats! You've learned all rules, Quiz yourself!");
   }
 //Do stuff here
 });
 
 
-// $('#quiz-modal').on('hidden.bs.modal', function () {
-//   // do something…
-  
 // })
 // display congrats when complete
 $('#lesson-close-btn').click(function () {
@@ -180,7 +209,7 @@ $('#lesson-close-btn').click(function () {
 // variables to keep track
 let clicked_colored = true;
 let complete = 'False';
-
+let counter = 0;
 
 /* build the canvas for testing purpose ONLY */
 function build() {
@@ -195,10 +224,11 @@ function build() {
   // Welcome to learning modal
   console.log("guidance is  : " + guidance)
   $(".modal-title").html("Let's start learning!")
-  $("#lesson").text(guidance['text']);
-  $('#modal').modal('show');
-  $("#lesson-close-btn").click(()=>{
-    $('#modal').modal('hide');
+  $("#tip").text(guidance['text']);
+  
+  $('#guidances-modal').modal('show');
+  $("#tip-close-btn").click(()=>{
+      $('#guidances-modal').modal('hide');
   });
   $("#guidance").text(guidance['text']);
 
@@ -322,15 +352,28 @@ function build() {
         // if (complete != 'True') {
         console.log(guide_new)
 
-        // Modals for hints and tips of moving forwards
+        // Modals for hints and tips for moving forward
 
-        $(".modal-title").html("Here's a tip:")
-        $("#lesson").text(guide_new);
-        // canvas.remove(rect);
-        $('#modal').modal('show');
-        $("#lesson-close-btn").click(()=>{
-          $('#modal').modal('hide');
-        });
+        // Make the instruction of clicking the red/green boxes only appear one
+        if(counter === 0 && guide_new == "Great! You've found some rules, click on the red/green box to learn about it"){
+          counter +=1
+          $(".modal-title").html("Here's a tip:")
+          $("#tip").text(guide_new);
+          $('#guidances-modal').modal('show');
+          $("#tip-close-btn").click(()=>{
+            $('#guidances-modal').modal('hide');
+          });
+        }
+        if(guide_new == "Please put all the furniture inside the room" ){
+        }
+        if(guide_new != "Great! You've found some rules, click on the red/green box to learn about it" ) {
+          $(".modal-title").html("Here's a tip:")
+          $("#tip").text(guide_new);
+          $('#guidances-modal').modal('show');
+          $("#tip-close-btn").click(()=>{
+            $('#guidances-modal').modal('hide');
+          });
+        }
 
         $("#guidance").text(guide_new);
         // }
@@ -358,7 +401,6 @@ function build() {
     disable_click(false);
   });
 }
-
 
 // set filter to object by id
 function mark_furniture(canvas, id, feedback, status, good_l, bad_l) {
@@ -395,7 +437,6 @@ function mark_furniture(canvas, id, feedback, status, good_l, bad_l) {
         // console.log('moused clicked!');
         // $("#learn-lesson-learned").append($('<div>').append($('<h3>',{text: feedback})));
         // $('#learn-test-submit-btn').prop({"disabled" : false });
-
         $(".modal-title").html("You found a rule!")
         $("#lesson").text(feedback);
         canvas.remove(rect);

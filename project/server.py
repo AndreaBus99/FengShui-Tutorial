@@ -499,8 +499,9 @@ def learn():
             "text" : "Arrange the furniture in the room and click submit to learn about some Feng Shui principles",
         },
         # some furniture not in room
+        # You get the feedback to get furniture inside the room after clicking the red box 
         1 : {
-            "text" : "Please put all the furniture inside the room",
+            "text" : "Great! You've found some rules, click on the red/green box to learn about it",
         },
         # all furniture in room
         4 : {
@@ -508,7 +509,7 @@ def learn():
         },
         # user is stuck (no rule found twice)
         2 : {
-            "text" : "Hmm, seems like you are stuck. Hint:" + gen_tip_for_next_rule(),
+            "text" : "Hmm, seems like you are stuck. Hint: " + gen_tip_for_next_rule(),
         },
         # found rule !
         3 : {
@@ -687,7 +688,7 @@ def learn():
         res[count]['guidance'] = guidance[cur_state]
         return jsonify(res)
     else:
-        return render_template('edit.html', furniture=furniture, guidance = guidance[0])
+        return render_template('edit.html', furniture=furniture, guidance = guidance[0], good=good_lessons, bad=bad_lessons)
 
 
 """

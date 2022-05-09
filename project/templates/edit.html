@@ -16,6 +16,10 @@
 <script>
     let furniture = {{furniture|tojson}}
     let guidance = {{guidance|tojson}}
+    let good = {{good|tojson}}
+    let bad = {{bad|tojson}}
+    console.log(good)
+    console.log(bad)
     console.log(furniture);
 </script>
 
@@ -102,6 +106,10 @@
         bottom: 10%;
         /* display: none; */
     }
+
+    .summary{
+        font-weight: bold;
+    }
 </style>
 
 <!-- content -->
@@ -164,7 +172,7 @@
        </div>
     </div>
 
-    
+    <!-- Modals for lessons -->
     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -174,15 +182,35 @@
                 <span aria-hidden="true" ></span>
               </button>
             </div>
-            <div class="modal-body" id = 'lesson'>
+                <div class="modal-body" id = 'lesson'>
               
-            </div>
+                </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal" id="lesson-close-btn">Close</button>
             </div>
           </div>
         </div>
-      </div>    
+    </div>   
+
+    <!-- Modal for tips (guidance) -->
+    <div class="modal fade" id="guidances-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Rule</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" ></span>
+              </button>
+            </div>
+                <div class="modal-body" id = 'tip'>
+                </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="tip-close-btn">Close</button>
+            </div>
+          </div>
+        </div>
+    </div> 
+
 </div>
 
 
