@@ -155,9 +155,9 @@ $(document).on('hide.bs.modal','#modal', function () {
   console.log("in hidden quiz modal, complete is : " + complete + "and check is : " + complete == 'True');
   if (complete == 'True') {
     $('#learn-test-submit-btn').prop({"disabled" : true});
-    $('#quiz-redirect').removeClass("display");
+    $('#quiz-redirect').show();
     $('#quiz-redirect').click(() => {
-      window.href.location = '/quiz_yourself/0';
+      window.location.href = '/quiz_yourself/0';
     })
     $("#guidance").text("Congrats! You've learned all rules, Quiz yourself!");
   }
