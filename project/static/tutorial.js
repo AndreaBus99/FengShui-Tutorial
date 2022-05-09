@@ -196,10 +196,6 @@ function build() {
   
   //When a furniture is dragged and dropped, check location
   canvas.on("mouse:up", function(event){
-    
-    // deselect all objects
-    // canvas.discardActiveObject().renderAll();
-
     // // clear all alert boxes
     canvas.forEachObject((obj)=> {
       if (obj.class == 'alert-box') {
@@ -214,13 +210,9 @@ function build() {
       'bed_coords' : getCoordinates(canvas, 'bed', grid),
       'desk_coords' : getCoordinates(canvas, 'desk', grid),
       'drawers_coords' : getCoordinates(canvas, 'drawers', grid),
-      // 'wardrobe_coords' : getCoordinates(canvas, 'wardrobe', grid),
     };
-    // check_rotation(allData)
-    // rotate_to_free(check_rotation(allData),allData)
-
-
-    // Receive from server if dragged and dropped furniture is inside room
+  
+    // Receive from server if furniture is dragged and dropped 
 		$.ajax({
 			type        :   "POST",
 			url         :   "/tutorial/<id>",
@@ -228,30 +220,27 @@ function build() {
 			contentType :   "application/json; charset=utf-8",
 			data        :   JSON.stringify(allData),
 
+      // On success
 			success: function(result){    
         let all_data = result["furniture"]
         furniture = all_data 
 
-        // If the furniture is inside the room
+        // Send the the data of the funirutre angles when user is in rotate step (tutorial/3)
+        rotate_to_free(allData)
+
+        // Get the inital angles of furniture from tutorial/2 so that it can be compared with the new angles
+        let current_url=$(location).attr('href')
+          // If furniture intial angle has not yet been checked and view is right before rotating
+        if (!checked && current_url == "http://127.0.0.1:5000/tutorial/2") {
+          checked = true;
+          // Call check_rotation to get the initial angles before they are changed
+          check_rotation(allData);
+        }
+
+        // If the furniture is inside the room call drag function
         if(result.status == 'yes'){
-
-          let current_url=$(location).attr('href')
-
-          // if furniture intial angle has not yet been checked and view is right before rotating
-          if (!checked && current_url == "http://127.0.0.1:5000/tutorial/2") {
-            checked = true;
-            // Call check_rotation to get the initial angles before they are changed
-            check_rotation(allData);
-
-            // let rotate check_rotation(allData);
-            // initial_bed=furniture['bed_coords']['angle']
-            // initial_desk=furniture['desk_coords']['angle']
-            // initial_drawer= furniture['drawers_coords']['angle']
-          }
           // Move to the next step of tutorial (rotating)
-          drag_to_rotate(allData)
-          // check_rotation(allData)
-          // console.log(check_rotation(allData))
+          drag_to_rotate()
         }
 			},
 			error: 
@@ -264,7 +253,10 @@ function build() {
 		});
   });
 }
+
+// For rotating angle purposes
 let checked = false;
+
 /* get coordinates of object by id*/
 function getCoordinates(canvas, id, grid){
   var coords = [];
@@ -354,15 +346,9 @@ function welcome_to_drag(){
 }
 
 /* function for step 2: clicking, dragging and dropping and step 3: rotation*/
-function drag_to_rotate(furniture){
+function drag_to_rotate(){
 
-  // console.log(furniture['bed_coords']['angle'])
-  let bed_angle=furniture['bed_coords']['angle']
-  let desk_angle=furniture['desk_coords']['angle']
-  let drawers_angle= furniture['drawers_coords']['angle']
-  
   let current_url=$(location).attr('href')
-  
   if(current_url == "http://127.0.0.1:5000/tutorial/2"){
     
     // Get the instruction for this step
@@ -381,7 +367,6 @@ function drag_to_rotate(furniture){
     })
 
     // Add step to the list on the right
-    // to remember: puedo cambiar esto despues porque ya no hay el problema que hay mucho events fired
     let searchWord= tutorial[1]['instruction']
     let exists=$('.step-list li:contains('+searchWord+')').length
     if(exists){
@@ -390,8 +375,7 @@ function drag_to_rotate(furniture){
       $('.step-list').append($('<li>', {text : tutorial[1]['instruction']}))
     }
   }
-  // Call rotate_to_free with updated angles as furniture is rotated
-  rotate_to_free(bed_angle,desk_angle,drawers_angle)
+  
 }
 
 
@@ -399,26 +383,26 @@ var initial_bed
 var initial_desk
 var initial_drawer
 
-// function for checking the initial angle before going into rotate step
+// Function for checking the initial angle before going into rotate step
+// This funciton is called inside the ajax function to send to the rotate step so comparison can be done
 function check_rotation(furniture){
-  // console.log("angles", furniture)
-
-  let current_url=$(location).attr('href')
   
-  // if(current_url == "http://127.0.0.1:5000/tutorial/2"){
-    initial_bed=furniture['bed_coords']['angle']
-    initial_desk=furniture['desk_coords']['angle']
-    initial_drawer= furniture['drawers_coords']['angle']
+  initial_bed=furniture['bed_coords']['angle']
+  initial_desk=furniture['desk_coords']['angle']
+  initial_drawer= furniture['drawers_coords']['angle']
+  
+  return [initial_bed, initial_desk, initial_drawer]
 
-    // // console.log(bed_angle)
-    return [initial_bed, initial_desk, initial_drawer]
-  // }
 }
 
-
 /* function for step 3: rotating and step 4: do whatever you want */
-// angle parameter is the angle of the objects
-function rotate_to_free(bed_angle, desk_angle, drawers_angle){
+// Furniture is a varibale with all the funirture coordinate and angle info
+function rotate_to_free(furniture){
+
+  // Extract the new angle of each furniture
+  let bed_angle=furniture['bed_coords']['angle']
+  let desk_angle=furniture['desk_coords']['angle']
+  let drawers_angle= furniture['drawers_coords']['angle']
 
   console.log("bed_angle", bed_angle)
   console.log(`bed: ${initial_bed}, desk: ${initial_desk}, drawers: ${initial_drawer}`)
@@ -428,10 +412,6 @@ function rotate_to_free(bed_angle, desk_angle, drawers_angle){
   // If the angle is changed (i.e rotation occurs) show the instruction
   // Compare the angles of each element to the initial angle
   if( (bed_angle != initial_bed || desk_angle != initial_desk || drawers_angle != initial_drawer) && current_url == "http://127.0.0.1:5000/tutorial/3"){
-
-    // let new_rotate_values = check_rotation(furniture)
-    // console.log(`bed: ${initial_bed}, desk: ${initial_desk}, drawers: ${initial_drawer}`)
-    // console.log(`new bed: ${new_rotate_values[0]}, new desk: ${new_rotate_values[1]}, new drawers: ${new_rotate_values[2]}`)
 
     // Get the correct instruction
     let click_and_drag = tutorial[0]['instruction']
@@ -450,7 +430,6 @@ function rotate_to_free(bed_angle, desk_angle, drawers_angle){
     })
 
     // Add step to the list
-    // to remember: puedo cambiar esto despues porque ya no hay el problema que hay mucho events fired
     let searchWord= tutorial[2]['instruction']
     let exists=$('.step-list li:contains('+searchWord+')').length
     if(exists){
@@ -462,13 +441,12 @@ function rotate_to_free(bed_angle, desk_angle, drawers_angle){
   }
 
   // Once the submit button is clicked, go to the learning portion
-  // if(current_url == "http://127.0.0.1:5000/tutorial/4"){
-    $('.submit-button').click(function(){
-      window.history.pushState({},'', "/tutorial/"+5);
-      transition()
-    })
-  // }
-
+  // Submit can be clicked even without placing all the furniture inside the room so that the user can make the decision to arrange or not the room
+  $('.submit-button').click(function(){
+    window.history.pushState({},'', "/tutorial/"+5);
+    transition()
+  })
+  
 }
 
 function transition(){
@@ -496,7 +474,7 @@ function transition(){
 
 }
   
-  // main
+// main
 $(document).ready(() => { 
 
   build();
