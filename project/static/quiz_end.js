@@ -14,7 +14,9 @@ const setContent = () => {
     const pText = isPerfect ? `Nice job! You've demonstrated Fengshui mastery` : `Good job. Try to review the concepts in red and try again!`;
     const modifiedZero = isZero ? `Let's go through the learning section again.` : pText
     if (isZero) {
-        $("#btnRestart").attr('disabled', '');
+        $("a[href='/quiz_yourself/0']").attr('href', '/learn');
+        $("#nav-quiz-yourself").remove();
+        $("#btnRestart").html('Learn');
     }
     $("#improvement").html(modifiedZero);
 }
