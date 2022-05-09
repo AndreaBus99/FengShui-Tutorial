@@ -191,7 +191,15 @@ function build() {
   let grid = init_room(canvas);
   // console.log("grid size: "+ grid);
   // render guidance title
+
+  // Welcome to learning modal
   console.log("guidance is  : " + guidance)
+  $(".modal-title").html("Let's start learning!")
+  $("#lesson").text(guidance['text']);
+  $('#modal').modal('show');
+  $("#lesson-close-btn").click(()=>{
+    $('#modal').modal('hide');
+  });
   $("#guidance").text(guidance['text']);
 
   // fetch furniture json from flask server and render on canvas
@@ -312,6 +320,18 @@ function build() {
   
         // update guidance
         // if (complete != 'True') {
+        console.log(guide_new)
+
+        // Modals for hints and tips of moving forwards
+
+        $(".modal-title").html("Here's a tip:")
+        $("#lesson").text(guide_new);
+        // canvas.remove(rect);
+        $('#modal').modal('show');
+        $("#lesson-close-btn").click(()=>{
+          $('#modal').modal('hide');
+        });
+
         $("#guidance").text(guide_new);
         // }
         // set progress bar
@@ -375,6 +395,8 @@ function mark_furniture(canvas, id, feedback, status, good_l, bad_l) {
         // console.log('moused clicked!');
         // $("#learn-lesson-learned").append($('<div>').append($('<h3>',{text: feedback})));
         // $('#learn-test-submit-btn').prop({"disabled" : false });
+
+        $(".modal-title").html("You found a rule!")
         $("#lesson").text(feedback);
         canvas.remove(rect);
         $('#modal').modal('show');
