@@ -14,20 +14,29 @@
 </script>
 
 <style>
-    .capsule{
-        margin-top:10px;
-        background-color: white; 
-        height: 75vh;
-        overflow:auto;
+    .container{
+        height: 90vh;
+        width: 100vw;
         border-radius: 25px;
+        padding-left: 0px;
+        padding-right: 0px;
     }
+
+    .capsule{
+        background-color: white; 
+        border-radius: 25px;
+        height: 75%;
+        margin:1vh;
+    }
+
     .images{
         margin-top: 20px;
         margin-bottom: 20px;
-        height: 400px;
+        height: 350px;
         display: flex;
         justify-content: center;
     }
+
     .quiz-image{
         border: 2px solid lightgray;
     }
@@ -53,6 +62,7 @@
     .quiz-prompt{
         font-weight: bold;
         margin-bottom: 5px;
+        text-align: center;
     }
     .progressRow {
         margin-top:10px
@@ -62,8 +72,8 @@
 TODO:
     1. how to handle the quiz start page? do we really need it?
  -->
-<div class="container capsule">
-    <div class="row">
+<div class="container">
+    <div class="row capsule">
         <!-- current quiz score -->
         <div class="col-md-3 quiz-score" id="current-score">
             <div class="score">
@@ -74,9 +84,6 @@ TODO:
         <div class="col-md-6">
             <!-- system status percentage -->
             <div class="row progressRow">
-                <!-- <div class="col-md-3">
-                    Progress
-                </div> -->
                 <div class="col-md-12" style="padding-top:10px; padding-bottom: -5px;">
                     <div class="progress">
                         <div id ='progress-bar' class="progress-bar" role="progressbar" style="width: 0; margin-left: 5px; margin-top: 5px" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
@@ -89,47 +96,49 @@ TODO:
                     <img src="" alt="image of quiz" class="img-fluid quiz-image rounded" />
                 </div>
             </div>
-            <!-- question prompt -->
-            <div class="row">
-                <div class="col-md-12 quiz-prompt">
-                </div>
-            </div>
-            <!-- options -->
+        </div>
+    </div>
+    <!-- question prompt -->
+    <div class="row container-fluid">
+        <div class="col-md-12">
+            <div class="quiz-prompt"></div>
+        </div>
+    </div>
+    <div class="row container-fluid">
+        <div class="col-md-3"></div>
+        <!-- options -->
+        <div class="col-md-6">
             <div class="quiz-choices">
                 <!-- create divs representing choices here... -->
             </div>
-            
         </div>
         <div class ="col-md-3">
             <div class="submit"></div>
         </div>
+    </div>
         <!-- buttons 
             if q not answered -> render ONLY submit button
             if q answered -> render next AND review
-        -->
-    </div> 
-
+        --> 
+    
     <div class="modal fade" id="quiz-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
+        <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel"></h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <h5 class="modal-title" id="exampleModalLabel"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true" ></span>
-              </button>
+            </button>
             </div>
             <div class="modal-body" id = 'quiz-modal-text'>
-              
+            
             </div>
             <div class="modal-footer">
                 <div id="skip-tutorial-btn"></div>
                 <button type="button" id="modal-btn" class="btn btn-secondary" data-dismiss="modal" id="next-question" val="Next Question"></button>
             </div>
-          </div>
         </div>
-      </div> 
+        </div>
+    </div>
 </div>
-
-
-
 {% endblock %}
