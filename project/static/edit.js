@@ -357,7 +357,7 @@ function build() {
         // Make the instruction of clicking the red/green boxes only appear one
         if(counter === 0 && guide_new == "Great! You've found some rules, click on the red/green box to learn about it"){
           counter +=1
-          $(".modal-title").html("Here's a tip:")
+          $(".modal-title").html("Let's learn!")
           $("#tip").text(guide_new);
           $('#guidances-modal').modal('show');
           $("#tip-close-btn").click(()=>{
@@ -367,7 +367,12 @@ function build() {
         if(guide_new == "Please put all the furniture inside the room" ){
         }
         if(guide_new != "Great! You've found some rules, click on the red/green box to learn about it" ) {
-          $(".modal-title").html("Here's a tip:")
+          if(guide_new == "You didn't find new rules, try a different layout"){
+            $(".modal-title").html("Oh no!")
+          }
+          else{
+            $(".modal-title").html("Here's a tip")
+          }
           $("#tip").text(guide_new);
           $('#guidances-modal').modal('show');
           $("#tip-close-btn").click(()=>{
@@ -437,7 +442,12 @@ function mark_furniture(canvas, id, feedback, status, good_l, bad_l) {
         // console.log('moused clicked!');
         // $("#learn-lesson-learned").append($('<div>').append($('<h3>',{text: feedback})));
         // $('#learn-test-submit-btn').prop({"disabled" : false });
-        $(".modal-title").html("You found a rule!")
+        if(feedback == "Please place all the furniture inside the room!!!"){
+          $(".modal-title").html("Oh no!")
+        }
+        else{
+          $(".modal-title").html("You found a rule!")
+        }
         $("#lesson").text(feedback);
         canvas.remove(rect);
         $('#modal').modal('show');
