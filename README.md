@@ -1,5 +1,6 @@
 # FengShui Tutorial
 Goal: Learn about FengShui principles using this tutorial in under 10 minutes
+<br>
 Used: backend Python and Flask, and in frontend Fabrics.js, JavaScript/jQuery, HTML/CSS
 
 # What how it works and how it looks:
