@@ -4,6 +4,3 @@ Used: backend Python and Flask, and in frontend Fabrics.js, JavaScript/jQuery, H
 
 # What how it works and how it looks:
 https://www.youtube.com/watch?v=vK4bwd1xD4s&feature=youtu.be
-
-# Some resources
-1. http://fabricjs.com
